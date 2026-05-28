@@ -406,19 +406,33 @@ function seleccionarPremio(premio) {
   premioActual = premio;
   document.getElementById('premioActualNombre').textContent = premio.nombre;
   document.getElementById('partNum').textContent = pool.length;
+  
+  // Limpiar bolitas HTML del sorteo anterior
+  bolitas.forEach(b => { if (b.elem) b.elem.remove(); });
+  bolitas = [];
+
   mostrarPantalla('screenSorteo');
   iniciarFisica();
+
+  // Resetear botón sortear
+  const btn = document.getElementById('btnSortear');
+  btn.disabled = false;
+  document.getElementById('spinnerSorteo').style.display = 'none';
+  document.getElementById('txtSortear').textContent = '🤠 ¡Sortear!';
 }
 
 // ── FÍSICA CON MATTER.JS ──────────────────────────────
 function iniciarFisica() {
   // Limpiar instancia anterior
-  if (engine) {
-    Matter.Runner.stop(runner);
-    Matter.Render.stop(render);
-    Matter.Engine.clear(engine);
-    render.canvas.remove();
-  }
+  if (runner) Matter.Runner.stop(runner);
+  if (render) { Matter.Render.stop(render); }
+  if (engine) Matter.Engine.clear(engine);
+  
+  // Resetear canvas
+  const canvas = document.getElementById('canvas');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
   bolitas = [];
 
   const W = window.innerWidth;
@@ -427,7 +441,7 @@ function iniciarFisica() {
   engine = Matter.Engine.create({ gravity: { y: 1.2 } });
   render = Matter.Render.create({
     element: document.getElementById('screenSorteo'),
-    canvas: document.getElementById('canvas'),
+    canvas: canvas,
     engine: engine,
     options: {
       width: W, height: H,
@@ -435,6 +449,28 @@ function iniciarFisica() {
       wireframes: false,
     }
   });
+
+  const sombreroY = H * 0.72;
+  const sombreroW = W * 0.25;
+  const cx = W / 2;
+
+  const paredes = [
+    Matter.Bodies.rectangle(cx, H + 30, W * 2, 60, { isStatic:true, render:{fillStyle:'transparent'} }),
+    Matter.Bodies.rectangle(cx - sombreroW - 20, sombreroY + 40, 20, 120, { isStatic:true, angle:0.15, render:{fillStyle:'transparent'} }),
+    Matter.Bodies.rectangle(cx + sombreroW + 20, sombreroY + 40, 20, 120, { isStatic:true, angle:-0.15, render:{fillStyle:'transparent'} }),
+    Matter.Bodies.rectangle(-10, H/2, 20, H*2, { isStatic:true, render:{fillStyle:'transparent'} }),
+    Matter.Bodies.rectangle(W+10, H/2, 20, H*2, { isStatic:true, render:{fillStyle:'transparent'} }),
+  ];
+  Matter.World.add(engine.world, paredes);
+
+  runner = Matter.Runner.create();
+  Matter.Runner.run(runner, engine);
+  Matter.Render.run(render);
+
+  pool.forEach((p, i) => {
+    setTimeout(() => crearBolita(p, W, H), i * 120 + 300);
+  });
+}
 
   // Paredes invisibles (funnel hacia el sombrero)
   const sombreroY = H * 0.72;
