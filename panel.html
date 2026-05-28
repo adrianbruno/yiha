@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Panel · Yiha! 221countryLP</title>
+  <meta name="theme-color" content="#1a0a00">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --tierra:       #1a0a00;
+      --cuero:        #3d1f00;
+      --arena:        #c8a06a;
+      --paja:         #e8d5a3;
+      --hueso:        #f5ecd7;
+      --rojo:         #8b1a1a;
+      --rojo-vivo:    #c0392b;
+      --dorado:       #c9922a;
+      --dorado-claro: #f0c040;
+      --verde:        #1a5c1a;
+      --verde-claro:  #27ae60;
+      --surface:      rgba(61,31,0,0.6);
+      --border:       rgba(200,160,106,0.25);
+      --border-focus: rgba(240,192,64,0.6);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html,body { min-height:100%; font-family:'Josefin Sans',sans-serif; background:var(--tierra); color:var(--hueso); }
+
+    .bg { position:fixed; inset:0; z-index:0; background:radial-gradient(ellipse at 50% 0%,#2a3f5f 0%,#0d1a2e 40%,#060c14 100%); }
+    .stars { position:fixed; inset:0; z-index:1; pointer-events:none; }
+    .star { position:absolute; background:white; border-radius:50%; animation:twinkle var(--dur) ease-in-out infinite alternate; animation-delay:var(--delay); }
+    @keyframes twinkle { from{opacity:0.15} to{opacity:0.9} }
+
+    .page { position:relative; z-index:10; max-width:520px; margin:0 auto; padding:1.5rem 1rem 5rem; }
+
+    /* HEADER */
+    .header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.5rem; animation:entrar 0.5s ease both; }
+    .back-btn { width:36px; height:36px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--arena); font-size:1.1rem; display:flex; align-items:center; justify-content:center; text-decoration:none; transition:all 0.15s; flex-shrink:0; }
+    .back-btn:hover { background:rgba(200,160,106,0.15); color:var(--hueso); }
+    .header-titulo { font-family:'Rye',serif; font-size:1.4rem; color:var(--dorado-claro); text-shadow:0 0 20px rgba(240,192,64,0.3); }
+    .header-sub { font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--arena); opacity:0.7; }
+
+    /* LOGIN */
+    .login-wrap { display:flex; flex-direction:column; align-items:center; padding:1rem 0; animation:entrar 0.5s ease both; }
+    .vic-login { height:160px; filter:drop-shadow(0 8px 20px rgba(0,0,0,0.5)); animation:vic-float 3s ease-in-out infinite; margin-bottom:1.25rem; }
+    @keyframes vic-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    .login-card { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:1.5rem; width:100%; backdrop-filter:blur(8px); }
+    .login-titulo { font-family:'Rye',serif; font-size:1.1rem; color:var(--dorado-claro); text-align:center; margin-bottom:0.25rem; }
+    .login-sub { font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--arena); opacity:0.7; text-align:center; margin-bottom:1.25rem; }
+
+    .campo { display:flex; flex-direction:column; gap:0.3rem; margin-bottom:0.75rem; }
+    .campo label { font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--arena); opacity:0.8; }
+    input, select { background:rgba(26,10,0,0.6); border:1px solid var(--border); border-radius:3px; color:var(--hueso); font-family:'Josefin Sans',sans-serif; font-size:0.95rem; padding:0.7rem 0.85rem; width:100%; outline:none; transition:border-color 0.15s,box-shadow 0.15s; -webkit-appearance:none; }
+    input::placeholder { color:rgba(200,160,106,0.35); }
+    input:focus,select:focus { border-color:var(--border-focus); box-shadow:0 0 0 2px rgba(240,192,64,0.1); }
+    input.error { border-color:rgba(192,57,43,0.7); }
+
+    .btn-login { width:100%; padding:0.9rem; background:linear-gradient(160deg,var(--rojo-vivo),var(--rojo)); border:1px solid rgba(255,255,255,0.15); border-radius:3px; color:var(--hueso); font-family:'Josefin Sans',sans-serif; font-size:0.82rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; box-shadow:0 4px 20px rgba(192,57,43,0.4); transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:0.5rem; }
+    .btn-login:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 28px rgba(192,57,43,0.5); }
+    .btn-login:disabled { opacity:0.5; cursor:not-allowed; }
+
+    /* SECCIÓN */
+    .seccion { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:1.25rem; margin-bottom:1rem; backdrop-filter:blur(8px); animation:entrar 0.4s ease both; }
+    .seccion-titulo { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--dorado); margin-bottom:1rem; display:flex; align-items:center; gap:0.5rem; }
+    .seccion-titulo::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,rgba(201,146,42,0.4),transparent); }
+
+    /* BADGE DE ESTADO */
+    .estado-badge { display:inline-flex; align-items:center; gap:0.4rem; border-radius:20px; padding:0.3rem 0.8rem; font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; font-weight:600; }
+    .estado-pendiente { background:rgba(201,146,42,0.15); border:1px solid rgba(201,146,42,0.3); color:var(--dorado-claro); }
+    .estado-comprobante { background:rgba(41,128,185,0.15); border:1px solid rgba(41,128,185,0.3); color:#7ec8f0; }
+    .estado-confirmado { background:rgba(39,174,96,0.15); border:1px solid rgba(39,174,96,0.3); color:#7efca8; }
+    .estado-cancelado { background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.3); color:#f08080; }
+    .estado-vencido { background:rgba(100,100,100,0.15); border:1px solid rgba(100,100,100,0.3); color:#aaa; }
+
+    .estado-dot { width:6px; height:6px; border-radius:50%; background:currentColor; animation:pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+    /* INFO PAGO */
+    .info-pago { background:rgba(201,146,42,0.08); border:1px solid rgba(201,146,42,0.2); border-radius:3px; padding:0.85rem 1rem; margin:0.75rem 0; }
+    .info-pago-fila { display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; font-size:0.82rem; }
+    .info-pago-fila .lbl { color:var(--arena); opacity:0.8; font-size:0.72rem; letter-spacing:0.05em; text-transform:uppercase; }
+    .info-pago-fila .val { color:var(--paja); font-weight:600; }
+    .val-grande { font-family:'Rye',serif; font-size:1.2rem; color:var(--dorado-claro); }
+
+    /* PERSONAS */
+    .persona-card { background:rgba(26,10,0,0.4); border:1px solid var(--border); border-radius:3px; padding:0.75rem 1rem; margin-bottom:0.5rem; }
+    .persona-header { display:flex; align-items:center; gap:0.75rem; }
+    .persona-num { width:24px; height:24px; border-radius:50%; background:var(--dorado); color:var(--tierra); font-size:0.7rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .persona-resp { font-size:0.6rem; background:rgba(201,146,42,0.2); color:var(--dorado); border-radius:10px; padding:0.15rem 0.5rem; letter-spacing:0.05em; text-transform:uppercase; }
+    .persona-nombre { flex:1; font-size:0.9rem; color:var(--paja); }
+    .persona-info { display:flex; gap:0.75rem; margin-top:0.4rem; padding-left:2.25rem; }
+    .persona-tag { font-size:0.68rem; color:var(--arena); opacity:0.7; background:rgba(200,160,106,0.1); border-radius:10px; padding:0.15rem 0.5rem; }
+    .persona-baja { opacity:0.4; text-decoration:line-through; }
+
+    .persona-acciones { display:flex; gap:0.4rem; margin-top:0.6rem; padding-left:2.25rem; flex-wrap:wrap; }
+    .btn-accion { padding:0.35rem 0.75rem; border-radius:3px; font-family:'Josefin Sans',sans-serif; font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.15s; border:1px solid; }
+    .btn-accion-menu { background:rgba(201,146,42,0.1); border-color:rgba(201,146,42,0.3); color:var(--dorado); }
+    .btn-accion-menu:hover { background:rgba(201,146,42,0.2); }
+    .btn-accion-edit { background:rgba(41,128,185,0.1); border-color:rgba(41,128,185,0.3); color:#7ec8f0; }
+    .btn-accion-edit:hover { background:rgba(41,128,185,0.2); }
+    .btn-accion-baja { background:rgba(192,57,43,0.1); border-color:rgba(192,57,43,0.3); color:#f08080; }
+    .btn-accion-baja:hover { background:rgba(192,57,43,0.2); }
+
+    /* SUBIR COMPROBANTE */
+    .upload-area { border:2px dashed rgba(200,160,106,0.3); border-radius:3px; padding:1.5rem; text-align:center; cursor:pointer; transition:all 0.15s; position:relative; }
+    .upload-area:hover { border-color:var(--dorado); background:rgba(201,146,42,0.05); }
+    .upload-area input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+    .upload-icon { font-size:2rem; margin-bottom:0.5rem; }
+    .upload-txt { font-size:0.8rem; color:var(--arena); opacity:0.8; }
+    .upload-sub { font-size:0.68rem; color:var(--arena); opacity:0.5; margin-top:0.25rem; }
+    .upload-preview { margin-top:0.75rem; display:none; }
+    .upload-preview img { max-height:120px; border-radius:3px; border:1px solid var(--border); }
+    .upload-nombre { font-size:0.75rem; color:var(--dorado); margin-top:0.4rem; }
+
+    /* BOTONES GENERALES */
+    .btn-full { width:100%; padding:0.85rem; border-radius:3px; font-family:'Josefin Sans',sans-serif; font-size:0.8rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:0.5rem; border:none; margin-top:0.75rem; }
+    .btn-primario { background:linear-gradient(160deg,var(--rojo-vivo),var(--rojo)); color:var(--hueso); box-shadow:0 4px 16px rgba(192,57,43,0.3); }
+    .btn-primario:hover:not(:disabled) { transform:translateY(-2px); }
+    .btn-primario:disabled { opacity:0.4; cursor:not-allowed; }
+    .btn-dorado { background:linear-gradient(160deg,#c9922a,#8b5e1a); color:var(--hueso); box-shadow:0 4px 16px rgba(201,146,42,0.3); }
+    .btn-dorado:hover:not(:disabled) { transform:translateY(-2px); }
+    .btn-dorado:disabled { opacity:0.4; cursor:not-allowed; }
+    .btn-outline { background:transparent; color:var(--arena); border:1px solid rgba(200,160,106,0.3); }
+    .btn-outline:hover { background:rgba(200,160,106,0.08); color:var(--hueso); border-color:var(--arena); }
+
+    /* MODAL */
+    .modal-overlay { position:fixed; inset:0; z-index:50; background:rgba(6,12,20,0.9); display:flex; align-items:center; justify-content:center; padding:1rem; opacity:0; pointer-events:none; transition:opacity 0.25s; }
+    .modal-overlay.visible { opacity:1; pointer-events:all; }
+    .modal { background:linear-gradient(160deg,#3d1f00,#1a0a00); border:1px solid var(--border); border-radius:4px; padding:1.5rem; width:100%; max-width:360px; animation:entrar 0.3s ease both; }
+    .modal-titulo { font-family:'Rye',serif; font-size:1.1rem; color:var(--dorado-claro); margin-bottom:0.25rem; }
+    .modal-sub { font-size:0.72rem; color:var(--arena); opacity:0.7; margin-bottom:1.25rem; letter-spacing:0.05em; text-transform:uppercase; }
+    .modal-botones { display:flex; gap:0.5rem; margin-top:1rem; }
+    .modal-botones .btn-full { margin-top:0; flex:1; }
+
+    /* TOAST */
+    .toast { position:fixed; top:1rem; left:50%; transform:translateX(-50%); z-index:200; border-radius:3px; padding:0.75rem 1.25rem; font-size:0.8rem; max-width:340px; width:90%; text-align:center; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
+    .toast.error { background:rgba(139,26,26,0.95); border:1px solid rgba(192,57,43,0.5); color:#f5d5d5; }
+    .toast.ok { background:rgba(27,94,32,0.95); border:1px solid rgba(39,174,96,0.5); color:#d5f5d5; }
+    .toast.visible { opacity:1; }
+
+    /* SPINNER */
+    .spinner { width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,0.3); border-top-color:white; animation:spin 0.7s linear infinite; display:none; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    @keyframes entrar { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+    .loading-inicial { position:fixed; inset:0; z-index:100; background:var(--tierra); display:flex; align-items:center; justify-content:center; transition:opacity 0.4s ease; }
+    .loading-inicial.oculto { opacity:0; pointer-events:none; }
+    .loading-txt { font-family:'Rye',serif; font-size:1.5rem; color:var(--dorado-claro); animation:brillo 1.5s ease-in-out infinite alternate; }
+    @keyframes brillo { from{text-shadow:0 0 10px rgba(240,192,64,0.3)} to{text-shadow:0 0 30px rgba(240,192,64,0.8)} }
+
+    .sep { height:1px; background:linear-gradient(90deg,transparent,rgba(200,160,106,0.2),transparent); margin:0.75rem 0; }
+  </style>
+</head>
+<body>
+
+<div class="loading-inicial" id="loadingInicial"><div class="loading-txt">Yiha!</div></div>
+<div class="bg"></div>
+<div class="stars" id="stars"></div>
+<div class="toast error" id="toastError"></div>
+<div class="toast ok" id="toastOk"></div>
+
+<!-- MODAL CAMBIAR MENÚ -->
+<div class="modal-overlay" id="modalMenu">
+  <div class="modal">
+    <div class="modal-titulo">Cambiar menú</div>
+    <div class="modal-sub" id="modalMenuNombre">Persona</div>
+    <div class="campo">
+      <label>Nuevo menú</label>
+      <select id="modalMenuSelect"></select>
+    </div>
+    <div class="modal-botones">
+      <button class="btn-full btn-outline" onclick="cerrarModal('modalMenu')">Cancelar</button>
+      <button class="btn-full btn-dorado" onclick="confirmarCambioMenu()">
+        <div class="spinner" id="spinnerMenu"></div>
+        <span id="txtBtnMenu">Guardar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR NOMBRE -->
+<div class="modal-overlay" id="modalEditar">
+  <div class="modal">
+    <div class="modal-titulo">Editar persona</div>
+    <div class="modal-sub">Cambiá el nombre si viene otra persona</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem">
+      <div class="campo">
+        <label>Nombre</label>
+        <input type="text" id="editNombre" placeholder="Nombre">
+      </div>
+      <div class="campo">
+        <label>Apellido</label>
+        <input type="text" id="editApellido" placeholder="Apellido">
+      </div>
+    </div>
+    <div class="modal-botones">
+      <button class="btn-full btn-outline" onclick="cerrarModal('modalEditar')">Cancelar</button>
+      <button class="btn-full btn-dorado" onclick="confirmarEdicion()">
+        <div class="spinner" id="spinnerEditar"></div>
+        <span id="txtBtnEditar">Guardar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL BAJA PERSONA -->
+<div class="modal-overlay" id="modalBaja">
+  <div class="modal">
+    <div class="modal-titulo">Dar de baja</div>
+    <div class="modal-sub" id="modalBajaNombre">Persona</div>
+    <p style="font-size:0.82rem;color:var(--paja);line-height:1.6;margin-bottom:0.5rem">
+      ¿Estás seguro? Si ya realizaste el pago, nos pondremos en contacto para coordinar la devolución.
+    </p>
+    <p style="font-size:0.75rem;color:var(--arena);opacity:0.7">El lugar quedará liberado.</p>
+    <div class="modal-botones">
+      <button class="btn-full btn-outline" onclick="cerrarModal('modalBaja')">Cancelar</button>
+      <button class="btn-full btn-primario" onclick="confirmarBaja('persona')">
+        <div class="spinner" id="spinnerBaja"></div>
+        <span id="txtBtnBaja">Dar de baja</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL BAJA GRUPO -->
+<div class="modal-overlay" id="modalBajaGrupo">
+  <div class="modal">
+    <div class="modal-titulo">Cancelar grupo</div>
+    <div class="modal-sub">Esta acción no se puede deshacer</div>
+    <p style="font-size:0.82rem;color:var(--paja);line-height:1.6;margin-bottom:0.5rem">
+      Se dará de baja a todas las personas del grupo y los lugares quedarán liberados.
+    </p>
+    <p style="font-size:0.75rem;color:var(--arena);opacity:0.7">Si ya pagaste, nos contactamos para la devolución.</p>
+    <div class="modal-botones">
+      <button class="btn-full btn-outline" onclick="cerrarModal('modalBajaGrupo')">Cancelar</button>
+      <button class="btn-full btn-primario" onclick="confirmarBaja('grupo')">
+        <div class="spinner" id="spinnerBajaGrupo"></div>
+        <span id="txtBtnBajaGrupo">Cancelar grupo</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="page">
+  <div class="header">
+    <a href="index.html" class="back-btn">←</a>
+    <div>
+      <div class="header-titulo">Mi Panel</div>
+      <div class="header-sub">Cumple 221countryLP · 3 Oct 2026</div>
+    </div>
+  </div>
+
+  <!-- LOGIN -->
+  <div id="vistaLogin">
+    <div class="login-wrap">
+      <img src="img/vic_cruzado.png" class="vic-login" alt="Vic">
+      <div class="login-card">
+        <div class="login-titulo">Entrá a tu grupo</div>
+        <div class="login-sub">Ingresá con tu ID y celular</div>
+        <div class="campo">
+          <label>ID de grupo</label>
+          <input type="text" id="loginId" placeholder="221CLP-XXXX"
+            style="text-transform:uppercase;letter-spacing:0.1em"
+            oninput="this.value=this.value.toUpperCase()">
+        </div>
+        <div class="campo">
+          <label>Últimos 4 dígitos de tu celular</label>
+          <input type="text" id="loginCelular" placeholder="1234"
+            inputmode="numeric" maxlength="4">
+        </div>
+        <button class="btn-login" onclick="entrarPanel()">
+          <div class="spinner" id="spinnerLogin"></div>
+          <span id="txtBtnLogin">🤠 Entrar a mi panel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL (oculto hasta login) -->
+  <div id="vistaPanel" style="display:none">
+
+    <!-- ESTADO DEL GRUPO -->
+    <div class="seccion" style="animation-delay:0.05s">
+      <div class="seccion-titulo">Estado de tu grupo</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem">
+        <div>
+          <div style="font-family:'Rye',serif;font-size:1.3rem;color:var(--dorado-claro)" id="panelGrupoId">---</div>
+          <div style="font-size:0.7rem;color:var(--arena);opacity:0.7;margin-top:2px">Tu ID de grupo</div>
+        </div>
+        <div id="panelEstadoBadge"></div>
+      </div>
+      <div class="sep"></div>
+      <div class="info-pago">
+        <div class="info-pago-fila">
+          <span class="lbl">Total</span>
+          <span class="val val-grande" id="panelTotal">$0</span>
+        </div>
+        <div class="info-pago-fila">
+          <span class="lbl">Alias</span>
+          <span class="val" id="panelAlias">---</span>
+        </div>
+        <div class="info-pago-fila">
+          <span class="lbl">Personas</span>
+          <span class="val" id="panelCantidad">0</span>
+        </div>
+        <div class="info-pago-fila" id="panelVencimientoFila">
+          <span class="lbl">Vence</span>
+          <span class="val" id="panelVencimiento" style="color:#f0c040">---</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBIR COMPROBANTE -->
+    <div class="seccion" id="seccionComprobante" style="animation-delay:0.1s">
+      <div class="seccion-titulo">Comprobante de pago</div>
+      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept="image/*,.pdf" onchange="previewArchivo(event)">
+        <div class="upload-icon">📎</div>
+        <div class="upload-txt">Tocá para subir el comprobante</div>
+        <div class="upload-sub">JPG, PNG o PDF · Máximo 5MB</div>
+        <div class="upload-preview" id="uploadPreview">
+          <img id="previewImg" src="" alt="preview">
+          <div class="upload-nombre" id="uploadNombre"></div>
+        </div>
+      </div>
+      <button class="btn-full btn-dorado" id="btnSubir" onclick="subirComprobante()" disabled>
+        <div class="spinner" id="spinnerSubir"></div>
+        <span id="txtBtnSubir">Subir comprobante</span>
+      </button>
+    </div>
+
+    <!-- PERSONAS DEL GRUPO -->
+    <div class="seccion" style="animation-delay:0.15s">
+      <div class="seccion-titulo">Personas del grupo</div>
+      <div id="personasLista"></div>
+    </div>
+
+    <!-- CANCELAR GRUPO -->
+    <div class="seccion" style="animation-delay:0.2s;border-color:rgba(192,57,43,0.2)">
+      <div class="seccion-titulo" style="color:var(--rojo-vivo)">Zona de peligro</div>
+      <button class="btn-full btn-outline" style="border-color:rgba(192,57,43,0.3);color:#f08080"
+        onclick="abrirModal('modalBajaGrupo')">
+        ✕ Cancelar todo el grupo
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
+
+let sessionGrupoId = '';
+let sessionCelular4 = '';
+let panelData = null;
+let menus = [];
+let personaActivaId = '';
+let archivoSeleccionado = null;
+
+// Estrellas
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const s=document.createElement('div'); s.className='star';
+    const sz=Math.random()*2+0.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*70}%;left:${Math.random()*100}%;--dur:${2+Math.random()*3}s;--delay:${Math.random()*4}s`;
+    c.appendChild(s);
+  }
+})();
+
+// Cargar menús para los modales
+async function cargarMenus() {
+  try {
+    const res = await fetch(`${API}?action=menus`);
+    const data = await res.json();
+    if (data.ok) {
+      menus = data.menus || [];
+      const sel = document.getElementById('modalMenuSelect');
+      sel.innerHTML = '';
+      menus.forEach(m => {
+        const opt = document.createElement('option');
+        opt.value = m.id;
+        opt.textContent = m.nombre + (m.descripcion ? ' · ' + m.descripcion : '');
+        sel.appendChild(opt);
+      });
+    }
+  } catch(e) { console.warn('Error cargando menús:', e); }
+  finally {
+    document.getElementById('loadingInicial').classList.add('oculto');
+  }
+}
+
+// ── LOGIN ────────────────────────────────────────────
+async function entrarPanel() {
+  const id = document.getElementById('loginId').value.trim().toUpperCase();
+  const cel = document.getElementById('loginCelular').value.trim();
+
+  if (!id || !cel) { mostrarToast('error', 'Completá el ID y los últimos 4 del celular'); return; }
+  if (!/^\d{4}$/.test(cel)) { mostrarToast('error', 'Los últimos 4 dígitos deben ser números'); return; }
+
+  setLoading('spinnerLogin', 'txtBtnLogin', true, 'Entrando...');
+
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'consultar_grupo', grupo_id: id, celular_ultimos4: cel })
+    });
+    const data = await res.json();
+
+    if (!data.ok) { mostrarToast('error', data.error); return; }
+
+    sessionGrupoId = id;
+    sessionCelular4 = cel;
+    panelData = data;
+    renderPanel(data);
+
+  } catch(e) {
+    mostrarToast('error', 'Error de conexión. Intentá de nuevo.');
+  } finally {
+    setLoading('spinnerLogin', 'txtBtnLogin', false, '🤠 Entrar a mi panel');
+  }
+}
+
+// ── RENDER PANEL ─────────────────────────────────────
+function renderPanel(data) {
+  const { grupo, personas, permisos, info_pago } = data;
+
+  document.getElementById('vistaLogin').style.display = 'none';
+  document.getElementById('vistaPanel').style.display = 'block';
+
+  // ID y estado
+  document.getElementById('panelGrupoId').textContent = grupo.grupo_id;
+  document.getElementById('panelEstadoBadge').innerHTML = badgeEstado(grupo.estado_pago);
+
+  // Info pago
+  document.getElementById('panelTotal').textContent = '$' + Number(grupo.total_pagar).toLocaleString('es-AR');
+  document.getElementById('panelAlias').textContent = info_pago.alias || '(a definir)';
+  const activos = personas.filter(p => p.estado !== 'baja').length;
+  document.getElementById('panelCantidad').textContent = activos + ' persona' + (activos !== 1 ? 's' : '');
+
+  // Vencimiento
+  if (grupo.estado_pago === 'pendiente_pago' && grupo.vencimiento_reserva) {
+    document.getElementById('panelVencimiento').textContent = formatFecha(grupo.vencimiento_reserva);
+    document.getElementById('panelVencimientoFila').style.display = 'flex';
+  } else {
+    document.getElementById('panelVencimientoFila').style.display = 'none';
+  }
+
+  // Sección comprobante: mostrar solo si puede subir
+  const secComp = document.getElementById('seccionComprobante');
+  if (!permisos.puede_subir_comprobante) {
+    if (grupo.estado_pago === 'comprobante_subido') {
+      secComp.innerHTML = `
+        <div class="seccion-titulo">Comprobante de pago</div>
+        <div style="text-align:center;padding:1rem 0">
+          <div style="font-size:2rem;margin-bottom:0.5rem">✅</div>
+          <div style="font-size:0.85rem;color:var(--paja)">Comprobante recibido</div>
+          <div style="font-size:0.72rem;color:var(--arena);opacity:0.7;margin-top:0.25rem">Estamos verificando el pago</div>
+          ${grupo.comprobante_url ? `<a href="${grupo.comprobante_url}" target="_blank" style="font-size:0.72rem;color:var(--dorado);margin-top:0.5rem;display:block">Ver comprobante →</a>` : ''}
+        </div>`;
+    } else if (grupo.estado_pago === 'confirmado') {
+      secComp.innerHTML = `
+        <div class="seccion-titulo">Pago</div>
+        <div style="text-align:center;padding:1rem 0">
+          <div style="font-size:2rem;margin-bottom:0.5rem">🎉</div>
+          <div style="font-size:0.85rem;color:#7efca8;font-weight:600">¡Pago confirmado!</div>
+          <div style="font-size:0.72rem;color:var(--arena);opacity:0.7;margin-top:0.25rem">Tu lugar está asegurado. El QR llegará 10 días antes del evento.</div>
+        </div>`;
+    } else {
+      secComp.style.display = 'none';
+    }
+  }
+
+  // Lista de personas
+  const lista = document.getElementById('personasLista');
+  lista.innerHTML = '';
+  personas.forEach((p, i) => {
+    const menuNombre = menus.find(m => String(m.id) === String(p.menu_id))?.nombre || 'Menú ' + p.menu_id;
+    const esBaja = p.estado === 'baja';
+    const card = document.createElement('div');
+    card.className = 'persona-card' + (esBaja ? ' persona-baja' : '');
+    card.innerHTML = `
+      <div class="persona-header">
+        <div class="persona-num">${i+1}</div>
+        <div class="persona-nombre">${p.nombre} ${p.apellido}</div>
+        ${p.es_responsable ? '<span class="persona-resp">Responsable</span>' : ''}
+        ${esBaja ? '<span style="font-size:0.68rem;color:#f08080;opacity:0.8">Baja</span>' : ''}
+      </div>
+      <div class="persona-info">
+        <span class="persona-tag">🍽 ${menuNombre}</span>
+        ${p.obs_alimenticias ? `<span class="persona-tag">⚠️ ${p.obs_alimenticias}</span>` : ''}
+      </div>
+      ${!esBaja && !p.es_responsable ? `
+      <div class="persona-acciones">
+        ${permisos.puede_cambiar_menu ? `<button class="btn-accion btn-accion-menu" onclick="abrirCambioMenu('${p.id}','${p.nombre} ${p.apellido}','${p.menu_id}')">Cambiar menú</button>` : ''}
+        ${permisos.puede_modificar_cantidad || grupo.estado_pago !== 'pendiente_pago' ? `<button class="btn-accion btn-accion-edit" onclick="abrirEdicion('${p.id}','${p.nombre}','${p.apellido}')">Editar nombre</button>` : ''}
+        <button class="btn-accion btn-accion-baja" onclick="abrirBajaPersona('${p.id}','${p.nombre} ${p.apellido}')">Dar de baja</button>
+      </div>` : ''}
+    `;
+    lista.appendChild(card);
+  });
+}
+
+// ── BADGES ───────────────────────────────────────────
+function badgeEstado(estado) {
+  const map = {
+    pendiente_pago:      ['estado-pendiente',    '⏳ Pendiente de pago'],
+    comprobante_subido:  ['estado-comprobante',  '📎 Comprobante enviado'],
+    confirmado:          ['estado-confirmado',   '✅ Confirmado'],
+    cancelado:           ['estado-cancelado',    '✕ Cancelado'],
+    vencido:             ['estado-vencido',      '⌛ Vencido'],
+  };
+  const [cls, txt] = map[estado] || ['estado-pendiente', estado];
+  return `<span class="estado-badge ${cls}"><span class="estado-dot"></span>${txt}</span>`;
+}
+
+// ── SUBIR COMPROBANTE ─────────────────────────────────
+function previewArchivo(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  archivoSeleccionado = file;
+  document.getElementById('uploadNombre').textContent = file.name;
+  document.getElementById('btnSubir').disabled = false;
+
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      document.getElementById('previewImg').src = ev.target.result;
+      document.getElementById('uploadPreview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  } else {
+    document.getElementById('uploadPreview').style.display = 'block';
+    document.getElementById('previewImg').style.display = 'none';
+    document.getElementById('uploadNombre').textContent = '📄 ' + file.name;
+  }
+}
+
+async function subirComprobante() {
+  if (!archivoSeleccionado) return;
+  setLoading('spinnerSubir', 'txtBtnSubir', true, 'Subiendo...');
+
+  try {
+    const base64 = await fileToBase64(archivoSeleccionado);
+    const res = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'subir_comprobante',
+        grupo_id: sessionGrupoId,
+        celular_ultimos4: sessionCelular4,
+        archivo_base64: base64,
+        nombre_archivo: archivoSeleccionado.name,
+        mime_type: archivoSeleccionado.type
+      })
+    });
+    const data = await res.json();
+    if (!data.ok) { mostrarToast('error', data.error); return; }
+
+    mostrarToast('ok', '¡Comprobante enviado! Lo revisamos a la brevedad.');
+    setTimeout(() => location.reload(), 2000);
+
+  } catch(e) {
+    mostrarToast('error', 'Error al subir. Revisá tu conexión.');
+  } finally {
+    setLoading('spinnerSubir', 'txtBtnSubir', false, 'Subir comprobante');
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(',')[1]);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ── MODALES ───────────────────────────────────────────
+function abrirModal(id) { document.getElementById(id).classList.add('visible'); }
+function cerrarModal(id) { document.getElementById(id).classList.remove('visible'); }
+
+function abrirCambioMenu(personaId, nombre, menuActual) {
+  personaActivaId = personaId;
+  document.getElementById('modalMenuNombre').textContent = nombre;
+  document.getElementById('modalMenuSelect').value = String(menuActual);
+  abrirModal('modalMenu');
+}
+
+async function confirmarCambioMenu() {
+  setLoading('spinnerMenu', 'txtBtnMenu', true, 'Guardando...');
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'cambiar_menu',
+        grupo_id: sessionGrupoId,
+        celular_ultimos4: sessionCelular4,
+        persona_id: personaActivaId,
+        nuevo_menu_id: document.getElementById('modalMenuSelect').value
+      })
+    });
+    const data = await res.json();
+    if (!data.ok) { mostrarToast('error', data.error); return; }
+    mostrarToast('ok', data.mensaje);
+    cerrarModal('modalMenu');
+    await recargarPanel();
+  } catch(e) {
+    mostrarToast('error', 'Error de conexión.');
+  } finally {
+    setLoading('spinnerMenu', 'txtBtnMenu', false, 'Guardar');
+  }
+}
+
+function abrirEdicion(personaId, nombre, apellido) {
+  personaActivaId = personaId;
+  document.getElementById('editNombre').value = nombre;
+  document.getElementById('editApellido').value = apellido;
+  abrirModal('modalEditar');
+}
+
+async function confirmarEdicion() {
+  setLoading('spinnerEditar', 'txtBtnEditar', true, 'Guardando...');
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'editar_persona',
+        grupo_id: sessionGrupoId,
+        celular_ultimos4: sessionCelular4,
+        persona_id: personaActivaId,
+        nuevo_nombre: document.getElementById('editNombre').value.trim(),
+        nuevo_apellido: document.getElementById('editApellido').value.trim()
+      })
+    });
+    const data = await res.json();
+    if (!data.ok) { mostrarToast('error', data.error); return; }
+    mostrarToast('ok', data.mensaje);
+    cerrarModal('modalEditar');
+    await recargarPanel();
+  } catch(e) {
+    mostrarToast('error', 'Error de conexión.');
+  } finally {
+    setLoading('spinnerEditar', 'txtBtnEditar', false, 'Guardar');
+  }
+}
+
+function abrirBajaPersona(personaId, nombre) {
+  personaActivaId = personaId;
+  document.getElementById('modalBajaNombre').textContent = nombre;
+  abrirModal('modalBaja');
+}
+
+async function confirmarBaja(tipo) {
+  const spinnerId = tipo === 'persona' ? 'spinnerBaja' : 'spinnerBajaGrupo';
+  const txtId = tipo === 'persona' ? 'txtBtnBaja' : 'txtBtnBajaGrupo';
+  const modalId = tipo === 'persona' ? 'modalBaja' : 'modalBajaGrupo';
+
+  setLoading(spinnerId, txtId, true, 'Procesando...');
+  try {
+    const body = {
+      action: 'dar_de_baja',
+      grupo_id: sessionGrupoId,
+      celular_ultimos4: sessionCelular4,
+      tipo
+    };
+    if (tipo === 'persona') body.persona_id = personaActivaId;
+
+    const res = await fetch(API, { method: 'POST', body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!data.ok) { mostrarToast('error', data.error); return; }
+
+    mostrarToast('ok', data.mensaje);
+    cerrarModal(modalId);
+
+    if (tipo === 'grupo') {
+      setTimeout(() => window.location.href = 'index.html', 2500);
+    } else {
+      await recargarPanel();
+    }
+  } catch(e) {
+    mostrarToast('error', 'Error de conexión.');
+  } finally {
+    setLoading(spinnerId, txtId, false, tipo === 'persona' ? 'Dar de baja' : 'Cancelar grupo');
+  }
+}
+
+// ── HELPERS ───────────────────────────────────────────
+async function recargarPanel() {
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'consultar_grupo', grupo_id: sessionGrupoId, celular_ultimos4: sessionCelular4 })
+    });
+    const data = await res.json();
+    if (data.ok) { panelData = data; renderPanel(data); }
+  } catch(e) { console.warn('Error recargando panel:', e); }
+}
+
+function formatFecha(str) {
+  if (!str) return '---';
+  const partes = str.split(' ');
+  const [y, m, d] = partes[0].split('-');
+  const hora = partes[1] ? partes[1].substring(0,5) : '';
+  const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return `${d} ${meses[parseInt(m)-1]} · ${hora}hs`;
+}
+
+function setLoading(spinnerId, txtId, loading, txt) {
+  document.getElementById(spinnerId).style.display = loading ? 'block' : 'none';
+  document.getElementById(txtId).textContent = loading ? txt : txt;
+}
+
+function mostrarToast(tipo, msg) {
+  const id = tipo === 'ok' ? 'toastOk' : 'toastError';
+  const t = document.getElementById(id);
+  t.textContent = msg;
+  t.classList.add('visible');
+  setTimeout(() => t.classList.remove('visible'), 4000);
+}
+
+cargarMenus();
+</script>
+</body>
+</html>
