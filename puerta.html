@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Puerta · Yiha! 221countryLP</title>
+  <meta name="theme-color" content="#1a0a00">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Yiha Puerta">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --tierra:       #1a0a00;
+      --cuero:        #3d1f00;
+      --arena:        #c8a06a;
+      --paja:         #e8d5a3;
+      --hueso:        #f5ecd7;
+      --rojo:         #8b1a1a;
+      --rojo-vivo:    #c0392b;
+      --dorado:       #c9922a;
+      --dorado-claro: #f0c040;
+      --verde:        #27ae60;
+      --surface:      rgba(61,31,0,0.7);
+      --border:       rgba(200,160,106,0.25);
+      --border-focus: rgba(240,192,64,0.6);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html,body { height:100%; font-family:'Josefin Sans',sans-serif; background:var(--tierra); color:var(--hueso); overflow-x:hidden; }
+
+    .bg { position:fixed; inset:0; z-index:0; background:radial-gradient(ellipse at 50% 0%,#1a2a1a 0%,#0a1a08 40%,#030a03 100%); }
+
+    /* ── LOGIN ── */
+    .login-screen {
+      position:relative; z-index:10; height:100vh;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:2rem;
+    }
+    .login-vic { height:160px; filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6)); animation:vic-float 3s ease-in-out infinite; margin-bottom:1.5rem; }
+    @keyframes vic-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+    .login-card { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:1.5rem; width:100%; max-width:340px; backdrop-filter:blur(8px); }
+    .login-titulo { font-family:'Rye',serif; font-size:1.2rem; color:var(--dorado-claro); text-align:center; margin-bottom:0.25rem; }
+    .login-sub { font-size:0.68rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--arena); opacity:0.7; text-align:center; margin-bottom:1.25rem; }
+
+    /* ── CAMPOS ── */
+    .campo { display:flex; flex-direction:column; gap:0.3rem; margin-bottom:0.75rem; }
+    .campo label { font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--arena); opacity:0.8; }
+    input { background:rgba(26,10,0,0.6); border:1px solid var(--border); border-radius:3px; color:var(--hueso); font-family:'Josefin Sans',sans-serif; font-size:1rem; padding:0.75rem; width:100%; outline:none; transition:border-color 0.15s; -webkit-appearance:none; }
+    input::placeholder { color:rgba(200,160,106,0.35); }
+    input:focus { border-color:var(--border-focus); box-shadow:0 0 0 2px rgba(240,192,64,0.1); }
+
+    /* ── BOTONES ── */
+    .btn { width:100%; padding:0.9rem; border-radius:3px; font-family:'Josefin Sans',sans-serif; font-size:0.82rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:0.5rem; border:none; }
+    .btn-rojo { background:linear-gradient(160deg,var(--rojo-vivo),var(--rojo)); color:var(--hueso); box-shadow:0 4px 16px rgba(192,57,43,0.4); }
+    .btn-rojo:hover:not(:disabled) { transform:translateY(-2px); }
+    .btn-rojo:disabled { opacity:0.4; cursor:not-allowed; }
+    .btn-verde { background:linear-gradient(160deg,#2ecc71,#27ae60); color:white; box-shadow:0 4px 16px rgba(39,174,96,0.4); }
+    .btn-verde:hover:not(:disabled) { transform:translateY(-2px); }
+    .btn-outline { background:transparent; color:var(--arena); border:1px solid rgba(200,160,106,0.3); }
+    .btn-outline:hover { background:rgba(200,160,106,0.08); }
+
+    /* ── APP PRINCIPAL ── */
+    .app { position:relative; z-index:10; display:none; flex-direction:column; height:100vh; }
+
+    /* Header */
+    .app-header { background:linear-gradient(180deg,rgba(10,26,8,0.98),rgba(10,26,8,0.9)); padding:0.75rem 1rem; border-bottom:1px solid rgba(39,174,96,0.2); flex-shrink:0; }
+    .header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem; }
+    .header-titulo { font-family:'Rye',serif; font-size:1.1rem; color:var(--dorado-claro); }
+    .btn-salir { background:transparent; border:1px solid rgba(200,160,106,0.2); border-radius:20px; color:var(--arena); font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.3rem 0.75rem; cursor:pointer; font-family:'Josefin Sans',sans-serif; }
+
+    /* Contadores */
+    .contadores { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5rem; }
+    .contador { background:rgba(0,0,0,0.3); border-radius:3px; padding:0.4rem 0.5rem; text-align:center; border:1px solid rgba(255,255,255,0.05); }
+    .contador-num { font-family:'Rye',serif; font-size:1.3rem; line-height:1; }
+    .contador-label { font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; opacity:0.6; margin-top:2px; }
+    .cnt-presentes .contador-num { color:#7efca8; }
+    .cnt-total .contador-num { color:var(--dorado-claro); }
+    .cnt-falta .contador-num { color:#f0c040; }
+
+    /* Búsqueda */
+    .busqueda-wrap { padding:0.75rem 1rem; background:rgba(0,0,0,0.2); border-bottom:1px solid rgba(255,255,255,0.05); flex-shrink:0; }
+    .busqueda-input-wrap { position:relative; }
+    .busqueda-input { font-size:1rem; padding:0.75rem 2.5rem 0.75rem 0.9rem; background:rgba(26,10,0,0.7); }
+    .busqueda-clear { position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); background:none; border:none; color:var(--arena); font-size:1.1rem; cursor:pointer; padding:0.25rem; display:none; }
+
+    /* Resultados */
+    .resultados { flex:1; overflow-y:auto; padding:0.75rem 1rem; -webkit-overflow-scrolling:touch; }
+
+    .resultado-card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:4px;
+      padding:0.85rem 1rem;
+      margin-bottom:0.6rem;
+      transition:all 0.2s;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+    }
+    .resultado-card:active { transform:scale(0.98); }
+    .resultado-card.presente { border-color:rgba(39,174,96,0.5); background:rgba(39,174,96,0.08); }
+    .resultado-card.presente::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--verde); }
+
+    .res-nombre { font-size:1rem; font-weight:600; color:var(--paja); margin-bottom:0.25rem; }
+    .res-info { display:flex; gap:0.5rem; flex-wrap:wrap; }
+    .res-tag { font-size:0.68rem; color:var(--arena); opacity:0.8; background:rgba(200,160,106,0.1); border-radius:10px; padding:0.15rem 0.5rem; }
+    .res-tag-verde { background:rgba(39,174,96,0.15); color:#7efca8; opacity:1; }
+    .res-check { position:absolute; right:0.75rem; top:50%; transform:translateY(-50%); font-size:1.5rem; }
+
+    .empty-state { text-align:center; padding:3rem 1rem; opacity:0.5; }
+    .empty-icon { font-size:3rem; margin-bottom:0.75rem; }
+    .empty-txt { font-size:0.85rem; color:var(--arena); }
+
+    /* ── OVERLAY CHECKIN ── */
+    .overlay-checkin {
+      position:fixed; inset:0; z-index:100;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      padding:2rem; text-align:center;
+      opacity:0; pointer-events:none; transition:opacity 0.3s;
+    }
+    .overlay-checkin.visible { opacity:1; pointer-events:all; }
+    .overlay-checkin.ok { background:rgba(3,20,5,0.97); }
+    .overlay-checkin.ya { background:rgba(20,10,3,0.97); }
+
+    .checkin-icono { font-size:5rem; margin-bottom:1rem; animation:pop 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+    @keyframes pop { from{transform:scale(0)} to{transform:scale(1)} }
+    .checkin-nombre { font-family:'Rye',serif; font-size:1.8rem; color:var(--dorado-claro); margin-bottom:0.25rem; }
+    .checkin-sub { font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--arena); margin-bottom:0.5rem; }
+    .checkin-menu { font-size:0.85rem; color:var(--paja); margin-bottom:2rem; opacity:0.9; }
+    .checkin-vic { height:160px; filter:drop-shadow(0 0 20px rgba(39,174,96,0.4)); animation:vic-float 2s ease-in-out infinite; margin-bottom:1.5rem; }
+
+    /* ── TOAST ── */
+    .toast { position:fixed; top:1rem; left:50%; transform:translateX(-50%); z-index:200; background:rgba(139,26,26,0.95); border:1px solid rgba(192,57,43,0.5); border-radius:3px; padding:0.65rem 1.1rem; font-size:0.8rem; color:#f5d5d5; max-width:320px; width:90%; text-align:center; opacity:0; pointer-events:none; transition:opacity 0.3s; }
+    .toast.visible { opacity:1; }
+
+    .spinner { width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,0.3); border-top-color:white; animation:spin 0.7s linear infinite; display:none; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    @keyframes entrar { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  </style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <img src="img/vic_senalando.png" class="login-vic" alt="Vic">
+  <div class="login-card">
+    <div class="login-titulo">Acceso · Puerta</div>
+    <div class="login-sub">Solo staff autorizado</div>
+    <div class="campo">
+      <label>Contraseña</label>
+      <input type="password" id="loginPass" placeholder="••••••••"
+        onkeydown="if(event.key==='Enter') entrarPuerta()">
+    </div>
+    <button class="btn btn-rojo" onclick="entrarPuerta()">
+      <div class="spinner" id="spinnerLogin"></div>
+      <span id="txtLogin">🚪 Entrar</span>
+    </button>
+  </div>
+</div>
+
+<!-- APP PRINCIPAL -->
+<div class="app" id="appPuerta">
+
+  <div class="app-header">
+    <div class="header-top">
+      <div class="header-titulo">🚪 Puerta · Yiha!</div>
+      <button class="btn-salir" onclick="salir()">Salir</button>
+    </div>
+    <div class="contadores">
+      <div class="contador cnt-presentes">
+        <div class="contador-num" id="cntPresentes">0</div>
+        <div class="contador-label">Presentes</div>
+      </div>
+      <div class="contador cnt-total">
+        <div class="contador-num" id="cntTotal">0</div>
+        <div class="contador-label">Confirmados</div>
+      </div>
+      <div class="contador cnt-falta">
+        <div class="contador-num" id="cntFalta">0</div>
+        <div class="contador-label">Faltan</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="busqueda-wrap">
+    <div class="busqueda-input-wrap">
+      <input type="text" class="busqueda-input" id="busquedaInput"
+        placeholder="Buscar por nombre o apellido..."
+        oninput="buscar(this.value)"
+        autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="busqueda-clear" id="busquedaClear" onclick="limpiarBusqueda()">✕</button>
+    </div>
+  </div>
+
+  <div class="resultados" id="resultados">
+    <div class="empty-state">
+      <div class="empty-icon">🤠</div>
+      <div class="empty-txt">Escribí un nombre para buscar</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- OVERLAY CHECK-IN -->
+<div class="overlay-checkin" id="overlayCheckin">
+  <img src="img/vic_sombrero.png" class="checkin-vic" alt="Vic" id="checkinVic">
+  <div class="checkin-icono" id="checkinIcono">✅</div>
+  <div class="checkin-nombre" id="checkinNombre">---</div>
+  <div class="checkin-sub" id="checkinSub">¡Bienvenido!</div>
+  <div class="checkin-menu" id="checkinMenu"></div>
+  <button class="btn btn-verde" style="max-width:280px;width:100%" onclick="cerrarCheckin()">
+    Continuar →
+  </button>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
+
+let todasLasPersonas = [];
+let menus = [];
+let passwordAdmin = '';
+
+// ── LOGIN ────────────────────────────────────────────
+async function entrarPuerta() {
+  const pass = document.getElementById('loginPass').value.trim();
+  if (!pass) { mostrarToast('Ingresá la contraseña'); return; }
+
+  document.getElementById('spinnerLogin').style.display = 'block';
+  document.getElementById('txtLogin').textContent = 'Verificando...';
+
+  try {
+    // Verificamos contra el config
+    const res = await fetch(`${API}?action=config_admin&password=${encodeURIComponent(pass)}`);
+    const data = await res.json();
+
+    if (!data.ok) { mostrarToast(data.error || 'Contraseña incorrecta'); return; }
+
+    passwordAdmin = pass;
+    await cargarPersonas();
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appPuerta').style.display = 'flex';
+    document.getElementById('busquedaInput').focus();
+
+  } catch(e) {
+    mostrarToast('Error de conexión');
+  } finally {
+    document.getElementById('spinnerLogin').style.display = 'none';
+    document.getElementById('txtLogin').textContent = '🚪 Entrar';
+  }
+}
+
+// ── CARGAR PERSONAS ───────────────────────────────────
+async function cargarPersonas() {
+  try {
+    const [resPersonas, resMenus] = await Promise.all([
+      fetch(`${API}?action=personas_evento&password=${encodeURIComponent(passwordAdmin)}`),
+      fetch(`${API}?action=menus`)
+    ]);
+    const [dPersonas, dMenus] = await Promise.all([resPersonas.json(), resMenus.json()]);
+
+    if (dPersonas.ok) {
+      todasLasPersonas = dPersonas.personas || [];
+      actualizarContadores();
+    }
+    if (dMenus.ok) menus = dMenus.menus || [];
+
+  } catch(e) { mostrarToast('Error cargando datos'); }
+}
+
+function actualizarContadores() {
+  const confirmados = todasLasPersonas.filter(p => p.estado === 'confirmado');
+  const presentes = confirmados.filter(p => p.asistio === 'SI');
+  document.getElementById('cntPresentes').textContent = presentes.length;
+  document.getElementById('cntTotal').textContent = confirmados.length;
+  document.getElementById('cntFalta').textContent = confirmados.length - presentes.length;
+}
+
+// ── BÚSQUEDA ──────────────────────────────────────────
+function buscar(query) {
+  const q = query.trim().toLowerCase();
+  document.getElementById('busquedaClear').style.display = q ? 'block' : 'none';
+
+  const cont = document.getElementById('resultados');
+
+  if (!q) {
+    cont.innerHTML = `<div class="empty-state"><div class="empty-icon">🤠</div><div class="empty-txt">Escribí un nombre para buscar</div></div>`;
+    return;
+  }
+
+  const resultados = todasLasPersonas.filter(p => {
+    if (p.estado === 'baja') return false;
+    const fullName = normalizar(p.nombre + ' ' + p.apellido);
+    const nombre = normalizar(p.nombre);
+    const apellido = normalizar(p.apellido);
+    return fullName.includes(normalizar(q)) || nombre.includes(normalizar(q)) || apellido.includes(normalizar(q));
+  });
+
+  if (resultados.length === 0) {
+    cont.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><div class="empty-txt">No encontramos a nadie con ese nombre</div></div>`;
+    return;
+  }
+
+  cont.innerHTML = '';
+  resultados.forEach(p => {
+    const menuNombre = menus.find(m => String(m.id) === String(p.menu_id))?.nombre || '';
+    const presente = p.asistio === 'SI';
+    const confirmado = p.estado === 'confirmado';
+
+    const card = document.createElement('div');
+    card.className = 'resultado-card' + (presente ? ' presente' : '');
+    card.onclick = () => !presente && confirmado ? checkIn(p) : mostrarYaPresente(p);
+
+    card.innerHTML = `
+      <div class="res-nombre">${p.nombre} ${p.apellido}</div>
+      <div class="res-info">
+        ${menuNombre ? `<span class="res-tag">🍽 ${menuNombre}</span>` : ''}
+        ${p.escuela_nombre ? `<span class="res-tag">🏫 ${p.escuela_nombre}</span>` : ''}
+        ${presente ? `<span class="res-tag res-tag-verde">✅ Presente</span>` : ''}
+        ${!confirmado ? `<span class="res-tag" style="color:#f08080">⚠️ ${p.estado.replace('_',' ')}</span>` : ''}
+      </div>
+      ${presente ? '<div class="res-check">✅</div>' : (confirmado ? '<div class="res-check" style="opacity:0.3">○</div>' : '')}
+    `;
+    cont.appendChild(card);
+  });
+}
+
+function limpiarBusqueda() {
+  document.getElementById('busquedaInput').value = '';
+  document.getElementById('busquedaClear').style.display = 'none';
+  buscar('');
+  document.getElementById('busquedaInput').focus();
+}
+
+// ── CHECK-IN ──────────────────────────────────────────
+async function checkIn(persona) {
+  try {
+    const res = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'checkin',
+        persona_id: persona.id,
+        password: passwordAdmin
+      })
+    });
+    const data = await res.json();
+    if (!data.ok) { mostrarToast(data.error); return; }
+
+    // Actualizar local
+    const idx = todasLasPersonas.findIndex(p => p.id === persona.id);
+    if (idx !== -1) todasLasPersonas[idx].asistio = 'SI';
+    actualizarContadores();
+
+    // Mostrar overlay de éxito
+    const menuNombre = menus.find(m => String(m.id) === String(persona.menu_id))?.nombre || '';
+    mostrarCheckin(persona.nombre + ' ' + persona.apellido, menuNombre, false);
+
+    // Refrescar resultados
+    buscar(document.getElementById('busquedaInput').value);
+
+  } catch(e) { mostrarToast('Error al registrar asistencia'); }
+}
+
+function mostrarYaPresente(persona) {
+  if (persona.estado !== 'confirmado') {
+    mostrarToast(`Esta persona está ${persona.estado.replace('_',' ')} — no puede ingresar`);
+    return;
+  }
+  const menuNombre = menus.find(m => String(m.id) === String(persona.menu_id))?.nombre || '';
+  mostrarCheckin(persona.nombre + ' ' + persona.apellido, menuNombre, true);
+}
+
+function mostrarCheckin(nombre, menu, yaPresente) {
+  const overlay = document.getElementById('overlayCheckin');
+  overlay.className = 'overlay-checkin ' + (yaPresente ? 'ya' : 'ok');
+  document.getElementById('checkinIcono').textContent = yaPresente ? '⚠️' : '✅';
+  document.getElementById('checkinNombre').textContent = nombre;
+  document.getElementById('checkinSub').textContent = yaPresente ? '¡Ya registrado anteriormente!' : '¡Bienvenido al cumple!';
+  document.getElementById('checkinMenu').textContent = menu ? '🍽 ' + menu : '';
+  overlay.classList.add('visible');
+
+  if (!yaPresente) setTimeout(cerrarCheckin, 3000);
+}
+
+function cerrarCheckin() {
+  document.getElementById('overlayCheckin').classList.remove('visible');
+  document.getElementById('busquedaInput').focus();
+}
+
+// ── HELPERS ───────────────────────────────────────────
+function normalizar(txt) {
+  return String(txt||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
+function salir() {
+  if (confirm('¿Salir de la app de puerta?')) {
+    passwordAdmin = '';
+    todasLasPersonas = [];
+    document.getElementById('loginPass').value = '';
+    document.getElementById('appPuerta').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+  }
+}
+
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('visible');
+  setTimeout(() => t.classList.remove('visible'), 3500);
+}
+</script>
+</body>
+</html>
