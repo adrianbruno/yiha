@@ -181,6 +181,7 @@
   <div class="exito-id-label">Tu ID de grupo</div>
   <div class="exito-id" id="exitoId">---</div>
   <p class="exito-msg" id="exitoMsg">Guardá este ID, lo vas a necesitar para todo.</p>
+  <p style="font-size:0.75rem;color:var(--paja);opacity:0.85;max-width:320px;line-height:1.5;margin-bottom:0.75rem">Envianos tu registro por WhatsApp, así después nos mandás el comprobante por ahí mismo.</p>
   <a href="#" class="exito-wa" id="exitoWa" target="_blank">📱 Enviar datos por WhatsApp</a>
   <a href="panel.html" class="exito-panel">Ir a mi panel →</a>
 </div>
@@ -345,7 +346,7 @@ async function cargarDatos() {
     if (dConfig.ok) {
       precioEntrada = Number(dConfig.config.precio_entrada) || 0;
       aliasTransferencia = dConfig.config.alias_transferencia || '(a definir)';
-      whatsappEvento = dConfig.config.whatsapp_evento || '';
+      whatsappEvento = String(dConfig.config.whatsapp_evento || '');
       document.getElementById('resAlias').textContent = aliasTransferencia;
       document.getElementById('resPrecio').textContent = '$' + precioEntrada.toLocaleString('es-AR');
       actualizarResumen();
