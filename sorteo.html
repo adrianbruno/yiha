@@ -15,7 +15,6 @@
     .stars{position:fixed;inset:0;z-index:1;pointer-events:none}
     .star{position:absolute;background:white;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite alternate;animation-delay:var(--delay)}
     @keyframes twinkle{from{opacity:0.1}to{opacity:1}}
-    .pradera{position:fixed;bottom:0;left:0;right:0;z-index:2;pointer-events:none}
     .screen{position:fixed;inset:0;z-index:10;display:none}
     .screen.active{display:flex}
 
@@ -48,25 +47,29 @@
 
     #screenSorteo{flex-direction:column;align-items:center;justify-content:center}
     #canvas{position:absolute;inset:0;z-index:3}
-    .nombre-flotante{position:absolute;z-index:7;pointer-events:none;font-family:'Josefin Sans',sans-serif;font-weight:600;color:white;text-align:center;line-height:1.1;text-shadow:0 1px 4px rgba(0,0,0,0.9);transform:translate(-50%,-50%);white-space:nowrap;overflow:hidden}
-    .premio-actual{position:absolute;top:3%;left:50%;transform:translateX(-50%);z-index:6;text-align:center;background:linear-gradient(160deg,rgba(61,31,0,0.9),rgba(26,10,0,0.95));border:1px solid rgba(201,146,42,0.4);border-radius:6px;padding:0.75rem 2rem;backdrop-filter:blur(12px);white-space:nowrap}
-    .premio-actual-label{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);opacity:0.7}
+    .nombre-flotante{position:absolute;z-index:7;pointer-events:none;font-family:'Josefin Sans',sans-serif;font-weight:700;color:white;text-align:center;line-height:1;text-shadow:0 1px 4px rgba(0,0,0,0.95);transform:translate(-50%,-50%);white-space:nowrap;overflow:hidden}
+    .premio-actual{position:absolute;top:2%;left:50%;transform:translateX(-50%);z-index:6;text-align:center;background:linear-gradient(160deg,rgba(61,31,0,0.9),rgba(26,10,0,0.95));border:1px solid rgba(201,146,42,0.4);border-radius:6px;padding:0.6rem 2rem;backdrop-filter:blur(12px);white-space:nowrap}
+    .premio-actual-label{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);opacity:0.7}
     .premio-actual-nombre{font-family:'Rye',serif;font-size:clamp(1.2rem,3vw,2rem);color:var(--dorado-claro)}
-    .vic-sorteo-izq{position:absolute;bottom:0;left:1%;z-index:5;height:clamp(160px,18vw,260px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
-    .vic-sorteo-der{position:absolute;bottom:0;right:1%;z-index:5;height:clamp(160px,18vw,260px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out 1s infinite;transform:scaleX(-1)}
-    .btn-sortear-wrap{position:absolute;bottom:3%;left:50%;transform:translateX(-50%);z-index:8}
-    .participantes-badge{position:absolute;top:3%;right:2%;z-index:6;background:rgba(26,10,0,0.8);border:1px solid rgba(201,146,42,0.3);border-radius:4px;padding:0.6rem 1rem;text-align:center}
-    .part-num{font-family:'Rye',serif;font-size:1.8rem;color:var(--dorado-claro);line-height:1}
-    .part-label{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--arena);opacity:0.7}
-
-    /* Nombre eliminado que vuela */
+    .vic-sorteo-izq{position:absolute;bottom:0;left:0;z-index:5;height:clamp(130px,14vw,200px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
+    .vic-sorteo-der{position:absolute;bottom:0;right:0;z-index:5;height:clamp(130px,14vw,200px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out 1s infinite;transform:scaleX(-1)}
+    .btn-sortear-wrap{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);z-index:8}
+    .participantes-badge{position:absolute;top:2%;right:1.5%;z-index:6;background:rgba(26,10,0,0.85);border:1px solid rgba(201,146,42,0.3);border-radius:4px;padding:0.5rem 0.8rem;text-align:center}
+    .part-num{font-family:'Rye',serif;font-size:1.6rem;color:var(--dorado-claro);line-height:1}
+    .part-label{font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.7}
+    .eliminacion-counter{position:absolute;top:2%;left:1.5%;z-index:6;background:rgba(26,10,0,0.85);border:1px solid rgba(192,57,43,0.3);border-radius:4px;padding:0.5rem 0.8rem;text-align:center;display:none}
+    .elim-num{font-family:'Rye',serif;font-size:1.6rem;color:#f08080;line-height:1}
+    .elim-label{font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.7}
     .nombre-eliminado{position:absolute;z-index:9;pointer-events:none;font-family:'Rye',serif;color:var(--dorado-claro);text-shadow:0 0 10px rgba(240,192,64,0.6);opacity:1;transition:all 0.8s ease-out;white-space:nowrap}
     .nombre-eliminado.volando{opacity:0;transform:translateY(-120px) scale(0.5)}
 
-    /* Contador de eliminación */
-    .eliminacion-counter{position:absolute;top:3%;left:2%;z-index:6;background:rgba(26,10,0,0.8);border:1px solid rgba(192,57,43,0.3);border-radius:4px;padding:0.6rem 1rem;text-align:center;display:none}
-    .elim-num{font-family:'Rye',serif;font-size:1.5rem;color:#f08080;line-height:1}
-    .elim-label{font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.7}
+    /* SOMBRERO GRANDE */
+    .sombrero-container{position:absolute;bottom:8%;left:50%;transform:translateX(-50%);z-index:4;pointer-events:none}
+    .sombrero-container.shaking{animation:shake 0.3s linear infinite}
+    .sombrero-container.shaking-hard{animation:shake-hard 0.25s linear infinite}
+
+    /* FINALISTAS */
+    .finalistas-label{position:absolute;top:12%;left:50%;transform:translateX(-50%);z-index:9;font-family:'Rye',serif;font-size:clamp(1.5rem,4vw,2.5rem);color:var(--dorado-claro);text-shadow:0 0 30px rgba(240,192,64,0.6);display:none;animation:entrar 0.5s ease both}
 
     #screenGanador{flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:1.5rem}
     .ganador-vic{height:clamp(180px,20vw,260px);filter:drop-shadow(0 0 40px rgba(240,192,64,0.4));animation:vic-float 2.5s ease-in-out infinite}
@@ -95,27 +98,18 @@
     @keyframes vic-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
     @keyframes entrar{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     @keyframes confetti-caer{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
-    @keyframes shake{0%,100%{transform:translateX(-50%) rotate(0)}10%{transform:translateX(-50%) rotate(-3deg)}20%{transform:translateX(-50%) rotate(3deg)}30%{transform:translateX(-50%) rotate(-4deg)}40%{transform:translateX(-50%) rotate(4deg)}50%{transform:translateX(-50%) rotate(-3deg)}60%{transform:translateX(-50%) rotate(3deg)}70%{transform:translateX(-50%) rotate(-2deg)}80%{transform:translateX(-50%) rotate(2deg)}90%{transform:translateX(-50%) rotate(-1deg)}}
-    @keyframes shake-hard{0%,100%{transform:translateX(-50%) rotate(0)}10%{transform:translateX(-50%) rotate(-6deg) translateY(-5px)}20%{transform:translateX(-50%) rotate(6deg) translateY(3px)}30%{transform:translateX(-50%) rotate(-7deg) translateY(-4px)}40%{transform:translateX(-50%) rotate(7deg) translateY(5px)}50%{transform:translateX(-50%) rotate(-5deg) translateY(-3px)}60%{transform:translateX(-50%) rotate(5deg) translateY(4px)}70%{transform:translateX(-50%) rotate(-4deg)}80%{transform:translateX(-50%) rotate(4deg)}90%{transform:translateX(-50%) rotate(-2deg)}}
-    @keyframes glow-pulse{0%,100%{box-shadow:0 0 20px rgba(240,192,64,0.4)}50%{box-shadow:0 0 50px rgba(240,192,64,0.8),0 0 80px rgba(240,192,64,0.3)}}
+    @keyframes shake{0%,100%{transform:translateX(-50%) rotate(0)}15%{transform:translateX(-50%) rotate(-3deg)}30%{transform:translateX(-50%) rotate(3deg)}45%{transform:translateX(-50%) rotate(-4deg)}60%{transform:translateX(-50%) rotate(4deg)}75%{transform:translateX(-50%) rotate(-2deg)}90%{transform:translateX(-50%) rotate(2deg)}}
+    @keyframes shake-hard{0%,100%{transform:translateX(-50%) rotate(0)}12%{transform:translateX(-50%) rotate(-7deg) translateY(-6px)}25%{transform:translateX(-50%) rotate(7deg) translateY(4px)}37%{transform:translateX(-50%) rotate(-8deg) translateY(-5px)}50%{transform:translateX(-50%) rotate(8deg) translateY(6px)}62%{transform:translateX(-50%) rotate(-6deg)}75%{transform:translateX(-50%) rotate(6deg)}87%{transform:translateX(-50%) rotate(-3deg)}}
 
     .toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(139,26,26,0.95);border:1px solid rgba(192,57,43,0.5);border-radius:3px;padding:0.75rem 1.25rem;font-size:0.85rem;color:#f5d5d5;max-width:400px;text-align:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
     .toast.visible{opacity:1}
     .spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);border-top-color:white;animation:spin 0.7s linear infinite;display:none}
     @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* Sombrero dado vuelta como contenedor */
-    .sombrero-container{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);z-index:4;pointer-events:none}
-    .sombrero-container.shaking{animation:shake 0.3s linear infinite}
-    .sombrero-container.shaking-hard{animation:shake-hard 0.25s linear infinite}
   </style>
 </head>
 <body>
 <div class="sky"></div>
 <div class="stars" id="stars"></div>
-<svg class="pradera" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M0,120 L0,80 Q80,55 140,70 Q200,85 260,60 Q320,35 400,55 Q480,75 560,45 Q620,25 680,50 Q740,75 820,40 Q880,15 940,45 Q1000,75 1080,40 Q1140,15 1200,45 Q1260,75 1340,55 Q1390,42 1440,60 L1440,120 Z" fill="#030a03" opacity="0.98"/>
-</svg>
 <div class="toast" id="toast"></div>
 
 <div class="screen active" id="screenLogin">
@@ -123,18 +117,9 @@
   <div class="login-card">
     <div class="login-titulo">¡Sorteo!</div>
     <div class="login-sub">Cumple 221countryLP · 3 Oct 2026</div>
-    <div class="campo"><label>Contraseña</label>
-      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') entrarSorteo()">
-    </div>
-    <button class="btn btn-dorado" style="width:100%" onclick="entrarSorteo()">
-      <div class="spinner" id="spinnerLogin"></div>
-      <span id="txtLogin">🎉 Entrar al sorteo</span>
-    </button>
-    <details class="test-toggle"><summary>Modo test</summary>
-      <div class="campo"><label>Simular participantes</label>
-        <input type="number" id="testCantidad" value="0" min="0" max="200">
-      </div>
-    </details>
+    <div class="campo"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') entrarSorteo()"></div>
+    <button class="btn btn-dorado" style="width:100%" onclick="entrarSorteo()"><div class="spinner" id="spinnerLogin"></div><span id="txtLogin">🎉 Entrar al sorteo</span></button>
+    <details class="test-toggle"><summary>Modo test</summary><div class="campo"><label>Simular participantes</label><input type="number" id="testCantidad" value="0" min="0" max="300"></div></details>
   </div>
 </div>
 
@@ -149,48 +134,33 @@
   <div class="premio-actual"><div class="premio-actual-label">Sorteando</div><div class="premio-actual-nombre" id="premioActualNombre">---</div></div>
   <div class="participantes-badge"><div class="part-num" id="partNum">0</div><div class="part-label">Participantes</div></div>
   <div class="eliminacion-counter" id="elimCounter"><div class="elim-num" id="elimNum">0</div><div class="elim-label">Quedan</div></div>
+  <div class="finalistas-label" id="finalistasLabel">¡Los 5 finalistas!</div>
   <canvas id="canvas"></canvas>
 
-  <!-- Sombrero dado vuelta (boca arriba) -->
   <div class="sombrero-container" id="sombreroContainer">
-    <svg id="sombreroSvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg">
-      <!-- Ala (abajo, invertida) -->
-      <ellipse cx="250" cy="290" rx="240" ry="28" fill="#2a1a08" stroke="#6b3a1f" stroke-width="2"/>
-      <ellipse cx="250" cy="286" rx="240" ry="24" fill="#3d2510"/>
-      <!-- Copa (cuerpo, abierta arriba) -->
-      <path d="M80 280 Q70 180 85 100 Q100 40 250 35 Q400 40 415 100 Q430 180 420 280 Z" fill="#2a1a08"/>
-      <path d="M86 278 Q76 180 90 102 Q104 44 250 40 Q396 44 410 102 Q424 180 414 278 Z" fill="#3d2510"/>
-      <!-- Banda decorativa -->
-      <path d="M88 120 Q100 110 250 107 Q400 110 412 120 Q400 130 250 133 Q100 130 88 120 Z" fill="#c9922a" opacity="0.7"/>
-      <!-- Hebilla -->
-      <rect x="234" y="112" width="32" height="14" rx="3" fill="#f0c040"/>
-      <rect x="240" y="115" width="20" height="8" rx="2" fill="#c9922a"/>
-      <!-- Boca abierta (elipse superior transparente para ver las bolitas) -->
-      <ellipse cx="250" cy="38" rx="155" ry="18" fill="rgba(10,5,0,0.5)" stroke="#6b3a1f" stroke-width="1.5"/>
-      <!-- Brillos -->
-      <path d="M108 260 Q100 180 110 120" stroke="rgba(240,192,64,0.1)" stroke-width="3" fill="none"/>
-      <ellipse cx="250" cy="280" rx="160" ry="10" fill="rgba(240,192,64,0.05)"/>
+    <svg id="sombreroSvg" viewBox="0 0 600 360" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="300" cy="340" rx="290" ry="20" fill="rgba(0,0,0,0.4)"/>
+      <ellipse cx="300" cy="330" rx="280" ry="28" fill="#2a1a08" stroke="#6b3a1f" stroke-width="2"/>
+      <ellipse cx="300" cy="326" rx="280" ry="24" fill="#3d2510"/>
+      <path d="M70 320 Q55 200 75 110 Q95 35 300 30 Q505 35 525 110 Q545 200 530 320 Z" fill="#2a1a08"/>
+      <path d="M78 318 Q62 200 82 112 Q100 40 300 36 Q500 40 518 112 Q538 200 522 318 Z" fill="#3d2510"/>
+      <path d="M80 130 Q95 118 300 115 Q505 118 520 130 Q505 142 300 145 Q95 142 80 130 Z" fill="#c9922a" opacity="0.6"/>
+      <rect x="282" y="122" width="36" height="14" rx="3" fill="#f0c040" opacity="0.8"/>
+      <rect x="288" y="126" width="24" height="8" rx="2" fill="#c9922a"/>
+      <ellipse cx="300" cy="34" rx="210" ry="22" fill="rgba(10,5,0,0.6)" stroke="#6b3a1f" stroke-width="1.5"/>
+      <path d="M108 300 Q95 200 108 130" stroke="rgba(240,192,64,0.08)" stroke-width="4" fill="none"/>
     </svg>
   </div>
 
   <img src="img/vic_bailando_juntos.png" class="vic-sorteo-izq" alt="Vic">
   <img src="img/vic_juntos_pulgar.png" class="vic-sorteo-der" alt="Vic">
-  <div class="btn-sortear-wrap">
-    <button class="btn btn-dorado btn-grande" id="btnSortear" onclick="iniciarSorteo()">
-      <div class="spinner" id="spinnerSorteo"></div>
-      <span id="txtSortear">🤠 ¡Sortear!</span>
-    </button>
-  </div>
+  <div class="btn-sortear-wrap"><button class="btn btn-dorado btn-grande" id="btnSortear" onclick="iniciarSorteo()"><div class="spinner" id="spinnerSorteo"></div><span id="txtSortear">🤠 ¡Sortear!</span></button></div>
 </div>
 
 <div class="screen" id="screenGanador">
   <div class="confetti-wrap" id="confettiWrap"></div>
   <img src="img/vic_juntos_highfive.png" class="ganador-vic" alt="Vic">
-  <div class="ganador-cartel">
-    <div class="ganador-label">¡Y el ganador es...!</div>
-    <div class="ganador-premio" id="ganadorPremio">Premio</div>
-    <div class="ganador-nombre" id="ganadorNombre">Nombre</div>
-  </div>
+  <div class="ganador-cartel"><div class="ganador-label">¡Y el ganador es...!</div><div class="ganador-premio" id="ganadorPremio">Premio</div><div class="ganador-nombre" id="ganadorNombre">Nombre</div></div>
   <div class="ganador-botones">
     <button class="btn btn-verde btn-grande" onclick="marcarEntregado()">✅ Premio entregado</button>
     <button class="btn btn-rojo" onclick="sortearDeNuevo()">🔄 Sortear de nuevo</button>
@@ -212,11 +182,7 @@ async function entrarSorteo(){
   testMode=parseInt(document.getElementById('testCantidad').value)||0;
   setLoading('spinnerLogin','txtLogin',true,'Entrando...');
   try{
-    const[rC,rP,rPe]=await Promise.all([
-      fetch(`${API}?action=config_admin&password=${encodeURIComponent(pass)}`),
-      fetch(`${API}?action=premios_sorteo&password=${encodeURIComponent(pass)}`),
-      fetch(`${API}?action=personas_sorteo&password=${encodeURIComponent(pass)}`)
-    ]);
+    const[rC,rP,rPe]=await Promise.all([fetch(`${API}?action=config_admin&password=${encodeURIComponent(pass)}`),fetch(`${API}?action=premios_sorteo&password=${encodeURIComponent(pass)}`),fetch(`${API}?action=personas_sorteo&password=${encodeURIComponent(pass)}`)]);
     const[dC,dP,dPe]=await Promise.all([rC.json(),rP.json(),rPe.json()]);
     if(!dC.ok){mostrarToast(dC.error||'Contraseña incorrecta');return}
     password=pass;premios=dP.premios||[];personas=dPe.personas||[];
@@ -225,8 +191,7 @@ async function entrarSorteo(){
       const apes=['García','López','Martínez','Rodríguez','Pérez','González','Sánchez','Romero','Gómez','Torres','Díaz','Fernández','Álvarez','Moreno','Ruiz','Acosta','Molina','Castro','Herrera','Medina','Ortiz','Silva','Ríos','Flores','Benítez'];
       personas=[];for(let i=0;i<testMode;i++)personas.push({id:'T-'+i,nombre:noms[i%noms.length],apellido:apes[i%apes.length]});
     }
-    pool=[...personas];
-    if(!personas.length){mostrarToast('No hay participantes');return}
+    pool=[...personas];if(!personas.length){mostrarToast('No hay participantes');return}
     mostrarPantalla('screenPremios');renderPremios();
   }catch(e){mostrarToast('Error de conexión')}
   finally{setLoading('spinnerLogin','txtLogin',false,'🎉 Entrar al sorteo')}
@@ -242,6 +207,7 @@ function seleccionarPremio(p){
   document.getElementById('premioActualNombre').textContent=p.nombre;
   document.getElementById('partNum').textContent=pool.length;
   document.getElementById('elimCounter').style.display='none';
+  document.getElementById('finalistasLabel').style.display='none';
   limpiarBolitas();mostrarPantalla('screenSorteo');
   sizeSombrero();iniciarFisica();
   document.getElementById('btnSortear').disabled=false;
@@ -252,9 +218,8 @@ function seleccionarPremio(p){
 
 function sizeSombrero(){
   const W=window.innerWidth;
-  const sw=Math.min(W*0.38,520);
-  const el=document.getElementById('sombreroContainer');
-  el.style.width=sw+'px';
+  const sw=Math.min(W*0.58,700);
+  document.getElementById('sombreroContainer').style.width=sw+'px';
 }
 
 function limpiarBolitas(){bolitas.forEach(b=>{if(b.elem)b.elem.remove()});bolitas=[];}
@@ -265,60 +230,74 @@ function iniciarFisica(){
   canvas.width=W;canvas.height=H;canvas.getContext('2d').clearRect(0,0,W,H);
   limpiarBolitas();
 
-  engine=Matter.Engine.create({gravity:{y:0.6}});
+  engine=Matter.Engine.create({gravity:{y:0.55}});
   render=Matter.Render.create({element:document.getElementById('screenSorteo'),canvas,engine,options:{width:W,height:H,background:'transparent',wireframes:false}});
 
-  // Sombrero dimensions matching SVG position
+  // Sombrero: grande, centrado
   const somEl=document.getElementById('sombreroContainer');
   const sw=parseFloat(somEl.style.width);
-  const sh=sw*0.64;
+  const sh=sw*0.6;
   const cx=W/2;
   const somBottom=H*0.88;
-  const somTop=somBottom-sh;
 
-  // Paredes del sombrero (invisible)
   const wo={isStatic:true,render:{fillStyle:'transparent'},friction:0.2,restitution:0.3};
-  // Piso del sombrero
-  Matter.World.add(engine.world,Matter.Bodies.rectangle(cx,somBottom,sw*0.85,12,wo));
-  // Paredes laterales curvadas (simuladas con segmentos)
-  const segments=6;
-  for(let i=0;i<segments;i++){
-    const t=i/segments;const t2=(i+1)/segments;
-    const topW=sw*0.55;const botW=sw*0.43;
-    const lx=cx-(botW+(topW-botW)*t)/2;const ly=somBottom-sh*t;
-    Matter.World.add(engine.world,Matter.Bodies.rectangle(lx,ly,10,sh/segments+8,{...wo,angle:0.12-t*0.06}));
-    const rx=cx+(botW+(topW-botW)*t)/2;
-    Matter.World.add(engine.world,Matter.Bodies.rectangle(rx,ly,10,sh/segments+8,{...wo,angle:-(0.12-t*0.06)}));
+  // Piso ancho
+  Matter.World.add(engine.world,Matter.Bodies.rectangle(cx,somBottom+5,sw*0.72,14,wo));
+  // Paredes curvadas del sombrero (más segmentos para más precisión)
+  const segs=8;
+  for(let i=0;i<segs;i++){
+    const t=i/segs;
+    const topHalfW=sw*0.68;const botHalfW=sw*0.36;
+    const halfW=botHalfW+(topHalfW-botHalfW)*t;
+    const y=somBottom-sh*t;
+    const segH=sh/segs+10;
+    const ang=0.08-t*0.04;
+    Matter.World.add(engine.world,Matter.Bodies.rectangle(cx-halfW,y,12,segH,{...wo,angle:ang}));
+    Matter.World.add(engine.world,Matter.Bodies.rectangle(cx+halfW,y,12,segH,{...wo,angle:-ang}));
   }
-  // Pared pantalla
+  // Paredes y piso de la pantalla
   Matter.World.add(engine.world,Matter.Bodies.rectangle(-10,H/2,20,H*2,wo));
   Matter.World.add(engine.world,Matter.Bodies.rectangle(W+10,H/2,20,H*2,wo));
-  // Piso pantalla
-  Matter.World.add(engine.world,Matter.Bodies.rectangle(W/2,H+20,W*2,40,wo));
+  Matter.World.add(engine.world,Matter.Bodies.rectangle(W/2,H+30,W*2,60,wo));
 
   runner=Matter.Runner.create();Matter.Runner.run(runner,engine);Matter.Render.run(render);
 
-  const delay=Math.max(15,Math.min(80,2500/pool.length));
-  pool.forEach((p,i)=>setTimeout(()=>crearBolita(p,W,H,cx,sw*0.4),i*delay+300));
+  // Bolitas caen con delay
+  const delay=Math.max(10,Math.min(60,2000/pool.length));
+  const dropW=sw*0.5;
+  pool.forEach((p,i)=>setTimeout(()=>crearBolita(p,W,H,cx,dropW),i*delay+400));
 
   Matter.Events.on(render,'afterRender',()=>{bolitas.forEach(b=>{if(b.elem&&b.body){b.elem.style.left=b.body.position.x+'px';b.elem.style.top=b.body.position.y+'px'}})});
 }
 
 function crearBolita(p,W,H,cx,spread){
   const n=pool.length;
-  let r;if(n<=30)r=Math.min(24,W*0.02);else if(n<=60)r=Math.min(18,W*0.015);else if(n<=100)r=Math.min(14,W*0.012);else r=Math.min(10,W*0.009);
-  const x=cx-spread/2+Math.random()*spread;const y=-r-Math.random()*400;
-  const cols=['#8b1a1a','#3d1f00','#1a3a1a','#c9922a','#5c3210','#2a4a6a','#4a1a4a','#1a4a3a'];
+  let r;
+  if(n<=20)r=Math.min(28,W*0.022);
+  else if(n<=50)r=Math.min(20,W*0.016);
+  else if(n<=100)r=Math.min(15,W*0.013);
+  else if(n<=150)r=Math.min(12,W*0.01);
+  else r=Math.min(9,W*0.008);
+
+  const x=cx-spread/2+Math.random()*spread;
+  const y=-r-Math.random()*500;
+  const cols=['#8b1a1a','#3d1f00','#1a3a1a','#c9922a','#5c3210','#2a4a6a','#4a1a4a','#1a4a3a','#6b3a1f','#2d5a27'];
   const col=cols[Math.floor(Math.random()*cols.length)];
-  const body=Matter.Bodies.circle(x,y,r,{restitution:0.4,friction:0.3,density:0.003,render:{fillStyle:col,strokeStyle:'rgba(240,192,64,0.4)',lineWidth:1}});
+  const body=Matter.Bodies.circle(x,y,r,{restitution:0.35,friction:0.3,density:0.003,render:{fillStyle:col,strokeStyle:'rgba(240,192,64,0.35)',lineWidth:1}});
   body._pid=p.id;body._name=p.nombre+' '+p.apellido;
   Matter.World.add(engine.world,body);
+
   let elem=null;
-  if(r>13){elem=document.createElement('div');elem.className='nombre-flotante';elem.style.fontSize=Math.max(7,r*0.5)+'px';elem.style.width=(r*2.2)+'px';elem.textContent=p.nombre;document.getElementById('screenSorteo').appendChild(elem)}
-  bolitas.push({body,name:body._name,id:p.id,elem});
+  if(r>=12){
+    elem=document.createElement('div');elem.className='nombre-flotante';
+    elem.style.fontSize=Math.max(7,r*0.52)+'px';elem.style.width=(r*2.4)+'px';
+    elem.textContent=p.nombre;
+    document.getElementById('screenSorteo').appendChild(elem);
+  }
+  bolitas.push({body,name:body._name,id:p.id,elem,r});
 }
 
-// ── SORTEO CON ELIMINACIÓN ──────────────────────────
+// ── SORTEO CON ELIMINACIÓN Y FINAL DRAMÁTICO ─────────
 async function iniciarSorteo(){
   if(sorteando||pool.length===0)return;
   sorteando=true;
@@ -326,96 +305,130 @@ async function iniciarSorteo(){
   document.getElementById('spinnerSorteo').style.display='block';
   document.getElementById('txtSortear').textContent='Sorteando...';
 
-  // Elegir ganador ANTES de la animación
+  // Elegir ganador ANTES
   const idxGanador=Math.floor(Math.random()*pool.length);
   ganadorActual=pool[idxGanador];
-  const ganadorBodyId=ganadorActual.id;
+  const ganadorId=ganadorActual.id;
 
-  // Fase 1: sacudir suave (1.5s)
+  // FASE 1: Sacudir suave
   const somb=document.getElementById('sombreroContainer');
   somb.className='sombrero-container shaking';
-  bolitas.forEach(b=>{if(b.body)Matter.Body.applyForce(b.body,b.body.position,{x:(Math.random()-0.5)*0.04,y:-Math.random()*0.03})});
+  agitarBolitas(0.04,0.03);
   await sleep(1500);
 
-  // Fase 2: sacudir fuerte + eliminación rápida
+  // FASE 2: Sacudir fuerte + eliminación
   somb.className='sombrero-container shaking-hard';
-  const elimCounter=document.getElementById('elimCounter');
-  elimCounter.style.display='block';
+  const elimC=document.getElementById('elimCounter');
+  elimC.style.display='block';
 
-  // Preparar lista de eliminación (todos excepto el ganador, en orden aleatorio)
-  const aEliminar=bolitas.filter(b=>b.id!==ganadorBodyId);
-  shuffle(aEliminar);
+  // Preparar eliminación: todos menos el ganador + 4 finalistas aleatorios
+  const noGanador=bolitas.filter(b=>b.id!==ganadorId);
+  shuffle(noGanador);
 
-  const total=aEliminar.length;
+  // Reservar 4 finalistas (además del ganador = 5 total)
+  const finalistas4=noGanador.splice(0,Math.min(4,noGanador.length));
+  const aEliminar=noGanador; // el resto se elimina
+
   let quedan=bolitas.length;
 
-  for(let i=0;i<total;i++){
+  // Eliminar rápido hasta quedar 5
+  for(let i=0;i<aEliminar.length;i++){
     const b=aEliminar[i];
     quedan--;
     document.getElementById('elimNum').textContent=quedan;
 
-    // Velocidad: rápido al principio, lento al final
     let delay;
-    if(quedan>20)delay=40;
-    else if(quedan>10)delay=100;
-    else if(quedan>5)delay=300;
-    else if(quedan>3)delay=600;
-    else delay=1000;
+    if(quedan>50)delay=20;
+    else if(quedan>20)delay=40;
+    else if(quedan>10)delay=80;
+    else if(quedan>5)delay=200;
+    else delay=300;
 
-    // Fuerza de eyección hacia arriba
+    // Eyectar
     if(b.body){
-      const fx=(Math.random()-0.5)*0.15;
-      const fy=-0.12-Math.random()*0.08;
-      Matter.Body.applyForce(b.body,b.body.position,{x:fx,y:fy});
+      Matter.Body.applyForce(b.body,b.body.position,{x:(Math.random()-0.5)*0.18,y:-0.15-Math.random()*0.1});
     }
 
-    // Mostrar nombre que se elimina (últimos 10)
-    if(quedan<10){
-      const tag=document.createElement('div');
-      tag.className='nombre-eliminado';
-      tag.style.left=(b.body?b.body.position.x:window.innerWidth/2)+'px';
-      tag.style.top=(b.body?b.body.position.y:window.innerHeight/2)+'px';
-      tag.style.fontSize=quedan<5?'1.5rem':'1rem';
-      tag.textContent=b.name;
-      document.getElementById('screenSorteo').appendChild(tag);
-      setTimeout(()=>{tag.classList.add('volando')},50);
-      setTimeout(()=>tag.remove(),900);
+    // Mostrar nombre (últimos 15 eliminados)
+    if(quedan<15){
+      mostrarNombreEliminado(b);
     }
 
-    // Remover bolita después de un momento
-    setTimeout(()=>{
-      if(b.body)Matter.World.remove(engine.world,b.body);
-      if(b.elem)b.elem.remove();
-    },200);
+    setTimeout(()=>{if(b.body)Matter.World.remove(engine.world,b.body);if(b.elem)b.elem.remove()},250);
 
-    // Sacudir entre eliminaciones
-    if(quedan<10){
-      bolitas.filter(x=>x.id===ganadorBodyId).forEach(x=>{
-        if(x.body)Matter.Body.applyForce(x.body,x.body.position,{x:(Math.random()-0.5)*0.02,y:-Math.random()*0.015});
-      });
-    }
-
+    if(quedan<15)agitarBolitas(0.02,0.015);
     await sleep(delay);
   }
 
-  // Fase 3: solo queda el ganador
+  // ═══ FASE 3: ¡5 FINALISTAS! ═══
   somb.className='sombrero-container shaking';
-  await sleep(800);
-  somb.className='sombrero-container';
+  document.getElementById('finalistasLabel').style.display='block';
+  elimC.style.display='none';
 
-  // Hacer brillar la bolita ganadora
-  const bGanador=bolitas.find(b=>b.id===ganadorBodyId);
-  if(bGanador&&bGanador.body){
-    bGanador.body.render.fillStyle='#f0c040';
-    bGanador.body.render.strokeStyle='#fff';
-    bGanador.body.render.lineWidth=3;
+  // Hacer que las 5 bolitas restantes se vean grandes y con nombre
+  const finalistasIds=new Set([ganadorId,...finalistas4.map(b=>b.id)]);
+  bolitas.filter(b=>finalistasIds.has(b.id)).forEach(b=>{
+    if(b.body){
+      b.body.render.strokeStyle='#f0c040';
+      b.body.render.lineWidth=3;
+      // Si no tiene label, crear uno
+      if(!b.elem){
+        const elem=document.createElement('div');elem.className='nombre-flotante';
+        elem.style.fontSize='12px';elem.style.width='80px';
+        elem.textContent=b.name.split(' ')[0];
+        document.getElementById('screenSorteo').appendChild(elem);
+        b.elem=elem;
+      }else{
+        b.elem.style.fontSize='12px';
+        b.elem.style.color='#f0c040';
+      }
+    }
+  });
+
+  // Rebote dramático de los 5 (3 segundos)
+  for(let i=0;i<6;i++){
+    agitarBolitas(0.03,0.025);
+    await sleep(500);
   }
 
-  elimCounter.style.display='none';
-  await sleep(1200);
+  // FASE 4: pausa final
+  somb.className='sombrero-container';
+  document.getElementById('finalistasLabel').style.display='none';
+  await sleep(1000);
 
+  // Resaltar la bolita ganadora
+  const bGanador=bolitas.find(b=>b.id===ganadorId);
+  if(bGanador){
+    if(bGanador.body){
+      bGanador.body.render.fillStyle='#f0c040';
+      bGanador.body.render.strokeStyle='#fff';
+      bGanador.body.render.lineWidth=4;
+    }
+    if(bGanador.elem){
+      bGanador.elem.style.color='#f0c040';
+      bGanador.elem.style.fontSize='16px';
+      bGanador.elem.textContent=bGanador.name;
+      bGanador.elem.style.width='160px';
+    }
+  }
+
+  await sleep(2000);
   sorteando=false;
   mostrarGanador(ganadorActual);
+}
+
+function agitarBolitas(fx,fy){
+  bolitas.forEach(b=>{if(b.body&&!b.body.isStatic)Matter.Body.applyForce(b.body,b.body.position,{x:(Math.random()-0.5)*fx,y:-Math.random()*fy})});
+}
+
+function mostrarNombreEliminado(b){
+  const tag=document.createElement('div');tag.className='nombre-eliminado';
+  tag.style.left=(b.body?b.body.position.x:window.innerWidth/2)+'px';
+  tag.style.top=(b.body?b.body.position.y:window.innerHeight/2)+'px';
+  tag.style.fontSize='1.1rem';tag.textContent=b.name;
+  document.getElementById('screenSorteo').appendChild(tag);
+  setTimeout(()=>tag.classList.add('volando'),50);
+  setTimeout(()=>tag.remove(),900);
 }
 
 function mostrarGanador(p){
@@ -425,14 +438,10 @@ function mostrarGanador(p){
 }
 
 async function marcarEntregado(){
-  if(!ganadorActual.id.startsWith('T-')){
-    try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'entregado',password})});const d=await r.json();if(!d.ok){mostrarToast(d.error);return}}catch(e){mostrarToast('Error');return}
-  }
+  if(!ganadorActual.id.startsWith('T-')){try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'entregado',password})});const d=await r.json();if(!d.ok){mostrarToast(d.error);return}}catch(e){mostrarToast('Error');return}}
   pool=pool.filter(p=>p.id!==ganadorActual.id);premioActual._ganados=(premioActual._ganados||0)+1;
-  mostrarToast('¡Premio entregado! '+ganadorActual.nombre+' '+ganadorActual.apellido);
-  setTimeout(volverAPremios,1500);
+  mostrarToast('¡Premio entregado!');setTimeout(volverAPremios,1500);
 }
-
 async function sortearDeNuevo(){
   if(!ganadorActual.id.startsWith('T-')){try{await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'no_presente',password})})}catch(e){}}
   pool=pool.filter(p=>p.id!==ganadorActual.id);
@@ -442,14 +451,13 @@ async function sortearDeNuevo(){
   document.getElementById('btnSortear').disabled=false;document.getElementById('spinnerSorteo').style.display='none';
   document.getElementById('txtSortear').textContent='🤠 ¡Sortear de nuevo!';
   document.getElementById('sombreroContainer').className='sombrero-container';
+  document.getElementById('finalistasLabel').style.display='none';
   sizeSombrero();iniciarFisica();
 }
-
-function volverAPremios(){limpiarBolitas();limpiarConfetti();if(runner)Matter.Runner.stop(runner);if(render)Matter.Render.stop(render);if(engine)Matter.Engine.clear(engine);document.getElementById('sombreroContainer').className='sombrero-container';renderPremios();mostrarPantalla('screenPremios')}
+function volverAPremios(){limpiarBolitas();limpiarConfetti();if(runner)Matter.Runner.stop(runner);if(render)Matter.Render.stop(render);if(engine)Matter.Engine.clear(engine);document.getElementById('sombreroContainer').className='sombrero-container';document.getElementById('finalistasLabel').style.display='none';renderPremios();mostrarPantalla('screenPremios')}
 
 function lanzarConfetti(){const w=document.getElementById('confettiWrap');w.innerHTML='';const cs=['#f0c040','#c0392b','#27ae60','#2980b9','#f39c12','#8e44ad','#e8d5a3'];for(let i=0;i<150;i++){const c=document.createElement('div');const cl=cs[Math.floor(Math.random()*cs.length)];const sz=8+Math.random()*10;const l=Math.random()*100;const d=Math.random()*2;const dur=3+Math.random()*2;c.style.cssText=`position:absolute;top:-20px;left:${l}%;width:${Math.random()>0.5?sz:sz/2}px;height:${sz}px;background:${cl};border-radius:${Math.random()>0.5?'2px':'50%'};animation:confetti-caer ${dur}s ease-in ${d}s both;transform:rotate(${Math.random()*360}deg)`;w.appendChild(c)}}
 function limpiarConfetti(){document.getElementById('confettiWrap').innerHTML=''}
-
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 function mostrarPantalla(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
