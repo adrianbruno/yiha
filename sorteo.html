@@ -19,58 +19,55 @@
     .screen{position:fixed;inset:0;z-index:10;display:none}
     .screen.active{display:flex}
 
-    /* LOGIN */
     #screenLogin{flex-direction:column;align-items:center;justify-content:center;padding:2rem}
     .login-vic{height:220px;filter:drop-shadow(0 12px 30px rgba(0,0,0,0.7));animation:vic-float 3s ease-in-out infinite;margin-bottom:1.5rem}
     .login-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:2rem;width:100%;max-width:380px;backdrop-filter:blur(12px)}
     .login-titulo{font-family:'Rye',serif;font-size:1.5rem;color:var(--dorado-claro);text-align:center;margin-bottom:0.25rem;text-shadow:0 0 20px rgba(240,192,64,0.4)}
     .login-sub{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);text-align:center;margin-bottom:1.5rem;opacity:0.7}
     .campo label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.8;display:block;margin-bottom:0.3rem}
-    input[type=password],input[type=number]{background:rgba(26,10,0,0.7);border:1px solid var(--border);border-radius:3px;color:var(--hueso);font-family:'Josefin Sans',sans-serif;font-size:1rem;padding:0.8rem;width:100%;outline:none;transition:border-color 0.15s;margin-bottom:1rem}
+    input{background:rgba(26,10,0,0.7);border:1px solid var(--border);border-radius:3px;color:var(--hueso);font-family:'Josefin Sans',sans-serif;font-size:1rem;padding:0.8rem;width:100%;outline:none;transition:border-color 0.15s;margin-bottom:1rem;-webkit-appearance:none}
     input:focus{border-color:rgba(240,192,64,0.6);box-shadow:0 0 0 2px rgba(240,192,64,0.1)}
-
-    /* TEST MODE */
     .test-toggle{margin-top:0.5rem;padding:0.5rem 0.75rem;background:rgba(200,160,106,0.1);border:1px solid rgba(200,160,106,0.2);border-radius:4px}
     .test-toggle summary{font-size:0.7rem;color:var(--arena);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase}
     .test-toggle .campo{margin-top:0.5rem}
-    .test-toggle .campo label{font-size:0.6rem}
 
-    /* PREMIOS */
     #screenPremios{flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem;gap:2rem}
     .premios-titulo{font-family:'Rye',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--dorado-claro);text-align:center;text-shadow:0 0 40px rgba(240,192,64,0.5)}
     .premios-sub{font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);opacity:0.7}
     .premios-grid{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;max-width:900px;width:100%}
-    .premio-card{background:linear-gradient(160deg,rgba(61,31,0,0.8),rgba(26,10,0,0.9));border:1px solid rgba(201,146,42,0.3);border-radius:6px;padding:1.5rem 2rem;cursor:pointer;transition:all 0.2s;text-align:center;min-width:200px;flex:1;max-width:280px;backdrop-filter:blur(8px)}
+    .premio-card{background:linear-gradient(160deg,rgba(61,31,0,0.8),rgba(26,10,0,0.9));border:1px solid rgba(201,146,42,0.3);border-radius:6px;padding:1.5rem 2rem;cursor:pointer;transition:all 0.2s;text-align:center;min-width:200px;flex:1;max-width:280px}
     .premio-card:hover{border-color:var(--dorado);transform:translateY(-4px);box-shadow:0 12px 40px rgba(201,146,42,0.2)}
-    .premio-card.ganado{opacity:0.4;cursor:not-allowed;border-color:rgba(100,100,100,0.3)}
-    .premio-card.ganado:hover{transform:none;box-shadow:none}
+    .premio-card.ganado{opacity:0.4;cursor:not-allowed}.premio-card.ganado:hover{transform:none;box-shadow:none}
     .premio-orden{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--arena);opacity:0.6;margin-bottom:0.5rem}
     .premio-nombre{font-family:'Rye',serif;font-size:1.3rem;color:var(--dorado-claro);margin-bottom:0.25rem}
     .premio-desc{font-size:0.78rem;color:var(--paja);opacity:0.8;margin-bottom:0.75rem}
     .premio-ganadores{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.6}
-    .premio-badge-ganado{display:inline-block;background:rgba(39,174,96,0.2);border:1px solid rgba(39,174,96,0.4);border-radius:20px;padding:0.2rem 0.75rem;font-size:0.68rem;color:#7efca8;letter-spacing:0.1em;margin-top:0.5rem}
+    .premio-badge-ganado{display:inline-block;background:rgba(39,174,96,0.2);border:1px solid rgba(39,174,96,0.4);border-radius:20px;padding:0.2rem 0.75rem;font-size:0.68rem;color:#7efca8;margin-top:0.5rem}
     .vic-premios-wrap{position:fixed;bottom:0;right:2rem;z-index:5}
     .vic-premios{height:clamp(180px,20vw,280px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
 
-    /* SORTEO */
     #screenSorteo{flex-direction:column;align-items:center;justify-content:center}
     #canvas{position:absolute;inset:0;z-index:3}
     .nombre-flotante{position:absolute;z-index:7;pointer-events:none;font-family:'Josefin Sans',sans-serif;font-weight:600;color:white;text-align:center;line-height:1.1;text-shadow:0 1px 4px rgba(0,0,0,0.9);transform:translate(-50%,-50%);white-space:nowrap;overflow:hidden}
-
-    /* URNA */
-    .urna-svg{position:absolute;bottom:3%;left:50%;transform:translateX(-50%);z-index:4;width:clamp(300px,40vw,550px);pointer-events:none;filter:drop-shadow(0 10px 30px rgba(0,0,0,0.6))}
-
-    .premio-actual{position:absolute;top:4%;left:50%;transform:translateX(-50%);z-index:6;text-align:center;background:linear-gradient(160deg,rgba(61,31,0,0.9),rgba(26,10,0,0.95));border:1px solid rgba(201,146,42,0.4);border-radius:6px;padding:0.75rem 2rem;backdrop-filter:blur(12px);white-space:nowrap}
+    .premio-actual{position:absolute;top:3%;left:50%;transform:translateX(-50%);z-index:6;text-align:center;background:linear-gradient(160deg,rgba(61,31,0,0.9),rgba(26,10,0,0.95));border:1px solid rgba(201,146,42,0.4);border-radius:6px;padding:0.75rem 2rem;backdrop-filter:blur(12px);white-space:nowrap}
     .premio-actual-label{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);opacity:0.7}
-    .premio-actual-nombre{font-family:'Rye',serif;font-size:clamp(1.2rem,3vw,2rem);color:var(--dorado-claro);text-shadow:0 0 20px rgba(240,192,64,0.4)}
-    .vic-sorteo-izq{position:absolute;bottom:0;left:1%;z-index:5;height:clamp(180px,20vw,300px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
-    .vic-sorteo-der{position:absolute;bottom:0;right:1%;z-index:5;height:clamp(180px,20vw,300px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out 1s infinite;transform:scaleX(-1)}
+    .premio-actual-nombre{font-family:'Rye',serif;font-size:clamp(1.2rem,3vw,2rem);color:var(--dorado-claro)}
+    .vic-sorteo-izq{position:absolute;bottom:0;left:1%;z-index:5;height:clamp(160px,18vw,260px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
+    .vic-sorteo-der{position:absolute;bottom:0;right:1%;z-index:5;height:clamp(160px,18vw,260px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out 1s infinite;transform:scaleX(-1)}
     .btn-sortear-wrap{position:absolute;bottom:3%;left:50%;transform:translateX(-50%);z-index:8}
-    .participantes-badge{position:absolute;top:4%;right:2%;z-index:6;background:rgba(26,10,0,0.8);border:1px solid rgba(201,146,42,0.3);border-radius:4px;padding:0.6rem 1rem;text-align:center}
+    .participantes-badge{position:absolute;top:3%;right:2%;z-index:6;background:rgba(26,10,0,0.8);border:1px solid rgba(201,146,42,0.3);border-radius:4px;padding:0.6rem 1rem;text-align:center}
     .part-num{font-family:'Rye',serif;font-size:1.8rem;color:var(--dorado-claro);line-height:1}
     .part-label{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--arena);opacity:0.7}
 
-    /* GANADOR */
+    /* Nombre eliminado que vuela */
+    .nombre-eliminado{position:absolute;z-index:9;pointer-events:none;font-family:'Rye',serif;color:var(--dorado-claro);text-shadow:0 0 10px rgba(240,192,64,0.6);opacity:1;transition:all 0.8s ease-out;white-space:nowrap}
+    .nombre-eliminado.volando{opacity:0;transform:translateY(-120px) scale(0.5)}
+
+    /* Contador de eliminación */
+    .eliminacion-counter{position:absolute;top:3%;left:2%;z-index:6;background:rgba(26,10,0,0.8);border:1px solid rgba(192,57,43,0.3);border-radius:4px;padding:0.6rem 1rem;text-align:center;display:none}
+    .elim-num{font-family:'Rye',serif;font-size:1.5rem;color:#f08080;line-height:1}
+    .elim-label{font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.7}
+
     #screenGanador{flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:1.5rem}
     .ganador-vic{height:clamp(180px,20vw,260px);filter:drop-shadow(0 0 40px rgba(240,192,64,0.4));animation:vic-float 2.5s ease-in-out infinite}
     .ganador-cartel{background:linear-gradient(160deg,#5c3210,#2a1200);border:3px solid var(--dorado);border-radius:6px;padding:2rem 3rem;position:relative;box-shadow:0 0 0 1px #1a0a00,0 0 0 5px #6b3a1f,0 20px 60px rgba(0,0,0,0.8);animation:cartel-entrada 0.8s cubic-bezier(0.34,1.56,0.64,1) both;max-width:600px;width:90%}
@@ -83,7 +80,6 @@
     .confetti-wrap{position:fixed;inset:0;z-index:15;pointer-events:none}
     .ganador-botones{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
 
-    /* BOTONES */
     .btn{padding:0.9rem 2rem;border-radius:4px;font-family:'Josefin Sans',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;border:none}
     .btn-dorado{background:linear-gradient(160deg,#c9922a,#8b5e1a);color:var(--hueso);box-shadow:0 6px 24px rgba(201,146,42,0.4);font-size:1rem;padding:1rem 2.5rem}
     .btn-dorado:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 10px 32px rgba(201,146,42,0.5)}
@@ -99,10 +95,19 @@
     @keyframes vic-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
     @keyframes entrar{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
     @keyframes confetti-caer{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+    @keyframes shake{0%,100%{transform:translateX(-50%) rotate(0)}10%{transform:translateX(-50%) rotate(-3deg)}20%{transform:translateX(-50%) rotate(3deg)}30%{transform:translateX(-50%) rotate(-4deg)}40%{transform:translateX(-50%) rotate(4deg)}50%{transform:translateX(-50%) rotate(-3deg)}60%{transform:translateX(-50%) rotate(3deg)}70%{transform:translateX(-50%) rotate(-2deg)}80%{transform:translateX(-50%) rotate(2deg)}90%{transform:translateX(-50%) rotate(-1deg)}}
+    @keyframes shake-hard{0%,100%{transform:translateX(-50%) rotate(0)}10%{transform:translateX(-50%) rotate(-6deg) translateY(-5px)}20%{transform:translateX(-50%) rotate(6deg) translateY(3px)}30%{transform:translateX(-50%) rotate(-7deg) translateY(-4px)}40%{transform:translateX(-50%) rotate(7deg) translateY(5px)}50%{transform:translateX(-50%) rotate(-5deg) translateY(-3px)}60%{transform:translateX(-50%) rotate(5deg) translateY(4px)}70%{transform:translateX(-50%) rotate(-4deg)}80%{transform:translateX(-50%) rotate(4deg)}90%{transform:translateX(-50%) rotate(-2deg)}}
+    @keyframes glow-pulse{0%,100%{box-shadow:0 0 20px rgba(240,192,64,0.4)}50%{box-shadow:0 0 50px rgba(240,192,64,0.8),0 0 80px rgba(240,192,64,0.3)}}
+
     .toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(139,26,26,0.95);border:1px solid rgba(192,57,43,0.5);border-radius:3px;padding:0.75rem 1.25rem;font-size:0.85rem;color:#f5d5d5;max-width:400px;text-align:center;opacity:0;pointer-events:none;transition:opacity 0.3s}
     .toast.visible{opacity:1}
     .spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);border-top-color:white;animation:spin 0.7s linear infinite;display:none}
     @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Sombrero dado vuelta como contenedor */
+    .sombrero-container{position:absolute;bottom:12%;left:50%;transform:translateX(-50%);z-index:4;pointer-events:none}
+    .sombrero-container.shaking{animation:shake 0.3s linear infinite}
+    .sombrero-container.shaking-hard{animation:shake-hard 0.25s linear infinite}
   </style>
 </head>
 <body>
@@ -110,14 +115,11 @@
 <div class="stars" id="stars"></div>
 <svg class="pradera" viewBox="0 0 1440 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
   <path d="M0,120 L0,80 Q80,55 140,70 Q200,85 260,60 Q320,35 400,55 Q480,75 560,45 Q620,25 680,50 Q740,75 820,40 Q880,15 940,45 Q1000,75 1080,40 Q1140,15 1200,45 Q1260,75 1340,55 Q1390,42 1440,60 L1440,120 Z" fill="#030a03" opacity="0.98"/>
-  <g fill="#041504" opacity="0.9"><rect x="80" y="35" width="7" height="50"/><rect x="62" y="52" width="24" height="6" rx="3"/><rect x="62" y="46" width="7" height="12" rx="3"/><rect x="80" y="65" width="24" height="6" rx="3"/><rect x="97" y="59" width="7" height="12" rx="3"/></g>
-  <g fill="#041504" opacity="0.9"><rect x="1353" y="28" width="7" height="58"/><rect x="1335" y="48" width="24" height="6" rx="3"/><rect x="1335" y="42" width="7" height="12" rx="3"/></g>
 </svg>
 <div class="toast" id="toast"></div>
 
-<!-- LOGIN -->
 <div class="screen active" id="screenLogin">
-  <img src="img/vic_juntos_saludo.png" class="login-vic" alt="Vic y compañera">
+  <img src="img/vic_juntos_saludo.png" class="login-vic" alt="Vic">
   <div class="login-card">
     <div class="login-titulo">¡Sorteo!</div>
     <div class="login-sub">Cumple 221countryLP · 3 Oct 2026</div>
@@ -128,48 +130,51 @@
       <div class="spinner" id="spinnerLogin"></div>
       <span id="txtLogin">🎉 Entrar al sorteo</span>
     </button>
-    <details class="test-toggle">
-      <summary>Modo test</summary>
-      <div class="campo"><label>Simular cantidad de participantes</label>
-        <input type="number" id="testCantidad" value="0" min="0" max="200" placeholder="0 = usar datos reales">
+    <details class="test-toggle"><summary>Modo test</summary>
+      <div class="campo"><label>Simular participantes</label>
+        <input type="number" id="testCantidad" value="0" min="0" max="200">
       </div>
     </details>
   </div>
 </div>
 
-<!-- PREMIOS -->
 <div class="screen" id="screenPremios">
   <div class="premios-titulo" style="animation:entrar 0.6s ease both">¿Qué sorteamos?</div>
-  <div class="premios-sub" style="animation:entrar 0.6s ease 0.1s both">Elegí el premio para este sorteo</div>
+  <div class="premios-sub" style="animation:entrar 0.6s ease 0.1s both">Elegí el premio</div>
   <div class="premios-grid" id="premiosGrid" style="animation:entrar 0.6s ease 0.2s both"></div>
   <div class="vic-premios-wrap"><img src="img/vic_apoyado_valla.png" class="vic-premios" alt="Vic"></div>
 </div>
 
-<!-- SORTEO -->
 <div class="screen" id="screenSorteo">
   <div class="premio-actual"><div class="premio-actual-label">Sorteando</div><div class="premio-actual-nombre" id="premioActualNombre">---</div></div>
   <div class="participantes-badge"><div class="part-num" id="partNum">0</div><div class="part-label">Participantes</div></div>
+  <div class="eliminacion-counter" id="elimCounter"><div class="elim-num" id="elimNum">0</div><div class="elim-label">Quedan</div></div>
   <canvas id="canvas"></canvas>
 
-  <!-- URNA visible tipo pecera/recipiente transparente -->
-  <svg class="urna-svg" viewBox="0 0 500 350" xmlns="http://www.w3.org/2000/svg">
-    <!-- Sombra base -->
-    <ellipse cx="250" cy="330" rx="210" ry="18" fill="rgba(0,0,0,0.4)"/>
-    <!-- Cuerpo urna (forma de recipiente cowboy/cuero) -->
-    <path d="M60 60 Q55 180 65 280 Q80 320 250 325 Q420 320 435 280 Q445 180 440 60 Z"
-      fill="rgba(61,31,0,0.25)" stroke="#c9922a" stroke-width="2" stroke-opacity="0.5"/>
-    <!-- Borde superior (boca) -->
-    <ellipse cx="250" cy="58" rx="192" ry="22" fill="rgba(61,31,0,0.4)" stroke="#c9922a" stroke-width="2" stroke-opacity="0.6"/>
-    <!-- Reflejo decorativo -->
-    <path d="M90 80 Q85 180 92 260" stroke="rgba(240,192,64,0.12)" stroke-width="3" fill="none"/>
-    <!-- Banda decorativa -->
-    <path d="M65 280 Q80 295 250 298 Q420 295 435 280" stroke="#c9922a" stroke-width="1.5" stroke-opacity="0.4" fill="none"/>
-    <!-- Hebilla central -->
-    <rect x="237" y="284" width="26" height="14" rx="3" fill="#f0c040" opacity="0.5"/>
-  </svg>
+  <!-- Sombrero dado vuelta (boca arriba) -->
+  <div class="sombrero-container" id="sombreroContainer">
+    <svg id="sombreroSvg" viewBox="0 0 500 320" xmlns="http://www.w3.org/2000/svg">
+      <!-- Ala (abajo, invertida) -->
+      <ellipse cx="250" cy="290" rx="240" ry="28" fill="#2a1a08" stroke="#6b3a1f" stroke-width="2"/>
+      <ellipse cx="250" cy="286" rx="240" ry="24" fill="#3d2510"/>
+      <!-- Copa (cuerpo, abierta arriba) -->
+      <path d="M80 280 Q70 180 85 100 Q100 40 250 35 Q400 40 415 100 Q430 180 420 280 Z" fill="#2a1a08"/>
+      <path d="M86 278 Q76 180 90 102 Q104 44 250 40 Q396 44 410 102 Q424 180 414 278 Z" fill="#3d2510"/>
+      <!-- Banda decorativa -->
+      <path d="M88 120 Q100 110 250 107 Q400 110 412 120 Q400 130 250 133 Q100 130 88 120 Z" fill="#c9922a" opacity="0.7"/>
+      <!-- Hebilla -->
+      <rect x="234" y="112" width="32" height="14" rx="3" fill="#f0c040"/>
+      <rect x="240" y="115" width="20" height="8" rx="2" fill="#c9922a"/>
+      <!-- Boca abierta (elipse superior transparente para ver las bolitas) -->
+      <ellipse cx="250" cy="38" rx="155" ry="18" fill="rgba(10,5,0,0.5)" stroke="#6b3a1f" stroke-width="1.5"/>
+      <!-- Brillos -->
+      <path d="M108 260 Q100 180 110 120" stroke="rgba(240,192,64,0.1)" stroke-width="3" fill="none"/>
+      <ellipse cx="250" cy="280" rx="160" ry="10" fill="rgba(240,192,64,0.05)"/>
+    </svg>
+  </div>
 
   <img src="img/vic_bailando_juntos.png" class="vic-sorteo-izq" alt="Vic">
-  <img src="img/vic_juntos_pulgar.png" class="vic-sorteo-der" alt="Vic compañera">
+  <img src="img/vic_juntos_pulgar.png" class="vic-sorteo-der" alt="Vic">
   <div class="btn-sortear-wrap">
     <button class="btn btn-dorado btn-grande" id="btnSortear" onclick="iniciarSorteo()">
       <div class="spinner" id="spinnerSorteo"></div>
@@ -178,14 +183,13 @@
   </div>
 </div>
 
-<!-- GANADOR -->
 <div class="screen" id="screenGanador">
   <div class="confetti-wrap" id="confettiWrap"></div>
-  <img src="img/vic_juntos_highfive.png" class="ganador-vic" alt="Vic festejando">
+  <img src="img/vic_juntos_highfive.png" class="ganador-vic" alt="Vic">
   <div class="ganador-cartel">
     <div class="ganador-label">¡Y el ganador es...!</div>
     <div class="ganador-premio" id="ganadorPremio">Premio</div>
-    <div class="ganador-nombre" id="ganadorNombre">Nombre Apellido</div>
+    <div class="ganador-nombre" id="ganadorNombre">Nombre</div>
   </div>
   <div class="ganador-botones">
     <button class="btn btn-verde btn-grande" onclick="marcarEntregado()">✅ Premio entregado</button>
@@ -196,13 +200,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 <script>
-const API = 'https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
-
+const API='https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
 let password='',personas=[],pool=[],premios=[],premioActual=null,ganadorActual=null;
-let engine,render,runner;
-let bolitas=[];
-let sorteando=false;
-let testMode=0;
+let engine,render,runner,bolitas=[],sorteando=false,testMode=0;
 
 (function(){const c=document.getElementById('stars');for(let i=0;i<150;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+0.5;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*75}%;left:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*5}s`;c.appendChild(s)}})();
 
@@ -220,19 +220,13 @@ async function entrarSorteo(){
     const[dC,dP,dPe]=await Promise.all([rC.json(),rP.json(),rPe.json()]);
     if(!dC.ok){mostrarToast(dC.error||'Contraseña incorrecta');return}
     password=pass;premios=dP.premios||[];personas=dPe.personas||[];
-
-    // Modo test: generar personas ficticias
     if(testMode>0){
-      const nombres=['Ana','Luis','María','Carlos','Laura','Pedro','Sofía','Diego','Lucía','Martín','Valentina','Tomás','Camila','Mateo','Julieta','Nicolás','Florencia','Santiago','Milagros','Agustín','Rocío','Bruno','Celeste','Franco','Abril','Gonzalo','Pilar','Facundo','Delfina','Lautaro','Carolina','Joaquín','Paula','Ramiro','Daniela','Hernán','Aldana','Ignacio','Brenda','Mauro','Andrea','Ezequiel','Romina','Gastón','Natalia','Sergio','Mora','Sebastián','Candela','Emmanuel'];
-      const apells=['García','López','Martínez','Rodríguez','Pérez','González','Sánchez','Romero','Gómez','Torres','Díaz','Fernández','Álvarez','Moreno','Ruiz','Acosta','Molina','Castro','Herrera','Medina','Ortiz','Silva','Ríos','Flores','Benítez'];
-      personas=[];
-      for(let i=0;i<testMode;i++){
-        personas.push({id:'TEST-'+i,nombre:nombres[i%nombres.length],apellido:apells[i%apells.length]});
-      }
+      const noms=['Ana','Luis','María','Carlos','Laura','Pedro','Sofía','Diego','Lucía','Martín','Valentina','Tomás','Camila','Mateo','Julieta','Nicolás','Florencia','Santiago','Milagros','Agustín','Rocío','Bruno','Celeste','Franco','Abril','Gonzalo','Pilar','Facundo','Delfina','Lautaro','Carolina','Joaquín','Paula','Ramiro','Daniela','Hernán','Aldana','Ignacio','Brenda','Mauro','Andrea','Ezequiel','Romina','Gastón','Natalia','Sergio','Mora','Sebastián','Candela','Emmanuel','Valeria'];
+      const apes=['García','López','Martínez','Rodríguez','Pérez','González','Sánchez','Romero','Gómez','Torres','Díaz','Fernández','Álvarez','Moreno','Ruiz','Acosta','Molina','Castro','Herrera','Medina','Ortiz','Silva','Ríos','Flores','Benítez'];
+      personas=[];for(let i=0;i<testMode;i++)personas.push({id:'T-'+i,nombre:noms[i%noms.length],apellido:apes[i%apes.length]});
     }
-
     pool=[...personas];
-    if(personas.length===0){mostrarToast('No hay participantes');return}
+    if(!personas.length){mostrarToast('No hay participantes');return}
     mostrarPantalla('screenPremios');renderPremios();
   }catch(e){mostrarToast('Error de conexión')}
   finally{setLoading('spinnerLogin','txtLogin',false,'🎉 Entrar al sorteo')}
@@ -240,130 +234,91 @@ async function entrarSorteo(){
 
 function renderPremios(){
   const g=document.getElementById('premiosGrid');g.innerHTML='';
-  premios.forEach(p=>{
-    const ganados=p._ganados||0;const completo=ganados>=p.cantidad_ganadores;
-    const c=document.createElement('div');c.className='premio-card'+(completo?' ganado':'');
-    c.innerHTML=`<div class="premio-orden">Premio ${p.orden_sorteo}</div><div class="premio-nombre">${p.nombre}</div>${p.descripcion?`<div class="premio-desc">${p.descripcion}</div>`:''}<div class="premio-ganadores">${p.cantidad_ganadores} ganador${p.cantidad_ganadores>1?'es':''}</div>${completo?'<div class="premio-badge-ganado">✅ Sorteado</div>':''}`;
-    if(!completo)c.onclick=()=>seleccionarPremio(p);
-    g.appendChild(c);
-  });
+  premios.forEach(p=>{const gn=p._ganados||0;const c=gn>=p.cantidad_ganadores;const d=document.createElement('div');d.className='premio-card'+(c?' ganado':'');d.innerHTML=`<div class="premio-orden">Premio ${p.orden_sorteo}</div><div class="premio-nombre">${p.nombre}</div>${p.descripcion?`<div class="premio-desc">${p.descripcion}</div>`:''}<div class="premio-ganadores">${p.cantidad_ganadores} ganador${p.cantidad_ganadores>1?'es':''}</div>${c?'<div class="premio-badge-ganado">✅ Sorteado</div>':''}`;if(!c)d.onclick=()=>seleccionarPremio(p);g.appendChild(d)});
 }
 
-function seleccionarPremio(premio){
-  premioActual=premio;
-  document.getElementById('premioActualNombre').textContent=premio.nombre;
+function seleccionarPremio(p){
+  premioActual=p;
+  document.getElementById('premioActualNombre').textContent=p.nombre;
   document.getElementById('partNum').textContent=pool.length;
-  limpiarBolitas();
-  mostrarPantalla('screenSorteo');
-  iniciarFisica();
-  const btn=document.getElementById('btnSortear');btn.disabled=false;
+  document.getElementById('elimCounter').style.display='none';
+  limpiarBolitas();mostrarPantalla('screenSorteo');
+  sizeSombrero();iniciarFisica();
+  document.getElementById('btnSortear').disabled=false;
   document.getElementById('spinnerSorteo').style.display='none';
   document.getElementById('txtSortear').textContent='🤠 ¡Sortear!';
+  document.getElementById('sombreroContainer').className='sombrero-container';
 }
 
-function limpiarBolitas(){
-  bolitas.forEach(b=>{if(b.elem)b.elem.remove()});
-  bolitas=[];
+function sizeSombrero(){
+  const W=window.innerWidth;
+  const sw=Math.min(W*0.38,520);
+  const el=document.getElementById('sombreroContainer');
+  el.style.width=sw+'px';
 }
+
+function limpiarBolitas(){bolitas.forEach(b=>{if(b.elem)b.elem.remove()});bolitas=[];}
 
 function iniciarFisica(){
-  if(runner)Matter.Runner.stop(runner);
-  if(render)Matter.Render.stop(render);
-  if(engine)Matter.Engine.clear(engine);
-
-  const canvas=document.getElementById('canvas');
-  const W=window.innerWidth;const H=window.innerHeight;
-  canvas.width=W;canvas.height=H;
-  canvas.getContext('2d').clearRect(0,0,W,H);
+  if(runner)Matter.Runner.stop(runner);if(render)Matter.Render.stop(render);if(engine)Matter.Engine.clear(engine);
+  const canvas=document.getElementById('canvas');const W=window.innerWidth;const H=window.innerHeight;
+  canvas.width=W;canvas.height=H;canvas.getContext('2d').clearRect(0,0,W,H);
   limpiarBolitas();
 
-  // Gravedad más suave para que caigan elegantemente
-  engine=Matter.Engine.create({gravity:{y:0.5}});
+  engine=Matter.Engine.create({gravity:{y:0.6}});
+  render=Matter.Render.create({element:document.getElementById('screenSorteo'),canvas,engine,options:{width:W,height:H,background:'transparent',wireframes:false}});
 
-  render=Matter.Render.create({
-    element:document.getElementById('screenSorteo'),canvas:canvas,engine:engine,
-    options:{width:W,height:H,background:'transparent',wireframes:false}
-  });
-
-  // Dimensiones de la urna (coinciden con el SVG)
-  const urnaW=Math.min(W*0.40,550);
-  const urnaH=urnaW*0.7;
+  // Sombrero dimensions matching SVG position
+  const somEl=document.getElementById('sombreroContainer');
+  const sw=parseFloat(somEl.style.width);
+  const sh=sw*0.64;
   const cx=W/2;
-  const urnaBottom=H*0.92;
-  const urnaTop=urnaBottom-urnaH;
+  const somBottom=H*0.88;
+  const somTop=somBottom-sh;
 
-  // Paredes de la urna (invisible pero sólido)
-  const wallOpts={isStatic:true,render:{fillStyle:'transparent'},friction:0.3};
-  const espesor=15;
-
-  // Piso
-  Matter.World.add(engine.world,Matter.Bodies.rectangle(cx,urnaBottom+espesor/2,urnaW,espesor,wallOpts));
-  // Pared izquierda (ligeramente inclinada como la urna)
-  Matter.World.add(engine.world,Matter.Bodies.rectangle(cx-urnaW/2-espesor/2+10,urnaBottom-urnaH/2,espesor,urnaH+20,{...wallOpts,angle:0.05}));
-  // Pared derecha
-  Matter.World.add(engine.world,Matter.Bodies.rectangle(cx+urnaW/2+espesor/2-10,urnaBottom-urnaH/2,espesor,urnaH+20,{...wallOpts,angle:-0.05}));
-  // Paredes laterales pantalla
-  Matter.World.add(engine.world,Matter.Bodies.rectangle(-10,H/2,20,H*2,wallOpts));
-  Matter.World.add(engine.world,Matter.Bodies.rectangle(W+10,H/2,20,H*2,wallOpts));
-
-  runner=Matter.Runner.create();
-  Matter.Runner.run(runner,engine);
-  Matter.Render.run(render);
-
-  // Crear bolitas con delay para efecto cascada
-  const delay=Math.max(30,Math.min(120,3000/pool.length));
-  pool.forEach((p,i)=>{setTimeout(()=>crearBolita(p,W,H,cx,urnaW),i*delay+500)});
-
-  // Actualizar posiciones de nombres
-  Matter.Events.on(render,'afterRender',()=>{
-    bolitas.forEach(b=>{
-      if(b.elem&&b.body){
-        b.elem.style.left=b.body.position.x+'px';
-        b.elem.style.top=b.body.position.y+'px';
-      }
-    });
-  });
-}
-
-function crearBolita(persona,W,H,cx,urnaW){
-  // Radio adaptativo según cantidad
-  const cant=pool.length;
-  let radio;
-  if(cant<=20)radio=Math.min(32,W*0.025);
-  else if(cant<=50)radio=Math.min(22,W*0.018);
-  else if(cant<=100)radio=Math.min(16,W*0.013);
-  else radio=Math.min(12,W*0.01);
-
-  // Caen desde arriba centrados en la urna
-  const spread=urnaW*0.7;
-  const x=cx-spread/2+Math.random()*spread;
-  const y=-radio-Math.random()*300;
-
-  const colores=['#8b1a1a','#3d1f00','#1a3a1a','#c9922a','#5c3210','#2a4a6a'];
-  const color=colores[Math.floor(Math.random()*colores.length)];
-
-  const body=Matter.Bodies.circle(x,y,radio,{
-    restitution:0.35,friction:0.4,density:0.003,
-    render:{fillStyle:color,strokeStyle:'rgba(240,192,64,0.5)',lineWidth:1}
-  });
-  body._personaId=persona.id;
-  body._nombre=persona.nombre+' '+persona.apellido;
-  Matter.World.add(engine.world,body);
-
-  // Etiqueta solo si hay espacio (radio > 12)
-  if(radio>12){
-    const div=document.createElement('div');
-    div.className='nombre-flotante';
-    div.style.fontSize=Math.max(7,radio*0.55)+'px';
-    div.style.width=(radio*2.2)+'px';
-    div.textContent=persona.nombre;
-    document.getElementById('screenSorteo').appendChild(div);
-    bolitas.push({body,nombre:body._nombre,id:persona.id,elem:div});
-  }else{
-    bolitas.push({body,nombre:body._nombre,id:persona.id,elem:null});
+  // Paredes del sombrero (invisible)
+  const wo={isStatic:true,render:{fillStyle:'transparent'},friction:0.2,restitution:0.3};
+  // Piso del sombrero
+  Matter.World.add(engine.world,Matter.Bodies.rectangle(cx,somBottom,sw*0.85,12,wo));
+  // Paredes laterales curvadas (simuladas con segmentos)
+  const segments=6;
+  for(let i=0;i<segments;i++){
+    const t=i/segments;const t2=(i+1)/segments;
+    const topW=sw*0.55;const botW=sw*0.43;
+    const lx=cx-(botW+(topW-botW)*t)/2;const ly=somBottom-sh*t;
+    Matter.World.add(engine.world,Matter.Bodies.rectangle(lx,ly,10,sh/segments+8,{...wo,angle:0.12-t*0.06}));
+    const rx=cx+(botW+(topW-botW)*t)/2;
+    Matter.World.add(engine.world,Matter.Bodies.rectangle(rx,ly,10,sh/segments+8,{...wo,angle:-(0.12-t*0.06)}));
   }
+  // Pared pantalla
+  Matter.World.add(engine.world,Matter.Bodies.rectangle(-10,H/2,20,H*2,wo));
+  Matter.World.add(engine.world,Matter.Bodies.rectangle(W+10,H/2,20,H*2,wo));
+  // Piso pantalla
+  Matter.World.add(engine.world,Matter.Bodies.rectangle(W/2,H+20,W*2,40,wo));
+
+  runner=Matter.Runner.create();Matter.Runner.run(runner,engine);Matter.Render.run(render);
+
+  const delay=Math.max(15,Math.min(80,2500/pool.length));
+  pool.forEach((p,i)=>setTimeout(()=>crearBolita(p,W,H,cx,sw*0.4),i*delay+300));
+
+  Matter.Events.on(render,'afterRender',()=>{bolitas.forEach(b=>{if(b.elem&&b.body){b.elem.style.left=b.body.position.x+'px';b.elem.style.top=b.body.position.y+'px'}})});
 }
 
+function crearBolita(p,W,H,cx,spread){
+  const n=pool.length;
+  let r;if(n<=30)r=Math.min(24,W*0.02);else if(n<=60)r=Math.min(18,W*0.015);else if(n<=100)r=Math.min(14,W*0.012);else r=Math.min(10,W*0.009);
+  const x=cx-spread/2+Math.random()*spread;const y=-r-Math.random()*400;
+  const cols=['#8b1a1a','#3d1f00','#1a3a1a','#c9922a','#5c3210','#2a4a6a','#4a1a4a','#1a4a3a'];
+  const col=cols[Math.floor(Math.random()*cols.length)];
+  const body=Matter.Bodies.circle(x,y,r,{restitution:0.4,friction:0.3,density:0.003,render:{fillStyle:col,strokeStyle:'rgba(240,192,64,0.4)',lineWidth:1}});
+  body._pid=p.id;body._name=p.nombre+' '+p.apellido;
+  Matter.World.add(engine.world,body);
+  let elem=null;
+  if(r>13){elem=document.createElement('div');elem.className='nombre-flotante';elem.style.fontSize=Math.max(7,r*0.5)+'px';elem.style.width=(r*2.2)+'px';elem.textContent=p.nombre;document.getElementById('screenSorteo').appendChild(elem)}
+  bolitas.push({body,name:body._name,id:p.id,elem});
+}
+
+// ── SORTEO CON ELIMINACIÓN ──────────────────────────
 async function iniciarSorteo(){
   if(sorteando||pool.length===0)return;
   sorteando=true;
@@ -371,89 +326,135 @@ async function iniciarSorteo(){
   document.getElementById('spinnerSorteo').style.display='block';
   document.getElementById('txtSortear').textContent='Sorteando...';
 
-  // Agitar las bolitas (aplicar fuerzas aleatorias)
-  bolitas.forEach(b=>{
-    if(b.body){
-      const fx=(Math.random()-0.5)*0.08;
-      const fy=-Math.random()*0.06-0.02;
-      Matter.Body.applyForce(b.body,b.body.position,{x:fx,y:fy});
-    }
-  });
+  // Elegir ganador ANTES de la animación
+  const idxGanador=Math.floor(Math.random()*pool.length);
+  ganadorActual=pool[idxGanador];
+  const ganadorBodyId=ganadorActual.id;
 
-  await sleep(2000);
-
-  // Segunda agitada
-  bolitas.forEach(b=>{
-    if(b.body){
-      const fx=(Math.random()-0.5)*0.06;
-      const fy=-Math.random()*0.04;
-      Matter.Body.applyForce(b.body,b.body.position,{x:fx,y:fy});
-    }
-  });
-
+  // Fase 1: sacudir suave (1.5s)
+  const somb=document.getElementById('sombreroContainer');
+  somb.className='sombrero-container shaking';
+  bolitas.forEach(b=>{if(b.body)Matter.Body.applyForce(b.body,b.body.position,{x:(Math.random()-0.5)*0.04,y:-Math.random()*0.03})});
   await sleep(1500);
 
-  const idx=Math.floor(Math.random()*pool.length);
-  ganadorActual=pool[idx];
+  // Fase 2: sacudir fuerte + eliminación rápida
+  somb.className='sombrero-container shaking-hard';
+  const elimCounter=document.getElementById('elimCounter');
+  elimCounter.style.display='block';
+
+  // Preparar lista de eliminación (todos excepto el ganador, en orden aleatorio)
+  const aEliminar=bolitas.filter(b=>b.id!==ganadorBodyId);
+  shuffle(aEliminar);
+
+  const total=aEliminar.length;
+  let quedan=bolitas.length;
+
+  for(let i=0;i<total;i++){
+    const b=aEliminar[i];
+    quedan--;
+    document.getElementById('elimNum').textContent=quedan;
+
+    // Velocidad: rápido al principio, lento al final
+    let delay;
+    if(quedan>20)delay=40;
+    else if(quedan>10)delay=100;
+    else if(quedan>5)delay=300;
+    else if(quedan>3)delay=600;
+    else delay=1000;
+
+    // Fuerza de eyección hacia arriba
+    if(b.body){
+      const fx=(Math.random()-0.5)*0.15;
+      const fy=-0.12-Math.random()*0.08;
+      Matter.Body.applyForce(b.body,b.body.position,{x:fx,y:fy});
+    }
+
+    // Mostrar nombre que se elimina (últimos 10)
+    if(quedan<10){
+      const tag=document.createElement('div');
+      tag.className='nombre-eliminado';
+      tag.style.left=(b.body?b.body.position.x:window.innerWidth/2)+'px';
+      tag.style.top=(b.body?b.body.position.y:window.innerHeight/2)+'px';
+      tag.style.fontSize=quedan<5?'1.5rem':'1rem';
+      tag.textContent=b.name;
+      document.getElementById('screenSorteo').appendChild(tag);
+      setTimeout(()=>{tag.classList.add('volando')},50);
+      setTimeout(()=>tag.remove(),900);
+    }
+
+    // Remover bolita después de un momento
+    setTimeout(()=>{
+      if(b.body)Matter.World.remove(engine.world,b.body);
+      if(b.elem)b.elem.remove();
+    },200);
+
+    // Sacudir entre eliminaciones
+    if(quedan<10){
+      bolitas.filter(x=>x.id===ganadorBodyId).forEach(x=>{
+        if(x.body)Matter.Body.applyForce(x.body,x.body.position,{x:(Math.random()-0.5)*0.02,y:-Math.random()*0.015});
+      });
+    }
+
+    await sleep(delay);
+  }
+
+  // Fase 3: solo queda el ganador
+  somb.className='sombrero-container shaking';
+  await sleep(800);
+  somb.className='sombrero-container';
+
+  // Hacer brillar la bolita ganadora
+  const bGanador=bolitas.find(b=>b.id===ganadorBodyId);
+  if(bGanador&&bGanador.body){
+    bGanador.body.render.fillStyle='#f0c040';
+    bGanador.body.render.strokeStyle='#fff';
+    bGanador.body.render.lineWidth=3;
+  }
+
+  elimCounter.style.display='none';
+  await sleep(1200);
+
   sorteando=false;
   mostrarGanador(ganadorActual);
 }
 
-function mostrarGanador(persona){
-  document.getElementById('ganadorNombre').textContent=persona.nombre+' '+persona.apellido;
+function mostrarGanador(p){
+  document.getElementById('ganadorNombre').textContent=p.nombre+' '+p.apellido;
   document.getElementById('ganadorPremio').textContent=premioActual.nombre;
-  lanzarConfetti();
-  mostrarPantalla('screenGanador');
+  lanzarConfetti();mostrarPantalla('screenGanador');
 }
 
 async function marcarEntregado(){
-  if(!ganadorActual.id.startsWith('TEST-')){
-    try{
-      const res=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'entregado',password})});
-      const data=await res.json();
-      if(!data.ok){mostrarToast(data.error);return}
-    }catch(e){mostrarToast('Error de conexión');return}
+  if(!ganadorActual.id.startsWith('T-')){
+    try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'entregado',password})});const d=await r.json();if(!d.ok){mostrarToast(d.error);return}}catch(e){mostrarToast('Error');return}
   }
-  pool=pool.filter(p=>p.id!==ganadorActual.id);
-  premioActual._ganados=(premioActual._ganados||0)+1;
+  pool=pool.filter(p=>p.id!==ganadorActual.id);premioActual._ganados=(premioActual._ganados||0)+1;
   mostrarToast('¡Premio entregado! '+ganadorActual.nombre+' '+ganadorActual.apellido);
   setTimeout(volverAPremios,1500);
 }
 
 async function sortearDeNuevo(){
-  if(!ganadorActual.id.startsWith('TEST-')){
-    try{await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'no_presente',password})})}catch(e){}
-  }
+  if(!ganadorActual.id.startsWith('T-')){try{await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'no_presente',password})})}catch(e){}}
   pool=pool.filter(p=>p.id!==ganadorActual.id);
-  if(pool.length===0){mostrarToast('No quedan más participantes');setTimeout(volverAPremios,2000);return}
+  if(!pool.length){mostrarToast('No quedan más participantes');setTimeout(volverAPremios,2000);return}
   document.getElementById('partNum').textContent=pool.length;
-  limpiarBolitas();limpiarConfetti();
-  mostrarPantalla('screenSorteo');
-  document.getElementById('btnSortear').disabled=false;
-  document.getElementById('spinnerSorteo').style.display='none';
+  limpiarBolitas();limpiarConfetti();mostrarPantalla('screenSorteo');
+  document.getElementById('btnSortear').disabled=false;document.getElementById('spinnerSorteo').style.display='none';
   document.getElementById('txtSortear').textContent='🤠 ¡Sortear de nuevo!';
-  iniciarFisica();
+  document.getElementById('sombreroContainer').className='sombrero-container';
+  sizeSombrero();iniciarFisica();
 }
 
-function volverAPremios(){
-  limpiarBolitas();limpiarConfetti();
-  if(runner)Matter.Runner.stop(runner);
-  if(render)Matter.Render.stop(render);
-  if(engine)Matter.Engine.clear(engine);
-  renderPremios();mostrarPantalla('screenPremios');
-}
+function volverAPremios(){limpiarBolitas();limpiarConfetti();if(runner)Matter.Runner.stop(runner);if(render)Matter.Render.stop(render);if(engine)Matter.Engine.clear(engine);document.getElementById('sombreroContainer').className='sombrero-container';renderPremios();mostrarPantalla('screenPremios')}
 
-function lanzarConfetti(){
-  const w=document.getElementById('confettiWrap');w.innerHTML='';
-  const cols=['#f0c040','#c0392b','#27ae60','#2980b9','#f39c12','#8e44ad','#e8d5a3'];
-  for(let i=0;i<120;i++){const c=document.createElement('div');const col=cols[Math.floor(Math.random()*cols.length)];const sz=8+Math.random()*8;const l=Math.random()*100;const d=Math.random()*2;const dur=3+Math.random()*2;const r=Math.random()>0.5;c.style.cssText=`position:absolute;top:-20px;left:${l}%;width:${r?sz:sz/2}px;height:${sz}px;background:${col};border-radius:${r?'2px':'50%'};animation:confetti-caer ${dur}s ease-in ${d}s both;transform:rotate(${Math.random()*360}deg)`;w.appendChild(c)}
-}
+function lanzarConfetti(){const w=document.getElementById('confettiWrap');w.innerHTML='';const cs=['#f0c040','#c0392b','#27ae60','#2980b9','#f39c12','#8e44ad','#e8d5a3'];for(let i=0;i<150;i++){const c=document.createElement('div');const cl=cs[Math.floor(Math.random()*cs.length)];const sz=8+Math.random()*10;const l=Math.random()*100;const d=Math.random()*2;const dur=3+Math.random()*2;c.style.cssText=`position:absolute;top:-20px;left:${l}%;width:${Math.random()>0.5?sz:sz/2}px;height:${sz}px;background:${cl};border-radius:${Math.random()>0.5?'2px':'50%'};animation:confetti-caer ${dur}s ease-in ${d}s both;transform:rotate(${Math.random()*360}deg)`;w.appendChild(c)}}
 function limpiarConfetti(){document.getElementById('confettiWrap').innerHTML=''}
 
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 function mostrarPantalla(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 function setLoading(s,t,l,txt){document.getElementById(s).style.display=l?'block':'none';document.getElementById(t).textContent=txt}
-function mostrarToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('visible');setTimeout(()=>t.classList.remove('visible'),4000)}
+function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('visible');setTimeout(()=>t.classList.remove('visible'),4000)}
 </script>
 </body>
 </html>
