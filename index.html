@@ -5,600 +5,210 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Yiha! · Cumple 221countryLP</title>
   <meta name="description" content="Registrate al cumpleaños de 221 Country La Plata. ¡El evento del año!">
-
-  <!-- PWA básico -->
   <meta name="theme-color" content="#1a0a00">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Wanted+Dead+Or+Alive&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    /* ── VARIABLES ─────────────────────────────────────────── */
     :root {
-      --tierra:     #1a0a00;
-      --cuero:      #3d1f00;
-      --madera:     #6b3a1f;
-      --arena:      #c8a06a;
-      --paja:       #e8d5a3;
-      --hueso:      #f5ecd7;
-      --rojo:       #8b1a1a;
-      --rojo-vivo:  #c0392b;
-      --dorado:     #c9922a;
-      --dorado-claro: #f0c040;
-      --verde:      #2d5a27;
-      --cielo:      #7eb8d4;
-      --cielo-noche:#1a2a3a;
+      --tierra:#1a0a00;--arena:#c8a06a;--paja:#e8d5a3;--hueso:#f5ecd7;
+      --rojo:#8b1a1a;--rojo-vivo:#c0392b;--dorado:#c9922a;--dorado-claro:#f0c040;
     }
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;font-family:'Josefin Sans',sans-serif;background:var(--tierra);color:var(--hueso);overflow-x:hidden}
+    .sky{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,#2a3f5f 0%,#0d1a2e 40%,#060c14 100%);z-index:0}
+    .stars{position:fixed;inset:0;z-index:1;pointer-events:none}
+    .star{position:absolute;background:white;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite alternate;animation-delay:var(--delay)}
+    @keyframes twinkle{from{opacity:0.2;transform:scale(0.8)}to{opacity:1;transform:scale(1.2)}}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .pradera{position:fixed;bottom:0;left:0;right:0;z-index:2;pointer-events:none}
 
-    html, body {
-      height: 100%;
-      font-family: 'Josefin Sans', sans-serif;
-      background: var(--tierra);
-      color: var(--hueso);
-      overflow-x: hidden;
-    }
+    .contenido{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1.5rem 8rem}
 
-    /* ── FONDO: CIELO NOCTURNO CON ESTRELLAS ──────────────── */
-    .sky {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, #2a3f5f 0%, #0d1a2e 40%, #060c14 100%);
-      z-index: 0;
-    }
+    /* LOGO MARCA DE AGUA */
+    .logo-watermark{width:clamp(100px,22vw,160px);opacity:0.12;filter:invert(1) brightness(1.5);margin-bottom:-0.5rem;animation:entrar 0.6s ease both}
 
-    .stars {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-    }
+    /* CARTEL */
+    .cartel{margin-top:0.5rem;background:linear-gradient(160deg,#5c3210 0%,#3d1f00 40%,#2a1200 100%);border:3px solid var(--dorado);border-radius:4px;padding:2rem 2.5rem 1.5rem;text-align:center;position:relative;box-shadow:0 0 0 1px #1a0a00,0 0 0 5px #6b3a1f,0 8px 40px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.05);max-width:480px;width:100%;animation:entrar 0.8s cubic-bezier(0.34,1.56,0.64,1) both}
+    .cartel::before,.cartel::after{content:'✦';position:absolute;color:var(--dorado);font-size:14px;opacity:0.7}
+    .cartel::before{top:10px;left:14px}.cartel::after{top:10px;right:14px}
+    .estrella-deco{color:var(--dorado-claro);font-size:13px;letter-spacing:12px;opacity:0.8;margin-bottom:0.5rem;display:block}
+    .titulo-evento{font-family:'Rye',serif;font-size:clamp(2rem,8vw,3rem);color:var(--dorado-claro);line-height:1.1;text-shadow:0 0 20px rgba(240,192,64,0.4),2px 2px 0 var(--tierra);margin-bottom:0.25rem}
+    .subtitulo{font-family:'Josefin Sans',sans-serif;font-size:0.75rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--arena);margin-bottom:1rem}
+    .separador{display:flex;align-items:center;gap:0.75rem;margin:0.75rem 0;opacity:0.6}
+    .separador::before,.separador::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--dorado),transparent)}
+    .separador span{color:var(--dorado);font-size:14px}
+    .fecha-bloque{display:flex;justify-content:center;gap:2rem;margin:1rem 0}
+    .fecha-item{text-align:center}
+    .fecha-numero{font-family:'Rye',serif;font-size:2rem;color:var(--dorado-claro);line-height:1;display:block}
+    .fecha-label{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--arena);opacity:0.8}
+    .mensaje-bienvenida{font-size:0.85rem;color:var(--paja);line-height:1.6;margin:1rem 0 0;opacity:0.9}
 
-    .star {
-      position: absolute;
-      background: white;
-      border-radius: 50%;
-      animation: twinkle var(--dur) ease-in-out infinite alternate;
-      animation-delay: var(--delay);
-    }
+    /* VIC */
+    .vic-wrap{position:relative;margin:-1rem 0 0;animation:vic-entrada 1s cubic-bezier(0.34,1.3,0.64,1) 0.3s both}
+    .vic-img{height:clamp(200px,40vw,280px);filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
+    @keyframes vic-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+    @keyframes vic-entrada{from{opacity:0;transform:translateX(60px) rotate(5deg)}to{opacity:1;transform:translateX(0) rotate(0deg)}}
 
-    @keyframes twinkle {
-      from { opacity: 0.2; transform: scale(0.8); }
-      to   { opacity: 1;   transform: scale(1.2); }
-    }
+    /* BOTONES */
+    .botones{display:flex;flex-direction:column;gap:0.75rem;width:100%;max-width:380px;margin-top:1.5rem;animation:entrar 0.8s ease 0.5s both}
+    .btn{display:flex;align-items:center;justify-content:center;gap:0.6rem;padding:1rem 1.5rem;border-radius:4px;font-family:'Josefin Sans',sans-serif;font-size:0.85rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none;transition:all 0.15s;position:relative;overflow:hidden}
+    .btn::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,0);transition:background 0.15s}
+    .btn:active::after{background:rgba(255,255,255,0.1)}
+    .btn-primario{background:linear-gradient(160deg,var(--rojo-vivo),var(--rojo));color:var(--hueso);border:1px solid rgba(255,255,255,0.15);box-shadow:0 4px 20px rgba(192,57,43,0.4),inset 0 1px 0 rgba(255,255,255,0.1)}
+    .btn-primario:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(192,57,43,0.5)}
+    .btn-secundario{background:transparent;color:var(--arena);border:1px solid rgba(200,160,106,0.4)}
+    .btn-secundario:hover{background:rgba(200,160,106,0.08);border-color:var(--arena);color:var(--hueso)}
 
-    /* ── SUELO: SILUETA DE PRADERA ────────────────────────── */
-    .pradera {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 2;
-      pointer-events: none;
-    }
+    /* AYUDA WHATSAPP */
+    .ayuda-wa{display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.5rem;padding:0.7rem 1rem;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.25);border-radius:4px;text-decoration:none;transition:all 0.15s;width:100%;max-width:380px;animation:entrar 0.8s ease 0.6s both}
+    .ayuda-wa:hover{background:rgba(37,211,102,0.18)}
+    .ayuda-wa-txt{font-size:0.75rem;color:#7efca8}
 
-    /* ── CONTENIDO PRINCIPAL ──────────────────────────────── */
-    .contenido {
-      position: relative;
-      z-index: 10;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 1.5rem 8rem;
-    }
+    /* CUPO BADGE */
+    .cupo-badge{display:inline-flex;align-items:center;gap:0.4rem;background:rgba(201,146,42,0.15);border:1px solid rgba(201,146,42,0.3);border-radius:20px;padding:0.35rem 0.9rem;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--dorado);margin-top:1rem;animation:entrar 0.8s ease 0.7s both}
+    .cupo-dot{width:6px;height:6px;border-radius:50%;background:var(--dorado-claro);animation:pulse 2s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)}}
 
-    /* ── CARTEL PRINCIPAL (madera) ────────────────────────── */
-    .cartel {
-      margin-top: 2.5rem;
-      background: linear-gradient(160deg, #5c3210 0%, #3d1f00 40%, #2a1200 100%);
-      border: 3px solid var(--dorado);
-      border-radius: 4px;
-      padding: 2rem 2.5rem 1.5rem;
-      text-align: center;
-      position: relative;
-      box-shadow:
-        0 0 0 1px #1a0a00,
-        0 0 0 5px #6b3a1f,
-        0 8px 40px rgba(0,0,0,0.7),
-        inset 0 1px 0 rgba(255,255,255,0.05);
-      max-width: 480px;
-      width: 100%;
-      animation: entrar 0.8s cubic-bezier(0.34,1.56,0.64,1) both;
-    }
+    .footer{position:fixed;bottom:0;left:0;right:0;z-index:20;text-align:center;padding:1rem;background:linear-gradient(0deg,rgba(6,12,20,0.95) 0%,transparent 100%)}
+    .footer-text{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--arena);opacity:0.5}
 
-    /* Tornillos decorativos */
-    .cartel::before, .cartel::after {
-      content: '✦';
-      position: absolute;
-      color: var(--dorado);
-      font-size: 14px;
-      opacity: 0.7;
-    }
-    .cartel::before { top: 10px; left: 14px; }
-    .cartel::after  { top: 10px; right: 14px; }
+    .loading-overlay{position:fixed;inset:0;background:var(--tierra);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;transition:opacity 0.5s ease}
+    .loading-overlay.oculto{opacity:0;pointer-events:none}
+    .loading-titulo{font-family:'Rye',serif;font-size:2.5rem;color:var(--dorado-claro);text-shadow:0 0 30px rgba(240,192,64,0.5);animation:brillo 1.5s ease-in-out infinite alternate}
+    .loading-sub{font-size:0.7rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--arena);opacity:0.7}
+    @keyframes brillo{from{text-shadow:0 0 20px rgba(240,192,64,0.3)}to{text-shadow:0 0 40px rgba(240,192,64,0.8),0 0 80px rgba(240,192,64,0.3)}}
+    @keyframes entrar{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 
-    .cartel-tornillo-bl::before,
-    .cartel-tornillo-br::after {
-      content: '✦';
-      position: absolute;
-      color: var(--dorado);
-      font-size: 14px;
-      opacity: 0.7;
-    }
-
-    .estrella-deco {
-      color: var(--dorado-claro);
-      font-size: 13px;
-      letter-spacing: 12px;
-      opacity: 0.8;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-
-    .titulo-evento {
-      font-family: 'Rye', serif;
-      font-size: clamp(2rem, 8vw, 3rem);
-      color: var(--dorado-claro);
-      line-height: 1.1;
-      text-shadow:
-        0 0 20px rgba(240,192,64,0.4),
-        2px 2px 0 var(--tierra);
-      margin-bottom: 0.25rem;
-    }
-
-    .subtitulo {
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: 0.75rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--arena);
-      margin-bottom: 1rem;
-    }
-
-    .separador {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin: 0.75rem 0;
-      opacity: 0.6;
-    }
-    .separador::before,
-    .separador::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--dorado), transparent);
-    }
-    .separador span {
-      color: var(--dorado);
-      font-size: 14px;
-    }
-
-    .fecha-bloque {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      margin: 1rem 0;
-    }
-
-    .fecha-item {
-      text-align: center;
-    }
-
-    .fecha-numero {
-      font-family: 'Rye', serif;
-      font-size: 2rem;
-      color: var(--dorado-claro);
-      line-height: 1;
-      display: block;
-    }
-
-    .fecha-label {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--arena);
-      opacity: 0.8;
-    }
-
-    .mensaje-bienvenida {
-      font-size: 0.85rem;
-      color: var(--paja);
-      line-height: 1.6;
-      margin: 1rem 0 0;
-      opacity: 0.9;
-    }
-
-    /* ── VIC ──────────────────────────────────────────────── */
-    .vic-wrap {
-      position: relative;
-      margin: -1rem 0 0;
-      animation: vic-entrada 1s cubic-bezier(0.34,1.3,0.64,1) 0.3s both;
-    }
-
-    .vic-img {
-      height: clamp(200px, 40vw, 280px);
-      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6));
-      animation: vic-float 3s ease-in-out infinite;
-    }
-
-    @keyframes vic-float {
-      0%, 100% { transform: translateY(0px); }
-      50%       { transform: translateY(-8px); }
-    }
-
-    @keyframes vic-entrada {
-      from { opacity: 0; transform: translateX(60px) rotate(5deg); }
-      to   { opacity: 1; transform: translateX(0) rotate(0deg); }
-    }
-
-    /* ── BOTONES ──────────────────────────────────────────── */
-    .botones {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      width: 100%;
-      max-width: 380px;
-      margin-top: 1.5rem;
-      animation: entrar 0.8s ease 0.5s both;
-    }
-
-    .btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-      padding: 1rem 1.5rem;
-      border-radius: 3px;
-      font-family: 'Josefin Sans', sans-serif;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      transition: all 0.15s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0);
-      transition: background 0.15s;
-    }
-
-    .btn:active::after {
-      background: rgba(255,255,255,0.1);
-    }
-
-    .btn-primario {
-      background: linear-gradient(160deg, var(--rojo-vivo), var(--rojo));
-      color: var(--hueso);
-      border: 1px solid rgba(255,255,255,0.15);
-      box-shadow: 0 4px 20px rgba(192,57,43,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-
-    .btn-primario:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 28px rgba(192,57,43,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
-    }
-
-    .btn-secundario {
-      background: transparent;
-      color: var(--arena);
-      border: 1px solid rgba(200,160,106,0.4);
-    }
-
-    .btn-secundario:hover {
-      background: rgba(200,160,106,0.08);
-      border-color: var(--arena);
-      color: var(--hueso);
-    }
-
-    .btn-icon {
-      font-size: 1.1rem;
-    }
-
-    /* ── BADGE DE CUPO ────────────────────────────────────── */
-    .cupo-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: rgba(201,146,42,0.15);
-      border: 1px solid rgba(201,146,42,0.3);
-      border-radius: 20px;
-      padding: 0.35rem 0.9rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--dorado);
-      margin-top: 1rem;
-      animation: entrar 0.8s ease 0.7s both;
-    }
-
-    .cupo-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--dorado-claro);
-      animation: pulse 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(0.7); }
-    }
-
-    /* ── FOOTER ───────────────────────────────────────────── */
-    .footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 20;
-      text-align: center;
-      padding: 1rem;
-      background: linear-gradient(0deg, rgba(6,12,20,0.95) 0%, transparent 100%);
-    }
-
-    .footer-text {
-      font-size: 0.65rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--arena);
-      opacity: 0.5;
-    }
-
-    /* ── PANTALLA DE CARGA ────────────────────────────────── */
-    .loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: var(--tierra);
-      z-index: 100;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      transition: opacity 0.5s ease;
-    }
-
-    .loading-overlay.oculto {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .loading-titulo {
-      font-family: 'Rye', serif;
-      font-size: 2.5rem;
-      color: var(--dorado-claro);
-      text-shadow: 0 0 30px rgba(240,192,64,0.5);
-      animation: brillo 1.5s ease-in-out infinite alternate;
-    }
-
-    .loading-sub {
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--arena);
-      opacity: 0.7;
-    }
-
-    @keyframes brillo {
-      from { text-shadow: 0 0 20px rgba(240,192,64,0.3); }
-      to   { text-shadow: 0 0 40px rgba(240,192,64,0.8), 0 0 80px rgba(240,192,64,0.3); }
-    }
-
-    /* ── ANIMACIONES GENERALES ────────────────────────────── */
-    @keyframes entrar {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── ESTADO: REGISTRO CERRADO ─────────────────────────── */
-    .aviso-cerrado {
-      background: rgba(139,26,26,0.2);
-      border: 1px solid rgba(139,26,26,0.4);
-      border-radius: 3px;
-      padding: 0.75rem 1rem;
-      font-size: 0.8rem;
-      color: #e08080;
-      text-align: center;
-      margin-top: 0.5rem;
-      width: 100%;
-      max-width: 380px;
-      animation: entrar 0.5s ease both;
-    }
+    .aviso-cerrado{background:rgba(139,26,26,0.2);border:1px solid rgba(139,26,26,0.4);border-radius:4px;padding:0.75rem 1rem;font-size:0.8rem;color:#e08080;text-align:center;margin-top:0.5rem;width:100%;max-width:380px;animation:entrar 0.5s ease both}
   </style>
 </head>
 <body>
 
-  <!-- Pantalla de carga -->
-  <div class="loading-overlay" id="loading">
-    <div class="loading-titulo">Yiha!</div>
-    <div class="loading-sub">Preparando el salón...</div>
+<div class="loading-overlay" id="loading">
+  <div class="loading-titulo">Yiha!</div>
+  <div class="loading-sub">Preparando el salón...</div>
+</div>
+
+<div class="sky"></div>
+<div class="stars" id="stars"></div>
+
+<svg class="pradera" viewBox="0 0 1440 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0,180 L0,120 Q80,90 120,110 Q160,130 200,100 Q240,70 280,95 Q320,120 380,85 Q420,60 460,80 Q500,100 560,70 Q600,50 640,75 Q680,100 730,65 Q760,45 800,70 Q840,95 900,60 Q940,40 980,65 Q1020,90 1080,55 Q1120,30 1160,60 Q1200,90 1260,70 Q1300,55 1340,80 Q1380,105 1440,90 L1440,180 Z" fill="#0d0600" opacity="0.95"/>
+  <g fill="#0a1a08" opacity="0.8"><rect x="60" y="60" width="8" height="60"/><rect x="40" y="80" width="28" height="7" rx="3"/><rect x="40" y="73" width="8" height="14" rx="3"/><rect x="60" y="93" width="28" height="7" rx="3"/><rect x="80" y="86" width="8" height="14" rx="3"/></g>
+  <g fill="#0a1a08" opacity="0.8"><rect x="1372" y="50" width="8" height="70"/><rect x="1352" y="72" width="28" height="7" rx="3"/><rect x="1352" y="65" width="8" height="14" rx="3"/></g>
+  <circle cx="1300" cy="30" r="18" fill="#f5ecd7" opacity="0.15"/>
+</svg>
+
+<div class="contenido">
+
+  <!-- LOGO MARCA DE AGUA -->
+  <img src="img/logo_negro.png" alt="221 Country La Plata" class="logo-watermark">
+
+  <div class="cartel" id="cartel">
+    <span class="estrella-deco">★ ★ ★</span>
+    <div class="titulo-evento">Cumple<br>221</div>
+    <div class="subtitulo">Country La Plata · Aniversario</div>
+    <div class="separador"><span>✦</span></div>
+    <div class="fecha-bloque">
+      <div class="fecha-item"><span class="fecha-numero">03</span><span class="fecha-label">Octubre</span></div>
+      <div class="fecha-item"><span class="fecha-numero">2026</span><span class="fecha-label">Año</span></div>
+      <div class="fecha-item"><span class="fecha-numero">21hs</span><span class="fecha-label">Hora</span></div>
+    </div>
+    <div class="separador"><span>✦</span></div>
+    <p class="mensaje-bienvenida" id="msgBienvenida">¡Te esperamos! Registrate y asegurate tu lugar.</p>
   </div>
 
-  <!-- Fondo -->
-  <div class="sky"></div>
-  <div class="stars" id="stars"></div>
-
-  <!-- Silueta pradera SVG -->
-  <svg class="pradera" viewBox="0 0 1440 180" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0,180 L0,120 Q80,90 120,110 Q160,130 200,100 Q240,70 280,95 Q320,120 380,85 Q420,60 460,80 Q500,100 560,70 Q600,50 640,75 Q680,100 730,65 Q760,45 800,70 Q840,95 900,60 Q940,40 980,65 Q1020,90 1080,55 Q1120,30 1160,60 Q1200,90 1260,70 Q1300,55 1340,80 Q1380,105 1440,90 L1440,180 Z" fill="#0d0600" opacity="0.95"/>
-    <!-- cactus izquierdo -->
-    <g fill="#0a1a08" opacity="0.8">
-      <rect x="60" y="60" width="8" height="60"/>
-      <rect x="40" y="80" width="28" height="7" rx="3"/>
-      <rect x="40" y="73" width="8" height="14" rx="3"/>
-      <rect x="60" y="93" width="28" height="7" rx="3"/>
-      <rect x="80" y="86" width="8" height="14" rx="3"/>
-    </g>
-    <!-- cactus derecho -->
-    <g fill="#0a1a08" opacity="0.8">
-      <rect x="1372" y="50" width="8" height="70"/>
-      <rect x="1352" y="72" width="28" height="7" rx="3"/>
-      <rect x="1352" y="65" width="8" height="14" rx="3"/>
-    </g>
-    <!-- luna -->
-    <circle cx="1300" cy="30" r="18" fill="#f5ecd7" opacity="0.15"/>
-  </svg>
-
-  <!-- Contenido -->
-  <div class="contenido">
-
-    <div class="cartel" id="cartel">
-      <span class="estrella-deco">★ ★ ★</span>
-      <div class="titulo-evento">Cumple<br>221</div>
-      <div class="subtitulo">Country La Plata · Aniversario</div>
-      <div class="separador"><span>✦</span></div>
-      <div class="fecha-bloque">
-        <div class="fecha-item">
-          <span class="fecha-numero">03</span>
-          <span class="fecha-label">Octubre</span>
-        </div>
-        <div class="fecha-item">
-          <span class="fecha-numero">2026</span>
-          <span class="fecha-label">Año</span>
-        </div>
-        <div class="fecha-item">
-          <span class="fecha-numero">21hs</span>
-          <span class="fecha-label">Hora</span>
-        </div>
-      </div>
-      <div class="separador"><span>✦</span></div>
-      <p class="mensaje-bienvenida" id="msgBienvenida">
-        ¡El salón te espera, cowboy!<br>Registrate y asegurate tu lugar.
-      </p>
-    </div>
-
-    <div class="vic-wrap">
-      <img class="vic-img" src="img/vic_sombrero.png" alt="Vic el cowboy" id="vic"/>
-    </div>
-
-    <!-- Botones dinámicos según estado -->
-    <div class="botones" id="botones">
-      <a href="registro.html" class="btn btn-primario" id="btnRegistro">
-        <span class="btn-icon">🤠</span>
-        <span>¡Quiero mi lugar!</span>
-      </a>
-      <a href="panel.html" class="btn btn-secundario">
-        <span class="btn-icon">🎫</span>
-        <span>Ya me registré · Ver mi grupo</span>
-      </a>
-    </div>
-
-    <div id="avisoCerrado" style="display:none" class="aviso-cerrado">
-      🔒 El registro aún no está abierto.<br>¡Seguinos en Instagram para enterarte cuando abre!
-    </div>
-
-    <div class="cupo-badge" id="cupoBadge" style="visibility:hidden">
-      <div class="cupo-dot"></div>
-      <span id="cupoTexto">Cargando cupo...</span>
-    </div>
-
+  <div class="vic-wrap">
+    <img class="vic-img" src="img/vic_sombrero.png" alt="Vic el cowboy" id="vic"/>
   </div>
 
-  <div class="footer">
-    <div class="footer-text">221 Country La Plata · Yiha! 🌵</div>
+  <div class="botones" id="botones">
+    <a href="registro.html" class="btn btn-primario" id="btnRegistro">
+      <span>🤠</span><span>¡Quiero mi lugar!</span>
+    </a>
+    <a href="panel.html" class="btn btn-secundario">
+      <span>🎫</span><span>Ya me registré · Ver mi grupo</span>
+    </a>
   </div>
 
-  <script>
-    const API = 'https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
+  <div id="avisoCerrado" style="display:none" class="aviso-cerrado">
+    🔒 El registro aún no está abierto.<br>¡Seguinos en Instagram para enterarte cuando abre!
+  </div>
 
-    // ── Generar estrellas ──────────────────────────────────
-    (function generarEstrellas() {
-      const cont = document.getElementById('stars');
-      for (let i = 0; i < 120; i++) {
-        const s = document.createElement('div');
-        s.className = 'star';
-        const size = Math.random() * 2.5 + 0.5;
-        s.style.cssText = `
-          width:${size}px; height:${size}px;
-          top:${Math.random()*65}%;
-          left:${Math.random()*100}%;
-          --dur:${2+Math.random()*3}s;
-          --delay:${Math.random()*4}s;
-        `;
-        cont.appendChild(s);
-      }
-    })();
+  <!-- AYUDA WHATSAPP -->
+  <a class="ayuda-wa" id="ayudaWa" href="#" target="_blank" style="display:none">
+    <span class="ayuda-wa-txt">¿Dudas? Escribinos por WhatsApp →</span>
+  </a>
 
-    // ── Cargar config desde Apps Script ───────────────────
-    async function cargarConfig() {
-      try {
-        const res = await fetch(`${API}?action=config`);
-        const data = await res.json();
+  <div class="cupo-badge" id="cupoBadge" style="visibility:hidden">
+    <div class="cupo-dot"></div>
+    <span id="cupoTexto">Cargando cupo...</span>
+  </div>
 
-        if (!data.ok) throw new Error(data.error);
+</div>
 
-        const cfg = data.config;
+<div class="footer"><div class="footer-text">221 Country La Plata · Yiha! 🌵</div></div>
 
-        // Mensaje de bienvenida
-        if (cfg.mensaje_bienvenida) {
-          document.getElementById('msgBienvenida').textContent = cfg.mensaje_bienvenida;
-        }
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
 
-        // Fecha y hora del evento
-        if (cfg.fecha_evento) {
-          const partes = cfg.fecha_evento.split('-');
-          const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-          const items = document.querySelectorAll('.fecha-numero');
-          if (items.length >= 2) {
-            items[0].textContent = partes[2];                    // día
-            items[1].textContent = meses[parseInt(partes[1])-1]; // mes
-            items[2].textContent = partes[0];                    // año
-          }
-          // Ajustar label del mes
-          document.querySelectorAll('.fecha-label')[0].textContent = meses[parseInt(partes[1])-1];
-          document.querySelectorAll('.fecha-label')[1].textContent = partes[0];
-        }
+(function(){
+  const c=document.getElementById('stars');
+  for(let i=0;i<120;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*2.5+0.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*65}%;left:${Math.random()*100}%;--dur:${2+Math.random()*3}s;--delay:${Math.random()*4}s`;
+    c.appendChild(s);
+  }
+})();
 
-        if (cfg.hora_evento) {
-          document.querySelectorAll('.fecha-numero')[2].textContent = cfg.hora_evento + 'hs';
-          document.querySelectorAll('.fecha-label')[2].textContent = 'Hora';
-        }
+async function cargarConfig() {
+  try {
+    const res = await fetch(`${API}?action=config`);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error);
+    const cfg = data.config;
 
-        // Control de registro abierto/cerrado
-        const abierto = String(cfg.registro_abierto).toUpperCase().trim() === 'SI';
-        const btnReg = document.getElementById('btnRegistro');
-        const aviso = document.getElementById('avisoCerrado');
+    if (cfg.mensaje_bienvenida) document.getElementById('msgBienvenida').textContent = cfg.mensaje_bienvenida;
 
-        if (!abierto) {
-          btnReg.style.opacity = '0.4';
-          btnReg.style.pointerEvents = 'none';
-          aviso.style.display = 'block';
-        }
-
-        // Cupo disponible (calculado en backend cuando tengamos ese endpoint)
-        // Por ahora mostramos cupo total
-        if (cfg.cupo_total) {
-          document.getElementById('cupoTexto').textContent =
-            `Capacidad: ${cfg.cupo_total} personas`;
-          document.getElementById('cupoBadge').style.visibility = 'visible';
-        }
-
-      } catch(e) {
-        console.warn('No se pudo cargar config:', e);
-        // Si falla, igual mostramos la pantalla con valores por defecto
-      } finally {
-        // Ocultar loading
-        setTimeout(() => {
-          document.getElementById('loading').classList.add('oculto');
-        }, 600);
-      }
+    if (cfg.fecha_evento) {
+      const p = cfg.fecha_evento.split('-');
+      const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+      const items = document.querySelectorAll('.fecha-numero');
+      items[0].textContent = p[2];
+      items[1].textContent = p[0];
+      items[2].textContent = (cfg.hora_evento || '21:00') + 'hs';
+      document.querySelectorAll('.fecha-label')[0].textContent = meses[parseInt(p[1])-1];
+      document.querySelectorAll('.fecha-label')[1].textContent = p[0];
+      document.querySelectorAll('.fecha-label')[2].textContent = 'Hora';
     }
 
-    cargarConfig();
-  </script>
+    const abierto = String(cfg.registro_abierto).toUpperCase().trim() === 'SI';
+    if (!abierto) {
+      document.getElementById('btnRegistro').style.opacity = '0.4';
+      document.getElementById('btnRegistro').style.pointerEvents = 'none';
+      document.getElementById('avisoCerrado').style.display = 'block';
+    }
 
+    if (cfg.cupo_total) {
+      document.getElementById('cupoTexto').textContent = `Capacidad: ${cfg.cupo_total} personas`;
+      document.getElementById('cupoBadge').style.visibility = 'visible';
+    }
+
+    // WhatsApp de ayuda
+    if (cfg.whatsapp_evento) {
+      const waNum = String(cfg.whatsapp_evento).replace(/\D/g,'');
+      const link = document.getElementById('ayudaWa');
+      link.href = `https://wa.me/${waNum}?text=Hola!%20Tengo%20una%20consulta%20sobre%20el%20cumple%20221`;
+      link.style.display = 'flex';
+    }
+
+  } catch(e) { console.warn('No se pudo cargar config:', e); }
+  finally { setTimeout(() => document.getElementById('loading').classList.add('oculto'), 600); }
+}
+
+cargarConfig();
+</script>
 </body>
 </html>
