@@ -779,6 +779,18 @@ function mostrarToast(tipo, msg) {
 }
 
 cargarMenus();
+
+// Auto-login desde URL
+(function(){
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const cel = params.get('cel');
+  if (id && cel) {
+    document.getElementById('loginId').value = id.toUpperCase();
+    document.getElementById('loginCelular').value = cel;
+    setTimeout(entrarPanel, 800);
+  }
+})();
 </script>
 </body>
 </html>

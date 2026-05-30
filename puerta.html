@@ -472,26 +472,33 @@ let grupoCheckinIds = [];
 function abrirScanner() {
   document.getElementById('modalScanner').classList.add('visible');
   
+  // Dar tiempo al modal para renderizar
   setTimeout(() => {
     html5QrCode = new Html5Qrcode('qrReader');
     
-    html5QrCode.start(
-      { facingMode: 'environment' },
-      { fps: 15, qrbox: { width: 200, height: 200 } },
-      onQrScanned,
-      () => {}
-    ).catch(err => {
-      console.error('Error cámara trasera, intentando frontal:', err);
-      // Si falla la trasera, intentar con cualquiera
-      html5QrCode.start(
-        { facingMode: 'user' },
-        { fps: 15, qrbox: { width: 200, height: 200 } },
-        onQrScanned,
-        () => {}
-      ).catch(err2 => {
-        mostrarToast('No se pudo iniciar la cámara. Revisá los permisos.');
+    Html5Qrcode.getCameras().then(cameras => {
+      if (cameras && cameras.length > 0) {
+        // Preferir cámara trasera
+        const camaraId = cameras.length > 1 ? cameras[1].id : cameras[0].id;
+        
+        html5QrCode.start(
+          camaraId,
+          { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 },
+          onQrScanned,
+          () => {}
+        ).catch(err => {
+          console.error('Error al iniciar cámara:', err);
+          mostrarToast('No se pudo iniciar la cámara. Revisá los permisos.');
+          cerrarScanner();
+        });
+      } else {
+        mostrarToast('No se encontró ninguna cámara');
         cerrarScanner();
-      });
+      }
+    }).catch(err => {
+      console.error('Error accediendo cámaras:', err);
+      mostrarToast('Permití el acceso a la cámara e intentá de nuevo');
+      cerrarScanner();
     });
   }, 300);
 }
