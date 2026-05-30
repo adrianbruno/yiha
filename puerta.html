@@ -91,8 +91,8 @@
     .modal-overlay.visible { opacity:1; pointer-events:all; }
     .modal-card { background:linear-gradient(160deg,#3d1f00,#1a0a00); border:1px solid rgba(200,160,106,0.3); border-radius:6px; padding:1.25rem; width:100%; max-width:400px; }
     .modal-titulo { font-family:'Rye',serif; font-size:1.1rem; color:var(--dorado-claro); text-align:center; margin-bottom:0.75rem; }
-    #qrReader { width:100%; min-height:300px; border-radius:4px; overflow:hidden; background:#000; }
-    #qrReader video { border-radius:4px; }
+    #qrReader { width:100%; min-height:280px; border-radius:4px; overflow:hidden; background:#000; }
+    #qrReader video { border-radius:4px; width:100%!important; }
 
     /* Grupo check-in */
     .grupo-checkin-nombre { font-family:'Rye',serif; font-size:1.3rem; color:var(--dorado-claro); text-align:center; margin-bottom:0.5rem; }
@@ -472,53 +472,75 @@ let grupoCheckinIds = [];
 function abrirScanner() {
   document.getElementById('modalScanner').classList.add('visible');
   
-  // Dar tiempo al modal para renderizar
   setTimeout(() => {
     html5QrCode = new Html5Qrcode('qrReader');
     
-    Html5Qrcode.getCameras().then(cameras => {
-      if (cameras && cameras.length > 0) {
-        // Preferir cámara trasera
-        const camaraId = cameras.length > 1 ? cameras[1].id : cameras[0].id;
-        
-        html5QrCode.start(
-          camaraId,
-          { fps: 10, qrbox: { width: 220, height: 220 }, aspectRatio: 1.0 },
-          onQrScanned,
-          () => {}
-        ).catch(err => {
-          console.error('Error al iniciar cámara:', err);
-          mostrarToast('No se pudo iniciar la cámara. Revisá los permisos.');
-          cerrarScanner();
-        });
-      } else {
-        mostrarToast('No se encontró ninguna cámara');
+    html5QrCode.start(
+      { facingMode: 'environment' },
+      { fps: 15, qrbox: { width: 200, height: 200 } },
+      onQrScanned,
+      () => {}
+    ).catch(err => {
+      console.error('Error cámara trasera:', err);
+      // Si falla la trasera, intentar con cualquiera
+      html5QrCode.start(
+        { facingMode: 'user' },
+        { fps: 15, qrbox: { width: 200, height: 200 } },
+        onQrScanned,
+        () => {}
+      ).catch(err2 => {
+        console.error('Error cámara frontal:', err2);
+        mostrarToast('No se pudo iniciar la cámara. Revisá los permisos.');
         cerrarScanner();
-      }
-    }).catch(err => {
-      console.error('Error accediendo cámaras:', err);
-      mostrarToast('Permití el acceso a la cámara e intentá de nuevo');
-      cerrarScanner();
+      });
     });
-  }, 300);
+  }, 400);
 }
 
 function cerrarScanner() {
+  const modal = document.getElementById('modalScanner');
   if (html5QrCode) {
-    html5QrCode.stop().catch(() => {});
-    html5QrCode.clear();
+    const scanner = html5QrCode;
     html5QrCode = null;
+    scanner.stop().then(() => {
+      try { scanner.clear(); } catch(e) {}
+      modal.classList.remove('visible');
+    }).catch(() => {
+      try { scanner.clear(); } catch(e) {}
+      modal.classList.remove('visible');
+    });
+  } else {
+    modal.classList.remove('visible');
   }
-  document.getElementById('modalScanner').classList.remove('visible');
 }
 
 function onQrScanned(decodedText) {
-  cerrarScanner();
+  // Evitar lecturas duplicadas
+  if (!html5QrCode) return;
+  
   const grupoId = decodedText.trim().toUpperCase();
+  console.log('QR leído:', grupoId);
+  
+  // Cerrar scanner y después procesar
+  const modal = document.getElementById('modalScanner');
+  const scanner = html5QrCode;
+  html5QrCode = null;
+  
+  scanner.stop().then(() => {
+    try { scanner.clear(); } catch(e) {}
+    modal.classList.remove('visible');
+    procesarQR(grupoId);
+  }).catch(() => {
+    try { scanner.clear(); } catch(e) {}
+    modal.classList.remove('visible');
+    procesarQR(grupoId);
+  });
+}
 
+function procesarQR(grupoId) {
   // Buscar personas de este grupo
   const personasGrupo = todasLasPersonas.filter(p =>
-    p.grupo_id === grupoId && p.estado !== 'baja'
+    String(p.grupo_id).toUpperCase() === grupoId && p.estado !== 'baja'
   );
 
   if (personasGrupo.length === 0) {
