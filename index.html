@@ -171,7 +171,19 @@ async function cargarConfig() {
     if (!data.ok) throw new Error(data.error);
     const cfg = data.config;
 
-    if (cfg.mensaje_bienvenida) document.getElementById('msgBienvenida').textContent = cfg.mensaje_bienvenida;
+    // Cuenta regresiva
+    if (cfg.fecha_evento) {
+      const hoy = new Date();
+      const evento = new Date(cfg.fecha_evento + 'T00:00:00');
+      const diff = Math.ceil((evento - hoy) / (1000 * 60 * 60 * 24));
+      if (diff > 0) {
+        document.getElementById('msgBienvenida').innerHTML = `¡Faltan <strong style="color:var(--dorado-claro)">${diff} días</strong> para el evento!<br>Registrate y asegurate tu lugar.`;
+      } else if (diff === 0) {
+        document.getElementById('msgBienvenida').innerHTML = `<strong style="color:var(--dorado-claro)">¡Es HOY!</strong> 🤠🎉`;
+      } else {
+        document.getElementById('msgBienvenida').textContent = cfg.mensaje_bienvenida || '¡Gracias por venir!';
+      }
+    }
 
     if (cfg.fecha_evento) {
       const p = cfg.fecha_evento.split('-');
