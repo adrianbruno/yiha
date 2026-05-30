@@ -519,41 +519,52 @@ function cerrarScanner() {
 }
 
 function onQrScanned(decodedText) {
-  // Evitar lecturas duplicadas
   if (!html5QrCode) return;
   
   const grupoId = decodedText.trim().toUpperCase();
-  console.log('QR leído:', grupoId);
   
-  // Cerrar scanner y después procesar
-  const modal = document.getElementById('modalScanner');
   const scanner = html5QrCode;
   html5QrCode = null;
   
   scanner.stop().then(() => {
     try { scanner.clear(); } catch(e) {}
-    modal.classList.remove('visible');
+    document.getElementById('qrReader').innerHTML = '';
+    document.getElementById('modalScanner').classList.remove('visible');
     procesarQR(grupoId);
   }).catch(() => {
     try { scanner.clear(); } catch(e) {}
-    modal.classList.remove('visible');
+    document.getElementById('qrReader').innerHTML = '';
+    document.getElementById('modalScanner').classList.remove('visible');
     procesarQR(grupoId);
   });
 }
 
-function procesarQR(grupoId) {
-  console.log('Buscando grupo:', grupoId, 'en', todasLasPersonas.length, 'personas');
+async function procesarQR(grupoId) {
+  // Mostrar que estamos procesando
+  mostrarToast('Buscando grupo ' + grupoId + '...');
+  
+  // Recargar datos frescos del servidor
+  try {
+    const res = await fetch(`${API}?action=personas_evento&password=${encodeURIComponent(passwordAdmin)}`);
+    const data = await res.json();
+    if (data.ok) {
+      todasLasPersonas = data.personas || [];
+      actualizarContadores();
+    }
+  } catch(e) {}
+  
+  // DEBUG temporal: mostrar info
+  const total = todasLasPersonas.length;
+  const grupos = [...new Set(todasLasPersonas.map(p => String(p.grupo_id || '')))];
   
   const personasGrupo = todasLasPersonas.filter(p => {
-    const match = String(p.grupo_id || '').trim().toUpperCase() === grupoId;
-    const activo = String(p.estado || '') !== 'baja';
-    return match && activo;
+    return String(p.grupo_id || '').trim().toUpperCase() === grupoId && String(p.estado || '') !== 'baja';
   });
 
-  console.log('Encontradas:', personasGrupo.length);
-
   if (personasGrupo.length === 0) {
-    mostrarToast('No encontramos el grupo ' + grupoId + '. Probá buscando por nombre.');
+    // Debug: mostrar qué grupos existen
+    alert('DEBUG (temporal):\nBuscando: ' + grupoId + '\nPersonas totales: ' + total + '\nGrupos existentes: ' + grupos.join(', '));
+    mostrarToast('No encontramos el grupo ' + grupoId);
     return;
   }
 
