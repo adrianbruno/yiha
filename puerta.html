@@ -470,6 +470,10 @@ let html5QrCode = null;
 let grupoCheckinIds = [];
 
 function abrirScanner() {
+  // Limpiar completamente el contenedor antes de crear nuevo scanner
+  const reader = document.getElementById('qrReader');
+  reader.innerHTML = '';
+  
   document.getElementById('modalScanner').classList.add('visible');
   
   setTimeout(() => {
@@ -481,16 +485,13 @@ function abrirScanner() {
       onQrScanned,
       () => {}
     ).catch(err => {
-      console.error('Error cámara trasera:', err);
-      // Si falla la trasera, intentar con cualquiera
       html5QrCode.start(
         { facingMode: 'user' },
         { fps: 15, qrbox: { width: 200, height: 200 } },
         onQrScanned,
         () => {}
       ).catch(err2 => {
-        console.error('Error cámara frontal:', err2);
-        mostrarToast('No se pudo iniciar la cámara. Revisá los permisos.');
+        mostrarToast('No se pudo iniciar la cámara');
         cerrarScanner();
       });
     });
@@ -504,12 +505,15 @@ function cerrarScanner() {
     html5QrCode = null;
     scanner.stop().then(() => {
       try { scanner.clear(); } catch(e) {}
+      document.getElementById('qrReader').innerHTML = '';
       modal.classList.remove('visible');
     }).catch(() => {
       try { scanner.clear(); } catch(e) {}
+      document.getElementById('qrReader').innerHTML = '';
       modal.classList.remove('visible');
     });
   } else {
+    document.getElementById('qrReader').innerHTML = '';
     modal.classList.remove('visible');
   }
 }
