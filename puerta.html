@@ -538,13 +538,18 @@ function onQrScanned(decodedText) {
 }
 
 function procesarQR(grupoId) {
-  // Buscar personas de este grupo
-  const personasGrupo = todasLasPersonas.filter(p =>
-    String(p.grupo_id).toUpperCase() === grupoId && p.estado !== 'baja'
-  );
+  console.log('Buscando grupo:', grupoId, 'en', todasLasPersonas.length, 'personas');
+  
+  const personasGrupo = todasLasPersonas.filter(p => {
+    const match = String(p.grupo_id || '').trim().toUpperCase() === grupoId;
+    const activo = String(p.estado || '') !== 'baja';
+    return match && activo;
+  });
+
+  console.log('Encontradas:', personasGrupo.length);
 
   if (personasGrupo.length === 0) {
-    mostrarToast('No encontramos el grupo ' + grupoId);
+    mostrarToast('No encontramos el grupo ' + grupoId + '. Probá buscando por nombre.');
     return;
   }
 
@@ -630,6 +635,7 @@ async function confirmarCheckinGrupo() {
       });
       const data = await res.json();
       if (data.ok) {
+        // Actualizar local inmediatamente
         const idx = todasLasPersonas.findIndex(p => p.id === personaId);
         if (idx !== -1) todasLasPersonas[idx].asistio = 'SI';
         ok++;
@@ -640,16 +646,15 @@ async function confirmarCheckinGrupo() {
   }
 
   actualizarContadores();
-  cerrarModalGrupo();
   
-  // Recargar datos del servidor para tener todo actualizado
-  await cargarPersonas();
+  const primerPersona = todasLasPersonas.find(p => p.id === grupoCheckinIds[0]);
+  const menuNombre = primerPersona ? (menus.find(m => String(m.id) === String(primerPersona.menu_id))?.nombre || '') : '';
+  
+  cerrarModalGrupo();
 
   if (ok > 0) {
-    const persona = todasLasPersonas.find(p => p.id === grupoCheckinIds[0]);
-    const menuNombre = persona ? (menus.find(m => String(m.id) === String(persona.menu_id))?.nombre || '') : '';
     mostrarCheckin(
-      ok === 1 ? `${persona.nombre} ${persona.apellido}` : `${ok} personas del grupo`,
+      ok === 1 ? `${primerPersona.nombre} ${primerPersona.apellido}` : `${ok} personas`,
       menuNombre,
       false
     );
@@ -657,6 +662,9 @@ async function confirmarCheckinGrupo() {
   if (errors > 0) mostrarToast(`${errors} check-in(s) fallaron`);
 
   grupoCheckinIds = [];
+  
+  // Recargar datos en background
+  cargarPersonas();
 }
 
 function cerrarModalGrupo() {
