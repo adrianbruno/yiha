@@ -641,6 +641,9 @@ async function confirmarCheckinGrupo() {
 
   actualizarContadores();
   cerrarModalGrupo();
+  
+  // Recargar datos del servidor para tener todo actualizado
+  await cargarPersonas();
 
   if (ok > 0) {
     const persona = todasLasPersonas.find(p => p.id === grupoCheckinIds[0]);
