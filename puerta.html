@@ -540,7 +540,6 @@ function onQrScanned(decodedText) {
 }
 
 async function procesarQR(grupoId) {
-  // Mostrar que estamos procesando
   mostrarToast('Buscando grupo ' + grupoId + '...');
   
   // Recargar datos frescos del servidor
@@ -553,65 +552,79 @@ async function procesarQR(grupoId) {
     }
   } catch(e) {}
   
-  // DEBUG temporal: mostrar info
-  const total = todasLasPersonas.length;
-  const grupos = [...new Set(todasLasPersonas.map(p => String(p.grupo_id || '')))];
-  
   const personasGrupo = todasLasPersonas.filter(p => {
     return String(p.grupo_id || '').trim().toUpperCase() === grupoId && String(p.estado || '') !== 'baja';
   });
 
   if (personasGrupo.length === 0) {
-    // Debug: mostrar qué grupos existen
-    alert('DEBUG (temporal):\nBuscando: ' + grupoId + '\nPersonas totales: ' + total + '\nGrupos existentes: ' + grupos.join(', '));
-    mostrarToast('No encontramos el grupo ' + grupoId);
+    alert('No se encontró el grupo: ' + grupoId + '\nTotal personas: ' + todasLasPersonas.length);
     return;
   }
 
-  mostrarGrupoCheckin(grupoId, personasGrupo);
+  try {
+    mostrarGrupoCheckin(grupoId, personasGrupo);
+  } catch(err) {
+    alert('Error en mostrarGrupoCheckin: ' + err.message);
+  }
 }
 
 function mostrarGrupoCheckin(grupoId, personasGrupo) {
   grupoCheckinIds = [];
+  
+  // Reset completo del modal
   document.getElementById('grupoCheckinId').textContent = grupoId;
+  document.getElementById('btnCheckinGrupo').disabled = true;
+  document.getElementById('btnCheckinGrupo').innerHTML = '✅ Confirmar presentes (<span id="checkinCount">0</span>)';
+  document.getElementById('checkinCount').textContent = '0';
 
   const presentes = personasGrupo.filter(p => p.asistio === 'SI').length;
   const total = personasGrupo.length;
   document.getElementById('grupoCheckinSub').textContent =
     presentes === total ? '¡Ya están todos presentes!'
-    : presentes > 0 ? `${presentes} de ${total} ya presentes · Seleccioná los que llegan`
+    : presentes > 0 ? presentes + ' de ' + total + ' ya presentes'
     : 'Seleccioná quiénes están presentes';
 
   const lista = document.getElementById('grupoCheckinLista');
   lista.innerHTML = '';
 
-  personasGrupo.forEach(p => {
-    const yaPresente = p.asistio === 'SI';
-    const confirmado = p.estado === 'confirmado';
-    const menuNombre = menus.find(m => String(m.id) === String(p.menu_id))?.nombre || '';
+  personasGrupo.forEach(function(p) {
+    var yaPresente = String(p.asistio) === 'SI';
+    var confirmado = String(p.estado) === 'confirmado';
+    var menuNombre = '';
+    for (var i = 0; i < menus.length; i++) {
+      if (String(menus[i].id) === String(p.menu_id)) { menuNombre = menus[i].nombre; break; }
+    }
 
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.className = 'persona-check' + (yaPresente ? ' ya-presente checked' : '');
-    div.dataset.personaId = p.id;
-    div.innerHTML = `
-      <div class="check-box">${yaPresente ? '✅' : ''}</div>
-      <div style="flex:1">
-        <div class="check-nombre">${p.nombre} ${p.apellido}</div>
-        ${menuNombre ? `<div class="check-menu">🍽 ${menuNombre}</div>` : ''}
-      </div>
-      ${yaPresente ? '<span style="font-size:0.65rem;color:#7efca8">Ya presente</span>' : ''}
-      ${!confirmado ? `<span style="font-size:0.65rem;color:#f08080">${p.estado.replace('_',' ')}</span>` : ''}
-    `;
+    div.setAttribute('data-persona-id', p.id);
+    
+    var html = '<div class="check-box">' + (yaPresente ? '✅' : '') + '</div>';
+    html += '<div style="flex:1"><div class="check-nombre">' + p.nombre + ' ' + p.apellido + '</div>';
+    if (menuNombre) html += '<div class="check-menu">🍽 ' + menuNombre + '</div>';
+    html += '</div>';
+    if (yaPresente) html += '<span style="font-size:0.65rem;color:#7efca8">Ya presente</span>';
+    if (!confirmado) html += '<span style="font-size:0.65rem;color:#f08080">' + p.estado.replace('_',' ') + '</span>';
+    
+    div.innerHTML = html;
 
     if (!yaPresente && confirmado) {
-      div.onclick = () => togglePersonaCheck(div, p.id);
+      div.addEventListener('click', function() {
+        togglePersonaCheck(this, p.id);
+      });
     }
 
     lista.appendChild(div);
   });
 
   actualizarCheckinCount();
-  document.getElementById('modalGrupo').classList.add('visible');
+  
+  // Forzar visible
+  var modal = document.getElementById('modalGrupo');
+  modal.classList.remove('visible');
+  setTimeout(function() {
+    modal.classList.add('visible');
+  }, 50);
 }
 
 function togglePersonaCheck(div, personaId) {
