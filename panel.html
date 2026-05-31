@@ -816,18 +816,39 @@ async function recuperarIdFetch(celular) {
       return;
     }
     
-    if (data.grupos.length === 1) {
-      const g = data.grupos[0];
+    var activos = data.grupos || [];
+    var inactivos = data.inactivos || [];
+    
+    if (activos.length === 1) {
+      var g = activos[0];
       document.getElementById('loginId').value = g.grupo_id;
       document.getElementById('loginCelular').value = g.celular_ultimos4;
-      mostrarToast('ok', '¡Encontramos tu grupo! ' + g.grupo_id + ' · Tocá "Entrar" para continuar');
-    } else {
-      var msg = '¡Encontramos ' + data.grupos.length + ' grupos!\n\n';
-      data.grupos.forEach(function(g) {
+      mostrarToast('ok', '¡Encontramos tu grupo! ' + g.grupo_id + ' · Tocá "Entrar"');
+    
+    } else if (activos.length > 1) {
+      var msg = '¡Encontramos ' + activos.length + ' grupos!\n\n';
+      activos.forEach(function(g) {
         msg += g.grupo_id + ' (' + g.cant_personas + ' personas, ' + g.estado_pago.replace('_', ' ') + ')\n';
       });
       msg += '\nIngresá el ID que corresponda en el campo de arriba.';
       alert(msg);
+    
+    } else if (inactivos.length > 0) {
+      var estados = inactivos.map(function(g) { return g.estado_pago; });
+      var esVencido = estados.indexOf('vencido') >= 0;
+      var esCancelado = estados.indexOf('cancelado') >= 0;
+      
+      var msg2 = '';
+      if (esVencido) {
+        msg2 = 'Tu reserva venció porque no se recibió el pago a tiempo.';
+      } else if (esCancelado) {
+        msg2 = 'Tu grupo fue cancelado.';
+      }
+      msg2 += '\n\n¿Querés registrarte de nuevo?';
+      
+      if (confirm(msg2)) {
+        window.location.href = 'registro.html';
+      }
     }
   } catch(e) {
     mostrarToast('error', 'Error de conexión');
