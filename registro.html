@@ -352,6 +352,16 @@ async function cargarDatos() {
       whatsappEvento = dConfig.config.whatsapp_evento || '';
       document.getElementById('resAlias').textContent = aliasTransferencia;
       document.getElementById('resPrecio').textContent = '$' + precioEntrada.toLocaleString('es-AR');
+	  // Cargar cupo disponible
+      fetch(`${API}?action=cupo`).then(r => r.json()).then(d => {
+        if (d.ok) {
+          var badge = document.getElementById('resumenBloque');
+          var cupoDiv = document.createElement('div');
+          cupoDiv.className = 'resumen-fila';
+          cupoDiv.innerHTML = '<span class="label">Lugares disponibles</span><span style="color:' + (d.disponibles <= 10 ? '#f08080' : '#7efca8') + ';font-weight:600">' + d.disponibles + ' de ' + d.cupo_total + '</span>';
+          badge.insertBefore(cupoDiv, badge.firstChild);
+        }
+      }).catch(function(){});
       actualizarResumen();
 
       // Link de ayuda WhatsApp
