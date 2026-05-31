@@ -69,7 +69,10 @@
     .sombrero-container.shaking-hard{animation:shake-hard 0.25s linear infinite}
 
     /* FINALISTAS */
-    .finalistas-label{position:absolute;top:12%;left:50%;transform:translateX(-50%);z-index:9;font-family:'Rye',serif;font-size:clamp(1.5rem,4vw,2.5rem);color:var(--dorado-claro);text-shadow:0 0 30px rgba(240,192,64,0.6);display:none;animation:entrar 0.5s ease both}
+    .finalistas-wrap{position:absolute;top:8%;left:50%;transform:translateX(-50%);z-index:9;text-align:center;display:none}
+    .finalistas-label{font-family:'Rye',serif;font-size:clamp(1.5rem,4vw,2.5rem);color:var(--dorado-claro);text-shadow:0 0 30px rgba(240,192,64,0.6);animation:entrar 0.5s ease both;margin-bottom:0.5rem}
+    .countdown-num{font-family:'Rye',serif;color:var(--dorado-claro);text-shadow:0 0 40px rgba(240,192,64,0.8),0 0 80px rgba(240,192,64,0.4);opacity:0;animation:countdown-pop 2.5s ease-out forwards}
+    @keyframes countdown-pop{0%{opacity:0;transform:scale(0.3);text-shadow:0 0 20px rgba(240,192,64,0.3)}15%{opacity:1;transform:scale(1.2)}30%{transform:scale(1)}90%{opacity:1;transform:scale(1)}100%{opacity:0.3;transform:scale(0.9)}}
 
     #screenGanador{flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:1.5rem}
     .ganador-vic{height:clamp(180px,20vw,260px);filter:drop-shadow(0 0 40px rgba(240,192,64,0.4));animation:vic-float 2.5s ease-in-out infinite}
@@ -134,7 +137,10 @@
   <div class="premio-actual"><div class="premio-actual-label">Sorteando</div><div class="premio-actual-nombre" id="premioActualNombre">---</div></div>
   <div class="participantes-badge"><div class="part-num" id="partNum">0</div><div class="part-label">Participantes</div></div>
   <div class="eliminacion-counter" id="elimCounter"><div class="elim-num" id="elimNum">0</div><div class="elim-label">Quedan</div></div>
-  <div class="finalistas-label" id="finalistasLabel">¡Los 5 finalistas!</div>
+  <div class="finalistas-wrap" id="finalistasWrap">
+    <div class="finalistas-label">¡Los 5 finalistas!</div>
+    <div id="countdownContainer"></div>
+  </div>
   <canvas id="canvas"></canvas>
 
   <div class="sombrero-container" id="sombreroContainer">
@@ -207,7 +213,7 @@ function seleccionarPremio(p){
   document.getElementById('premioActualNombre').textContent=p.nombre;
   document.getElementById('partNum').textContent=pool.length;
   document.getElementById('elimCounter').style.display='none';
-  document.getElementById('finalistasLabel').style.display='none';
+  document.getElementById('finalistasWrap').style.display='none';
   limpiarBolitas();mostrarPantalla('screenSorteo');
   sizeSombrero();iniciarFisica();
   document.getElementById('btnSortear').disabled=false;
@@ -362,7 +368,9 @@ async function iniciarSorteo(){
 
   // ═══ FASE 3: ¡5 FINALISTAS! ═══
   somb.className='sombrero-container shaking';
-  document.getElementById('finalistasLabel').style.display='block';
+  var finWrap = document.getElementById('finalistasWrap');
+  finWrap.style.display='block';
+  document.getElementById('countdownContainer').innerHTML = '';
   elimC.style.display='none';
 
   // Hacer que las 5 bolitas restantes se vean grandes y con nombre
@@ -371,7 +379,6 @@ async function iniciarSorteo(){
     if(b.body){
       b.body.render.strokeStyle='#f0c040';
       b.body.render.lineWidth=3;
-      // Si no tiene label, crear uno
       if(!b.elem){
         const elem=document.createElement('div');elem.className='nombre-flotante';
         elem.style.fontSize='12px';elem.style.width='80px';
@@ -385,15 +392,37 @@ async function iniciarSorteo(){
     }
   });
 
-  // Rebote dramático de los 5 (3 segundos)
-  for(let i=0;i<6;i++){
-    agitarBolitas(0.03,0.025);
-    await sleep(500);
+  await sleep(2000);
+
+  // Countdown dramático: 5...4...3...2...1
+  var countContainer = document.getElementById('countdownContainer');
+  var sizes = ['3rem', '4rem', '5.5rem', '7.5rem', '10rem'];
+  
+  for (var c = 5; c >= 1; c--) {
+    countContainer.innerHTML = '';
+    var numEl = document.createElement('div');
+    numEl.className = 'countdown-num';
+    numEl.style.fontSize = sizes[5 - c];
+    numEl.textContent = c;
+    countContainer.appendChild(numEl);
+    
+    agitarBolitas(0.03 + (5 - c) * 0.008, 0.02 + (5 - c) * 0.005);
+    await sleep(2500);
   }
 
+  // Final: mostrar "¡YA!"
+  countContainer.innerHTML = '';
+  var yaEl = document.createElement('div');
+  yaEl.className = 'countdown-num';
+  yaEl.style.fontSize = '12rem';
+  yaEl.textContent = '¡YA!';
+  countContainer.appendChild(yaEl);
+
+  somb.className = 'sombrero-container';
+  await sleep(1500);
+
   // FASE 4: pausa final
-  somb.className='sombrero-container';
-  document.getElementById('finalistasLabel').style.display='none';
+  finWrap.style.display='none';
   await sleep(1000);
 
   // Resaltar la bolita ganadora
@@ -451,10 +480,10 @@ async function sortearDeNuevo(){
   document.getElementById('btnSortear').disabled=false;document.getElementById('spinnerSorteo').style.display='none';
   document.getElementById('txtSortear').textContent='🤠 ¡Sortear de nuevo!';
   document.getElementById('sombreroContainer').className='sombrero-container';
-  document.getElementById('finalistasLabel').style.display='none';
+  document.getElementById('finalistasWrap').style.display='none';
   sizeSombrero();iniciarFisica();
 }
-function volverAPremios(){limpiarBolitas();limpiarConfetti();if(runner)Matter.Runner.stop(runner);if(render)Matter.Render.stop(render);if(engine)Matter.Engine.clear(engine);document.getElementById('sombreroContainer').className='sombrero-container';document.getElementById('finalistasLabel').style.display='none';renderPremios();mostrarPantalla('screenPremios')}
+function volverAPremios(){limpiarBolitas();limpiarConfetti();if(runner)Matter.Runner.stop(runner);if(render)Matter.Render.stop(render);if(engine)Matter.Engine.clear(engine);document.getElementById('sombreroContainer').className='sombrero-container';document.getElementById('finalistasWrap').style.display='none';renderPremios();mostrarPantalla('screenPremios')}
 
 function lanzarConfetti(){const w=document.getElementById('confettiWrap');w.innerHTML='';const cs=['#f0c040','#c0392b','#27ae60','#2980b9','#f39c12','#8e44ad','#e8d5a3'];for(let i=0;i<150;i++){const c=document.createElement('div');const cl=cs[Math.floor(Math.random()*cs.length)];const sz=8+Math.random()*10;const l=Math.random()*100;const d=Math.random()*2;const dur=3+Math.random()*2;c.style.cssText=`position:absolute;top:-20px;left:${l}%;width:${Math.random()>0.5?sz:sz/2}px;height:${sz}px;background:${cl};border-radius:${Math.random()>0.5?'2px':'50%'};animation:confetti-caer ${dur}s ease-in ${d}s both;transform:rotate(${Math.random()*360}deg)`;w.appendChild(c)}}
 function limpiarConfetti(){document.getElementById('confettiWrap').innerHTML=''}
