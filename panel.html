@@ -816,7 +816,7 @@ function mostrarRecuperarId() {
 }
 
 async function recuperarIdFetch(celular) {
-  mostrarToast('ok', 'Buscando...');
+  alert('Buscando celular: ' + celular);
   try {
     var res = await fetch(API, {
       method: 'POST',
@@ -824,13 +824,17 @@ async function recuperarIdFetch(celular) {
     });
     var data = await res.json();
     
+    alert('Respuesta: ' + JSON.stringify(data).substring(0, 300));
+    
     if (!data.ok) {
-      mostrarToast('error', data.error);
+      alert('Error: ' + data.error);
       return;
     }
     
     var activos = data.grupos || [];
     var inactivos = data.inactivos || [];
+    
+    alert('Activos: ' + activos.length + ' / Inactivos: ' + inactivos.length);
     
     if (activos.length === 1) {
       var g = activos[0];
@@ -843,32 +847,29 @@ async function recuperarIdFetch(celular) {
       activos.forEach(function(g) {
         msg += g.grupo_id + ' (' + g.cant_personas + ' personas, ' + g.estado_pago.replace('_', ' ') + ')\n';
       });
-      msg += '\nIngresá el ID que corresponda en el campo de arriba.';
       alert(msg);
     
     } else if (inactivos.length > 0) {
-      var estados = inactivos.map(function(g) { return g.estado_pago; });
-      var esVencido = estados.indexOf('vencido') >= 0;
-      
-      var msg2 = '';
-      if (esVencido) {
-        msg2 = 'Tu reserva venció porque no se recibió el pago a tiempo.';
-      } else {
-        msg2 = 'Tu grupo fue cancelado.';
+      var esVencido = false;
+      for (var i = 0; i < inactivos.length; i++) {
+        if (inactivos[i].estado_pago === 'vencido') esVencido = true;
       }
+      
+      var msg2 = esVencido 
+        ? 'Tu reserva venció porque no se recibió el pago a tiempo.'
+        : 'Tu grupo fue cancelado.';
       msg2 += '\n\n¿Querés registrarte de nuevo?';
       
       if (confirm(msg2)) {
         window.location.href = 'registro.html';
       }
     } else {
-      mostrarToast('error', 'No encontramos ningún grupo con ese celular');
+      alert('No se encontró nada');
     }
   } catch(e) {
-    mostrarToast('error', 'Error de conexión');
+    alert('Error de conexión: ' + e.message);
   }
 }
-
 cargarMenus();
 
 // Auto-login desde URL
