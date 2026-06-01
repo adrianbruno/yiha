@@ -6,7 +6,9 @@
   <title>Sorteo · Yiha! 221countryLP</title>
   <meta name="theme-color" content="#060c14">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js" as="script">
   <style>
     :root{--tierra:#1a0a00;--arena:#c8a06a;--paja:#e8d5a3;--hueso:#f5ecd7;--rojo:#8b1a1a;--rojo-vivo:#c0392b;--dorado:#c9922a;--dorado-claro:#f0c040;--verde:#27ae60;--surface:rgba(61,31,0,0.7);--border:rgba(200,160,106,0.25)}
     *{margin:0;padding:0;box-sizing:border-box}
@@ -138,7 +140,7 @@
   <div class="participantes-badge"><div class="part-num" id="partNum">0</div><div class="part-label">Participantes</div></div>
   <div class="eliminacion-counter" id="elimCounter"><div class="elim-num" id="elimNum">0</div><div class="elim-label">Quedan</div></div>
   <div class="finalistas-wrap" id="finalistasWrap">
-    <div class="finalistas-label">¡El ganador en ...!</div>
+    <div class="finalistas-label">¡El ganador en...!</div>
     <div id="countdownContainer"></div>
   </div>
   <canvas id="canvas"></canvas>
@@ -166,7 +168,7 @@
 <div class="screen" id="screenGanador">
   <div class="confetti-wrap" id="confettiWrap"></div>
   <img src="img/vic_juntos_highfive.png" class="ganador-vic" alt="Vic">
-  <div class="ganador-cartel"><div class="ganador-label">¡FELICITACIONES ganastes...!</div><div class="ganador-premio" id="ganadorPremio">Premio</div><div class="ganador-nombre" id="ganadorNombre">Nombre</div></div>
+  <div class="ganador-cartel"><div class="ganador-label">¡FELICITACIONES ganaste...!</div><div class="ganador-premio" id="ganadorPremio">Premio</div><div class="ganador-nombre" id="ganadorNombre">Nombre</div></div>
   <div class="ganador-botones">
     <button class="btn btn-verde btn-grande" onclick="marcarEntregado()">✅ Premio entregado</button>
     <button class="btn btn-rojo" onclick="sortearDeNuevo()">🔄 Sortear de nuevo</button>

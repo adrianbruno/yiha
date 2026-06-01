@@ -9,7 +9,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Yiha Puerta">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <link rel="preload" href="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js" as="script">
   <style>
     :root {
       --tierra:       #1a0a00;
@@ -470,10 +472,6 @@ let html5QrCode = null;
 let grupoCheckinIds = [];
 
 function abrirScanner() {
-  // Limpiar completamente el contenedor antes de crear nuevo scanner
-  const reader = document.getElementById('qrReader');
-  reader.innerHTML = '';
-  
   document.getElementById('modalScanner').classList.add('visible');
   
   setTimeout(() => {
@@ -485,13 +483,16 @@ function abrirScanner() {
       onQrScanned,
       () => {}
     ).catch(err => {
+      console.error('Error cámara trasera:', err);
+      // Si falla la trasera, intentar con cualquiera
       html5QrCode.start(
         { facingMode: 'user' },
         { fps: 15, qrbox: { width: 200, height: 200 } },
         onQrScanned,
         () => {}
       ).catch(err2 => {
-        mostrarToast('No se pudo iniciar la cámara');
+        console.error('Error cámara frontal:', err2);
+        mostrarToast('No se pudo iniciar la cámara. Revisá los permisos.');
         cerrarScanner();
       });
     });
@@ -505,126 +506,94 @@ function cerrarScanner() {
     html5QrCode = null;
     scanner.stop().then(() => {
       try { scanner.clear(); } catch(e) {}
-      document.getElementById('qrReader').innerHTML = '';
       modal.classList.remove('visible');
     }).catch(() => {
       try { scanner.clear(); } catch(e) {}
-      document.getElementById('qrReader').innerHTML = '';
       modal.classList.remove('visible');
     });
   } else {
-    document.getElementById('qrReader').innerHTML = '';
     modal.classList.remove('visible');
   }
 }
 
 function onQrScanned(decodedText) {
+  // Evitar lecturas duplicadas
   if (!html5QrCode) return;
   
   const grupoId = decodedText.trim().toUpperCase();
+  console.log('QR leído:', grupoId);
   
+  // Cerrar scanner y después procesar
+  const modal = document.getElementById('modalScanner');
   const scanner = html5QrCode;
   html5QrCode = null;
   
   scanner.stop().then(() => {
     try { scanner.clear(); } catch(e) {}
-    document.getElementById('qrReader').innerHTML = '';
-    document.getElementById('modalScanner').classList.remove('visible');
+    modal.classList.remove('visible');
     procesarQR(grupoId);
   }).catch(() => {
     try { scanner.clear(); } catch(e) {}
-    document.getElementById('qrReader').innerHTML = '';
-    document.getElementById('modalScanner').classList.remove('visible');
+    modal.classList.remove('visible');
     procesarQR(grupoId);
   });
 }
 
-async function procesarQR(grupoId) {
-  mostrarToast('Buscando grupo ' + grupoId + '...');
-  
-  // Recargar datos frescos del servidor
-  try {
-    const res = await fetch(`${API}?action=personas_evento&password=${encodeURIComponent(passwordAdmin)}`);
-    const data = await res.json();
-    if (data.ok) {
-      todasLasPersonas = data.personas || [];
-      actualizarContadores();
-    }
-  } catch(e) {}
-  
-  const personasGrupo = todasLasPersonas.filter(p => {
-    return String(p.grupo_id || '').trim().toUpperCase() === grupoId && String(p.estado || '') !== 'baja';
-  });
+function procesarQR(grupoId) {
+  // Buscar personas de este grupo
+  const personasGrupo = todasLasPersonas.filter(p =>
+    String(p.grupo_id).toUpperCase() === grupoId && p.estado !== 'baja'
+  );
 
   if (personasGrupo.length === 0) {
-    alert('No se encontró el grupo: ' + grupoId + '\nTotal personas: ' + todasLasPersonas.length);
+    mostrarToast('No encontramos el grupo ' + grupoId);
     return;
   }
 
-  try {
-    mostrarGrupoCheckin(grupoId, personasGrupo);
-  } catch(err) {
-    alert('Error en mostrarGrupoCheckin: ' + err.message);
-  }
+  mostrarGrupoCheckin(grupoId, personasGrupo);
 }
 
 function mostrarGrupoCheckin(grupoId, personasGrupo) {
   grupoCheckinIds = [];
-  
-  // Reset completo del modal
   document.getElementById('grupoCheckinId').textContent = grupoId;
-  document.getElementById('btnCheckinGrupo').disabled = true;
-  document.getElementById('btnCheckinGrupo').innerHTML = '✅ Confirmar presentes (<span id="checkinCount">0</span>)';
-  document.getElementById('checkinCount').textContent = '0';
 
   const presentes = personasGrupo.filter(p => p.asistio === 'SI').length;
   const total = personasGrupo.length;
   document.getElementById('grupoCheckinSub').textContent =
     presentes === total ? '¡Ya están todos presentes!'
-    : presentes > 0 ? presentes + ' de ' + total + ' ya presentes'
+    : presentes > 0 ? `${presentes} de ${total} ya presentes · Seleccioná los que llegan`
     : 'Seleccioná quiénes están presentes';
 
   const lista = document.getElementById('grupoCheckinLista');
   lista.innerHTML = '';
 
-  personasGrupo.forEach(function(p) {
-    var yaPresente = String(p.asistio) === 'SI';
-    var confirmado = String(p.estado) === 'confirmado';
-    var menuNombre = '';
-    for (var i = 0; i < menus.length; i++) {
-      if (String(menus[i].id) === String(p.menu_id)) { menuNombre = menus[i].nombre; break; }
-    }
+  personasGrupo.forEach(p => {
+    const yaPresente = p.asistio === 'SI';
+    const confirmado = p.estado === 'confirmado';
+    const menuNombre = menus.find(m => String(m.id) === String(p.menu_id))?.nombre || '';
 
-    var div = document.createElement('div');
+    const div = document.createElement('div');
     div.className = 'persona-check' + (yaPresente ? ' ya-presente checked' : '');
-    div.setAttribute('data-persona-id', p.id);
-    
-    var html = '<div class="check-box">' + (yaPresente ? '✅' : '') + '</div>';
-    html += '<div style="flex:1"><div class="check-nombre">' + p.nombre + ' ' + p.apellido + '</div>';
-    if (menuNombre) html += '<div class="check-menu">🍽 ' + menuNombre + '</div>';
-    html += '</div>';
-    if (yaPresente) html += '<span style="font-size:0.65rem;color:#7efca8">Ya presente</span>';
-    if (!confirmado) html += '<span style="font-size:0.65rem;color:#f08080">' + p.estado.replace('_',' ') + '</span>';
-    
-    div.innerHTML = html;
+    div.dataset.personaId = p.id;
+    div.innerHTML = `
+      <div class="check-box">${yaPresente ? '✅' : ''}</div>
+      <div style="flex:1">
+        <div class="check-nombre">${p.nombre} ${p.apellido}</div>
+        ${menuNombre ? `<div class="check-menu">🍽 ${menuNombre}</div>` : ''}
+      </div>
+      ${yaPresente ? '<span style="font-size:0.65rem;color:#7efca8">Ya presente</span>' : ''}
+      ${!confirmado ? `<span style="font-size:0.65rem;color:#f08080">${p.estado.replace('_',' ')}</span>` : ''}
+    `;
 
     if (!yaPresente && confirmado) {
-      div.addEventListener('click', function() {
-        togglePersonaCheck(this, p.id);
-      });
+      div.onclick = () => togglePersonaCheck(div, p.id);
     }
 
     lista.appendChild(div);
   });
 
   actualizarCheckinCount();
-  
-  // Forzar visible
-  var modal = document.getElementById('modalGrupo');
-  modal.classList.remove('visible');
-  setTimeout(function() {
-    modal.classList.add('visible');
-  }, 50);
+  document.getElementById('modalGrupo').classList.add('visible');
 }
 
 function togglePersonaCheck(div, personaId) {
@@ -663,7 +632,6 @@ async function confirmarCheckinGrupo() {
       });
       const data = await res.json();
       if (data.ok) {
-        // Actualizar local inmediatamente
         const idx = todasLasPersonas.findIndex(p => p.id === personaId);
         if (idx !== -1) todasLasPersonas[idx].asistio = 'SI';
         ok++;
@@ -674,15 +642,13 @@ async function confirmarCheckinGrupo() {
   }
 
   actualizarContadores();
-  
-  const primerPersona = todasLasPersonas.find(p => p.id === grupoCheckinIds[0]);
-  const menuNombre = primerPersona ? (menus.find(m => String(m.id) === String(primerPersona.menu_id))?.nombre || '') : '';
-  
   cerrarModalGrupo();
 
   if (ok > 0) {
+    const persona = todasLasPersonas.find(p => p.id === grupoCheckinIds[0]);
+    const menuNombre = persona ? (menus.find(m => String(m.id) === String(persona.menu_id))?.nombre || '') : '';
     mostrarCheckin(
-      ok === 1 ? `${primerPersona.nombre} ${primerPersona.apellido}` : `${ok} personas`,
+      ok === 1 ? `${persona.nombre} ${persona.apellido}` : `${ok} personas del grupo`,
       menuNombre,
       false
     );
@@ -690,9 +656,6 @@ async function confirmarCheckinGrupo() {
   if (errors > 0) mostrarToast(`${errors} check-in(s) fallaron`);
 
   grupoCheckinIds = [];
-  
-  // Recargar datos en background
-  cargarPersonas();
 }
 
 function cerrarModalGrupo() {
