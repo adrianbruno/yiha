@@ -105,9 +105,9 @@
     .btn-accion-baja:hover { background:rgba(192,57,43,0.2); }
 
     /* SUBIR COMPROBANTE */
-    .upload-area { border:2px dashed rgba(200,160,106,0.3); border-radius:3px; padding:1.5rem; text-align:center; cursor:pointer; transition:all 0.15s; position:relative; }
+    .upload-area { border:2px dashed rgba(200,160,106,0.3); border-radius:3px; padding:1.5rem; text-align:center; cursor:pointer; transition:all 0.15s; }
     .upload-area:hover { border-color:var(--dorado); background:rgba(201,146,42,0.05); }
-    .upload-area input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; }
+    .upload-input-hidden { display:none!important; }
     .upload-icon { font-size:2rem; margin-bottom:0.5rem; }
     .upload-txt { font-size:0.8rem; color:var(--arena); opacity:0.8; }
     .upload-sub { font-size:0.68rem; color:var(--arena); opacity:0.5; margin-top:0.25rem; }
@@ -320,15 +320,15 @@
     <!-- SUBIR COMPROBANTE -->
     <div class="seccion" id="seccionComprobante" style="animation-delay:0.1s">
       <div class="seccion-titulo">Comprobante de pago</div>
-      <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
-        <input type="file" id="fileInput" accept="image/*,.pdf" onchange="previewArchivo(event)">
-        <div class="upload-icon">📎</div>
-        <div class="upload-txt">Tocá para subir el comprobante</div>
+      <input type="file" id="fileInput" class="upload-input-hidden" accept="image/jpeg,image/png,image/webp,image/heic,application/pdf">
+      <label for="fileInput" class="upload-area" id="uploadArea">
+        <div class="upload-icon" id="uploadIcon">📎</div>
+        <div class="upload-txt" id="uploadTxt">Tocá para elegir foto o archivo</div>
         <div class="upload-sub">JPG, PNG o PDF · Máximo 5MB</div>
-        <div class="upload-preview" id="uploadPreview">
-          <img id="previewImg" src="" alt="preview">
-          <div class="upload-nombre" id="uploadNombre"></div>
-        </div>
+      </label>
+      <div id="uploadPreview" style="display:none;text-align:center;margin-top:0.75rem">
+        <img id="previewImg" src="" alt="preview" style="max-height:120px;border-radius:4px;border:1px solid rgba(200,160,106,0.3)">
+        <div id="uploadNombre" style="font-size:0.78rem;color:var(--dorado);margin-top:0.4rem"></div>
       </div>
       <button class="btn-full btn-dorado" id="btnSubir" onclick="subirComprobante()" disabled>
         <div class="spinner" id="spinnerSubir"></div>
@@ -540,24 +540,41 @@ function badgeEstado(estado) {
 }
 
 // ── SUBIR COMPROBANTE ─────────────────────────────────
-function previewArchivo(e) {
-  const file = e.target.files[0];
+// Listener robusto para el input file
+document.getElementById('fileInput').addEventListener('change', function(e) {
+  var file = this.files[0];
   if (!file) return;
+  
   archivoSeleccionado = file;
-  document.getElementById('uploadNombre').textContent = file.name;
   document.getElementById('btnSubir').disabled = false;
-
+  document.getElementById('uploadTxt').textContent = '✅ Archivo seleccionado:';
+  document.getElementById('uploadIcon').textContent = '✅';
+  
   if (file.type.startsWith('image/')) {
-    const reader = new FileReader();
-    reader.onload = ev => {
+    var reader = new FileReader();
+    reader.onload = function(ev) {
       document.getElementById('previewImg').src = ev.target.result;
+      document.getElementById('previewImg').style.display = 'block';
       document.getElementById('uploadPreview').style.display = 'block';
+      document.getElementById('uploadNombre').textContent = file.name;
     };
     reader.readAsDataURL(file);
   } else {
-    document.getElementById('uploadPreview').style.display = 'block';
     document.getElementById('previewImg').style.display = 'none';
+    document.getElementById('uploadPreview').style.display = 'block';
     document.getElementById('uploadNombre').textContent = '📄 ' + file.name;
+  }
+  
+  // Resetear el input para que el mismo archivo se pueda seleccionar otra vez
+  // (esto lo hacemos después de leer, no antes)
+});
+
+function previewArchivo(e) {
+  // Legacy fallback por si queda alguna referencia
+  var file = e.target.files[0];
+  if (file) {
+    archivoSeleccionado = file;
+    document.getElementById('btnSubir').disabled = false;
   }
 }
 
@@ -812,18 +829,18 @@ function mostrarToast(tipo, msg) {
 function mostrarRecuperarId() {
   var cel = prompt('Ingresá el número de celular con el que te registraste:');
   if (!cel || cel.trim().length < 4) return;
-  
-  var celLimpio = cel.trim().replace(/\D/g, '');
-  
-  // Mostrar barra de status
-  mostrarToast('ok', '🔍 Buscando tu registro...');
-  
-  fetch(API, {
-    method: 'POST',
-    body: JSON.stringify({ action: 'recuperar_id', celular: celLimpio })
-  })
-  .then(function(res) { return res.json(); })
-  .then(function(data) {
+  recuperarIdFetch(cel.trim());
+}
+
+async function recuperarIdFetch(celular) {
+  mostrarToast('ok', 'Buscando...');
+  try {
+    var res = await fetch(API, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'recuperar_id', celular: celular })
+    });
+    var data = await res.json();
+    
     if (!data.ok) {
       mostrarToast('error', data.error);
       return;
@@ -836,61 +853,6 @@ function mostrarRecuperarId() {
       var g = activos[0];
       document.getElementById('loginId').value = g.grupo_id;
       document.getElementById('loginCelular').value = g.celular_ultimos4;
-      mostrarToast('ok', '✅ ¡Encontramos tu grupo! ' + g.grupo_id + ' · Tocá Entrar');
-    
-    } else if (activos.length > 1) {
-      mostrarToast('ok', '✅ Encontramos ' + activos.length + ' grupos');
-      var msg = 'Encontramos ' + activos.length + ' grupos:\n\n';
-      activos.forEach(function(g) {
-        msg += g.grupo_id + ' (' + g.cant_personas + ' personas, ' + g.estado_pago.replace('_', ' ') + ')\n';
-      });
-      msg += '\nIngresá el ID en el campo de arriba.';
-      alert(msg);
-    
-    } else if (inactivos.length > 0) {
-      var esVencido = false;
-      for (var i = 0; i < inactivos.length; i++) {
-        if (inactivos[i].estado_pago === 'vencido') esVencido = true;
-      }
-      var msg2 = esVencido
-        ? 'Tu reserva venció porque no se recibió el pago a tiempo.'
-        : 'Tu grupo fue cancelado.';
-      msg2 += '\n\n¿Querés registrarte de nuevo?';
-      if (confirm(msg2)) window.location.href = 'registro.html';
-    } else {
-      mostrarToast('error', 'No encontramos ningún grupo con ese celular');
-    }
-  })
-  .catch(function(err) {
-    mostrarToast('error', 'Error de conexión. Intentá de nuevo.');
-  });
-}
-
-async function recuperarIdFetch(celular) {
-  alert('Buscando celular: ' + celular);
-  try {
-    var res = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'recuperar_id', celular: celular })
-    });
-    var data = await res.json();
-    
-    alert('Respuesta: ' + JSON.stringify(data).substring(0, 300));
-    
-    if (!data.ok) {
-      alert('Error: ' + data.error);
-      return;
-    }
-    
-    var activos = data.grupos || [];
-    var inactivos = data.inactivos || [];
-    
-    alert('Activos: ' + activos.length + ' / Inactivos: ' + inactivos.length);
-    
-    if (activos.length === 1) {
-      var g = activos[0];
-      document.getElementById('loginId').value = g.grupo_id;
-      document.getElementById('loginCelular').value = g.celular_ultimos4;
       mostrarToast('ok', '¡Encontramos tu grupo! ' + g.grupo_id + ' · Tocá "Entrar"');
     
     } else if (activos.length > 1) {
@@ -898,29 +860,32 @@ async function recuperarIdFetch(celular) {
       activos.forEach(function(g) {
         msg += g.grupo_id + ' (' + g.cant_personas + ' personas, ' + g.estado_pago.replace('_', ' ') + ')\n';
       });
+      msg += '\nIngresá el ID que corresponda en el campo de arriba.';
       alert(msg);
     
     } else if (inactivos.length > 0) {
-      var esVencido = false;
-      for (var i = 0; i < inactivos.length; i++) {
-        if (inactivos[i].estado_pago === 'vencido') esVencido = true;
-      }
+      var estados = inactivos.map(function(g) { return g.estado_pago; });
+      var esVencido = estados.indexOf('vencido') >= 0;
       
-      var msg2 = esVencido 
-        ? 'Tu reserva venció porque no se recibió el pago a tiempo.'
-        : 'Tu grupo fue cancelado.';
+      var msg2 = '';
+      if (esVencido) {
+        msg2 = 'Tu reserva venció porque no se recibió el pago a tiempo.';
+      } else {
+        msg2 = 'Tu grupo fue cancelado.';
+      }
       msg2 += '\n\n¿Querés registrarte de nuevo?';
       
       if (confirm(msg2)) {
         window.location.href = 'registro.html';
       }
     } else {
-      alert('No se encontró nada');
+      mostrarToast('error', 'No encontramos ningún grupo con ese celular');
     }
   } catch(e) {
-    alert('Error de conexión: ' + e.message);
+    mostrarToast('error', 'Error de conexión');
   }
 }
+
 cargarMenus();
 
 // Auto-login desde URL
