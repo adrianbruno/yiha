@@ -276,9 +276,6 @@
           <div class="spinner" id="spinnerLogin"></div>
           <span id="txtBtnLogin">🤠 Entrar a mi panel</span>
         </button>
-		<div style="text-align:center;margin-top:1rem">
-          <button onclick="mostrarRecuperarId()" style="background:none;border:none;color:var(--arena);font-family:'Josefin Sans',sans-serif;font-size:0.75rem;cursor:pointer;text-decoration:underline;opacity:0.7">¿Perdiste tu ID? Recuperalo acá</button>
-        </div>
       </div>
     </div>
   </div>
@@ -377,6 +374,9 @@ let archivoSeleccionado = null;
 
 // Cargar menús para los modales
 async function cargarMenus() {
+  // Mostrar UI de inmediato
+  document.getElementById('loadingInicial').classList.add('oculto');
+  
   try {
     const res = await fetch(`${API}?action=menus`);
     const data = await res.json();
@@ -392,9 +392,6 @@ async function cargarMenus() {
       });
     }
   } catch(e) { console.warn('Error cargando menús:', e); }
-  finally {
-    document.getElementById('loadingInicial').classList.add('oculto');
-  }
 }
 
 // ── LOGIN ────────────────────────────────────────────
@@ -563,10 +560,15 @@ function previewArchivo(e) {
 
 async function subirComprobante() {
   if (!archivoSeleccionado) return;
-  setLoading('spinnerSubir', 'txtBtnSubir', true, 'Subiendo...');
+  
+  const btn = document.getElementById('btnSubir');
+  btn.disabled = true;
+  setLoading('spinnerSubir', 'txtBtnSubir', true, 'Procesando... no cierres esta página');
 
   try {
     const base64 = await fileToBase64(archivoSeleccionado);
+    setLoading('spinnerSubir', 'txtBtnSubir', true, 'Subiendo comprobante...');
+    
     const res = await fetch(API, {
       method: 'POST',
       body: JSON.stringify({
@@ -582,12 +584,16 @@ async function subirComprobante() {
     if (!data.ok) { mostrarToast('error', data.error); return; }
 
     mostrarToast('ok', '¡Comprobante enviado! Lo revisamos a la brevedad.');
-    setTimeout(() => location.reload(), 2000);
+    archivoSeleccionado = null;
+    
+    // Recargar panel sin recargar la página
+    setTimeout(() => recargarPanel(), 1500);
 
   } catch(e) {
     mostrarToast('error', 'Error al subir. Revisá tu conexión.');
   } finally {
     setLoading('spinnerSubir', 'txtBtnSubir', false, 'Subir comprobante');
+    btn.disabled = false;
   }
 }
 
@@ -723,11 +729,29 @@ async function recargarPanel() {
 
 function formatFecha(str) {
   if (!str) return '---';
-  const partes = str.split(' ');
-  const [y, m, d] = partes[0].split('-');
-  const hora = partes[1] ? partes[1].substring(0,5) : '';
-  const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-  return `${d} ${meses[parseInt(m)-1]} · ${hora}hs`;
+  var s = String(str);
+  var meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  
+  // Intentar parsear como Date
+  var d;
+  if (s.indexOf('T') > -1) {
+    // Formato ISO: 2026-06-02T17:29:24.000Z
+    d = new Date(s);
+  } else if (s.indexOf('-') > -1 && s.indexOf(' ') > -1) {
+    // Formato: 2026-06-02 17:29:24
+    d = new Date(s.replace(' ', 'T'));
+  } else {
+    return s;
+  }
+  
+  if (isNaN(d.getTime())) return s;
+  
+  var dia = d.getDate();
+  var mes = meses[d.getMonth()];
+  var hora = String(d.getHours()).padStart(2,'0');
+  var min = String(d.getMinutes()).padStart(2,'0');
+  
+  return dia + ' ' + mes + ' · ' + hora + ':' + min + 'hs';
 }
 
 function setLoading(spinnerId, txtId, loading, txt) {
@@ -782,78 +806,6 @@ function mostrarToast(tipo, msg) {
 }
 
 cargarMenus();
-
-// Auto-login desde URL
-(function(){
-  const params = new URLSearchParams(window.location.search);
-  const id = params.get('id');
-  const cel = params.get('cel');
-  if (id && cel) {
-    document.getElementById('loginId').value = id.toUpperCase();
-    document.getElementById('loginCelular').value = cel;
-    setTimeout(entrarPanel, 800);
-  }
-})();
-// ── RECUPERAR ID ──────────────────────────────────────
-function mostrarRecuperarId() {
-  const cel = prompt('Ingresá el número de celular con el que te registraste:');
-  if (!cel || cel.trim().length < 6) return;
-  
-  recuperarIdFetch(cel.trim());
-}
-
-async function recuperarIdFetch(celular) {
-  mostrarToast('ok', 'Buscando...');
-  try {
-    const res = await fetch(API, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'recuperar_id', celular: celular })
-    });
-    const data = await res.json();
-    
-    if (!data.ok) {
-      mostrarToast('error', data.error);
-      return;
-    }
-    
-    var activos = data.grupos || [];
-    var inactivos = data.inactivos || [];
-    
-    if (activos.length === 1) {
-      var g = activos[0];
-      document.getElementById('loginId').value = g.grupo_id;
-      document.getElementById('loginCelular').value = g.celular_ultimos4;
-      mostrarToast('ok', '¡Encontramos tu grupo! ' + g.grupo_id + ' · Tocá "Entrar"');
-    
-    } else if (activos.length > 1) {
-      var msg = '¡Encontramos ' + activos.length + ' grupos!\n\n';
-      activos.forEach(function(g) {
-        msg += g.grupo_id + ' (' + g.cant_personas + ' personas, ' + g.estado_pago.replace('_', ' ') + ')\n';
-      });
-      msg += '\nIngresá el ID que corresponda en el campo de arriba.';
-      alert(msg);
-    
-    } else if (inactivos.length > 0) {
-      var estados = inactivos.map(function(g) { return g.estado_pago; });
-      var esVencido = estados.indexOf('vencido') >= 0;
-      var esCancelado = estados.indexOf('cancelado') >= 0;
-      
-      var msg2 = '';
-      if (esVencido) {
-        msg2 = 'Tu reserva venció porque no se recibió el pago a tiempo.';
-      } else if (esCancelado) {
-        msg2 = 'Tu grupo fue cancelado.';
-      }
-      msg2 += '\n\n¿Querés registrarte de nuevo?';
-      
-      if (confirm(msg2)) {
-        window.location.href = 'registro.html';
-      }
-    }
-  } catch(e) {
-    mostrarToast('error', 'Error de conexión');
-  }
-}
 </script>
 </body>
 </html>
