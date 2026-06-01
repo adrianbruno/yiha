@@ -811,8 +811,24 @@ function mostrarToast(tipo, msg) {
 // ── RECUPERAR ID ──────────────────────────────────────
 function mostrarRecuperarId() {
   var cel = prompt('Ingresá el número de celular con el que te registraste:');
-  if (!cel || cel.trim().length < 6) return;
-  recuperarIdFetch(cel.trim());
+  if (!cel || cel.trim().length < 6) { alert('Celular muy corto o cancelado'); return; }
+  
+  alert('Paso 1: voy a buscar ' + cel.trim());
+  
+  fetch(API, {
+    method: 'POST',
+    body: JSON.stringify({ action: 'recuperar_id', celular: cel.trim() })
+  })
+  .then(function(res) { 
+    alert('Paso 2: respuesta recibida, status ' + res.status);
+    return res.json(); 
+  })
+  .then(function(data) {
+    alert('Paso 3: ' + JSON.stringify(data).substring(0, 300));
+  })
+  .catch(function(err) {
+    alert('Error: ' + err.message);
+  });
 }
 
 async function recuperarIdFetch(celular) {
