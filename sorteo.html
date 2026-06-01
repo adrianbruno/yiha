@@ -233,6 +233,8 @@ async function entrarSorteo(){
     const[dC,dP,dPe]=await Promise.all([rC.json(),rP.json(),rPe.json()]);
     if(!dC.ok){mostrarToast(dC.error||'Contraseña incorrecta');return}
     password=pass;premios=dP.premios||[];personas=dPe.personas||[];
+	// Cargar ganadores ya entregados desde la planilla
+	premios.forEach(function(p){ p._ganados = p.ganados || 0; });
     if(testMode>0){
       const noms=['Ana','Luis','María','Carlos','Laura','Pedro','Sofía','Diego','Lucía','Martín','Valentina','Tomás','Camila','Mateo','Julieta','Nicolás','Florencia','Santiago','Milagros','Agustín','Rocío','Bruno','Celeste','Franco','Abril','Gonzalo','Pilar','Facundo','Delfina','Lautaro','Carolina','Joaquín','Paula','Ramiro','Daniela','Hernán','Aldana','Ignacio','Brenda','Mauro','Andrea','Ezequiel','Romina','Gastón','Natalia','Sergio','Mora','Sebastián','Candela','Emmanuel','Valeria'];
       const apes=['García','López','Martínez','Rodríguez','Pérez','González','Sánchez','Romero','Gómez','Torres','Díaz','Fernández','Álvarez','Moreno','Ruiz','Acosta','Molina','Castro','Herrera','Medina','Ortiz','Silva','Ríos','Flores','Benítez'];
