@@ -539,61 +539,91 @@ function onQrScanned(decodedText) {
   });
 }
 
-function procesarQR(grupoId) {
-  // Buscar personas de este grupo
-  const personasGrupo = todasLasPersonas.filter(p =>
-    String(p.grupo_id).toUpperCase() === grupoId && p.estado !== 'baja'
-  );
+async function procesarQR(grupoId) {
+  mostrarToast('Buscando grupo ' + grupoId + '...');
+  
+  // Recargar datos frescos del servidor
+  try {
+    var res = await fetch(API + '?action=personas_evento&password=' + encodeURIComponent(passwordAdmin));
+    var data = await res.json();
+    if (data.ok) {
+      todasLasPersonas = data.personas || [];
+      actualizarContadores();
+    }
+  } catch(e) {}
+  
+  var personasGrupo = todasLasPersonas.filter(function(p) {
+    return String(p.grupo_id || '').trim().toUpperCase() === grupoId && String(p.estado || '') !== 'baja';
+  });
 
   if (personasGrupo.length === 0) {
-    mostrarToast('No encontramos el grupo ' + grupoId);
+    mostrarToast('No se encontró el grupo ' + grupoId + ' (' + todasLasPersonas.length + ' personas cargadas)');
     return;
   }
 
-  mostrarGrupoCheckin(grupoId, personasGrupo);
+  try {
+    mostrarGrupoCheckin(grupoId, personasGrupo);
+  } catch(err) {
+    mostrarToast('Error al mostrar grupo: ' + err.message);
+  }
 }
 
 function mostrarGrupoCheckin(grupoId, personasGrupo) {
   grupoCheckinIds = [];
+  
+  // Reset completo del modal
   document.getElementById('grupoCheckinId').textContent = grupoId;
+  document.getElementById('btnCheckinGrupo').disabled = true;
+  document.getElementById('btnCheckinGrupo').innerHTML = '✅ Confirmar presentes (<span id="checkinCount">0</span>)';
 
-  const presentes = personasGrupo.filter(p => p.asistio === 'SI').length;
-  const total = personasGrupo.length;
+  var presentes = personasGrupo.filter(function(p) { return p.asistio === 'SI'; }).length;
+  var total = personasGrupo.length;
   document.getElementById('grupoCheckinSub').textContent =
     presentes === total ? '¡Ya están todos presentes!'
-    : presentes > 0 ? `${presentes} de ${total} ya presentes · Seleccioná los que llegan`
+    : presentes > 0 ? presentes + ' de ' + total + ' ya presentes'
     : 'Seleccioná quiénes están presentes';
 
-  const lista = document.getElementById('grupoCheckinLista');
+  var lista = document.getElementById('grupoCheckinLista');
   lista.innerHTML = '';
 
-  personasGrupo.forEach(p => {
-    const yaPresente = p.asistio === 'SI';
-    const confirmado = p.estado === 'confirmado';
-    const menuNombre = menus.find(m => String(m.id) === String(p.menu_id))?.nombre || '';
+  personasGrupo.forEach(function(p) {
+    var yaPresente = String(p.asistio) === 'SI';
+    var confirmado = String(p.estado) === 'confirmado';
+    var menuNombre = '';
+    for (var i = 0; i < menus.length; i++) {
+      if (String(menus[i].id) === String(p.menu_id)) { menuNombre = menus[i].nombre; break; }
+    }
 
-    const div = document.createElement('div');
+    var div = document.createElement('div');
     div.className = 'persona-check' + (yaPresente ? ' ya-presente checked' : '');
-    div.dataset.personaId = p.id;
-    div.innerHTML = `
-      <div class="check-box">${yaPresente ? '✅' : ''}</div>
-      <div style="flex:1">
-        <div class="check-nombre">${p.nombre} ${p.apellido}</div>
-        ${menuNombre ? `<div class="check-menu">🍽 ${menuNombre}</div>` : ''}
-      </div>
-      ${yaPresente ? '<span style="font-size:0.65rem;color:#7efca8">Ya presente</span>' : ''}
-      ${!confirmado ? `<span style="font-size:0.65rem;color:#f08080">${p.estado.replace('_',' ')}</span>` : ''}
-    `;
+    div.setAttribute('data-persona-id', p.id);
+    
+    var html = '<div class="check-box">' + (yaPresente ? '✅' : '') + '</div>';
+    html += '<div style="flex:1"><div class="check-nombre">' + p.nombre + ' ' + p.apellido + '</div>';
+    if (menuNombre) html += '<div class="check-menu">🍽 ' + menuNombre + '</div>';
+    html += '</div>';
+    if (yaPresente) html += '<span style="font-size:0.65rem;color:#7efca8">Ya presente</span>';
+    if (!confirmado) html += '<span style="font-size:0.65rem;color:#f08080">' + (p.estado || '').replace('_',' ') + '</span>';
+    
+    div.innerHTML = html;
 
     if (!yaPresente && confirmado) {
-      div.onclick = () => togglePersonaCheck(div, p.id);
+      div.addEventListener('click', function() {
+        togglePersonaCheck(this, p.id);
+      });
     }
 
     lista.appendChild(div);
   });
 
   actualizarCheckinCount();
-  document.getElementById('modalGrupo').classList.add('visible');
+  
+  // Forzar visible con delay
+  var modal = document.getElementById('modalGrupo');
+  modal.classList.remove('visible');
+  setTimeout(function() {
+    modal.classList.add('visible');
+  }, 50);
 }
 
 function togglePersonaCheck(div, personaId) {
@@ -617,23 +647,24 @@ function actualizarCheckinCount() {
 }
 
 async function confirmarCheckinGrupo() {
-  const btn = document.getElementById('btnCheckinGrupo');
+  var btn = document.getElementById('btnCheckinGrupo');
   btn.disabled = true;
   btn.textContent = 'Registrando...';
 
-  let ok = 0;
-  let errors = 0;
+  var ok = 0;
+  var errors = 0;
 
-  for (const personaId of grupoCheckinIds) {
+  for (var idx = 0; idx < grupoCheckinIds.length; idx++) {
+    var personaId = grupoCheckinIds[idx];
     try {
-      const res = await fetch(API, {
+      var res = await fetch(API, {
         method: 'POST',
         body: JSON.stringify({ action: 'checkin', persona_id: personaId, password: passwordAdmin })
       });
-      const data = await res.json();
+      var data = await res.json();
       if (data.ok) {
-        const idx = todasLasPersonas.findIndex(p => p.id === personaId);
-        if (idx !== -1) todasLasPersonas[idx].asistio = 'SI';
+        var pidx = todasLasPersonas.findIndex(function(p) { return p.id === personaId; });
+        if (pidx !== -1) todasLasPersonas[pidx].asistio = 'SI';
         ok++;
       } else {
         errors++;
@@ -642,20 +673,34 @@ async function confirmarCheckinGrupo() {
   }
 
   actualizarContadores();
+  
+  var primerPersona = null;
+  var menuNombre = '';
+  for (var i = 0; i < todasLasPersonas.length; i++) {
+    if (todasLasPersonas[i].id === grupoCheckinIds[0]) {
+      primerPersona = todasLasPersonas[i];
+      for (var j = 0; j < menus.length; j++) {
+        if (String(menus[j].id) === String(primerPersona.menu_id)) { menuNombre = menus[j].nombre; break; }
+      }
+      break;
+    }
+  }
+  
   cerrarModalGrupo();
 
-  if (ok > 0) {
-    const persona = todasLasPersonas.find(p => p.id === grupoCheckinIds[0]);
-    const menuNombre = persona ? (menus.find(m => String(m.id) === String(persona.menu_id))?.nombre || '') : '';
+  if (ok > 0 && primerPersona) {
     mostrarCheckin(
-      ok === 1 ? `${persona.nombre} ${persona.apellido}` : `${ok} personas del grupo`,
+      ok === 1 ? primerPersona.nombre + ' ' + primerPersona.apellido : ok + ' personas del grupo',
       menuNombre,
       false
     );
   }
-  if (errors > 0) mostrarToast(`${errors} check-in(s) fallaron`);
+  if (errors > 0) mostrarToast(errors + ' check-in(s) fallaron');
 
   grupoCheckinIds = [];
+  
+  // Recargar datos en background
+  cargarPersonas();
 }
 
 function cerrarModalGrupo() {
