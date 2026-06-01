@@ -112,19 +112,19 @@
     @keyframes spin{to{transform:rotate(360deg)}}
 
     /* PANEL DE GANADORES */
-    .ganadores-panel{position:fixed;top:0;left:0;bottom:0;width:220px;z-index:20;background:linear-gradient(180deg,rgba(10,5,0,0.95),rgba(26,10,0,0.9));border-right:1px solid rgba(201,146,42,0.2);overflow-y:auto;padding:0.75rem;display:none;animation:slide-in 0.4s ease both}
+    .ganadores-panel{position:fixed;top:0;left:0;bottom:0;width:280px;z-index:20;background:transparent;overflow-y:auto;padding:1rem;display:none;animation:slide-in 0.4s ease both}
     @keyframes slide-in{from{transform:translateX(-100%)}to{transform:translateX(0)}}
-    .ganadores-panel-titulo{font-family:'Rye',serif;font-size:0.75rem;color:var(--dorado-claro);text-align:center;margin-bottom:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding-bottom:0.5rem;border-bottom:1px solid rgba(201,146,42,0.2)}
-    .ganador-item{display:flex;align-items:center;gap:0.5rem;padding:0.5rem;background:rgba(245,236,215,0.04);border:1px solid rgba(201,146,42,0.15);border-radius:4px;margin-bottom:0.4rem;animation:entrar 0.3s ease both}
-    .ganador-item-logo{width:36px;height:36px;border-radius:4px;object-fit:contain;background:rgba(255,255,255,0.9);padding:2px;flex-shrink:0}
-    .ganador-item-logo-placeholder{width:36px;height:36px;border-radius:4px;background:rgba(201,146,42,0.15);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .ganadores-panel-titulo{font-family:'Rye',serif;font-size:1rem;color:var(--dorado-claro);text-align:center;margin-bottom:0.75rem;letter-spacing:0.1em;text-transform:uppercase;text-shadow:0 0 20px rgba(240,192,64,0.4)}
+    .ganador-item{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid rgba(201,146,42,0.15);animation:entrar 0.4s ease both}
+    .ganador-item-logo{width:60px;height:60px;border-radius:6px;object-fit:contain;background:rgba(255,255,255,0.95);padding:4px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+    .ganador-item-logo-placeholder{width:60px;height:60px;border-radius:6px;background:rgba(201,146,42,0.2);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
     .ganador-item-info{flex:1;min-width:0}
-    .ganador-item-premio{font-size:0.6rem;color:var(--dorado);letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ganador-item-nombre{font-size:0.78rem;color:var(--paja);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ganador-item-premio{font-size:0.7rem;color:var(--dorado);letter-spacing:0.08em;text-transform:uppercase;text-shadow:0 1px 3px rgba(0,0,0,0.8);margin-bottom:0.15rem}
+    .ganador-item-nombre{font-family:'Rye',serif;font-size:1.1rem;color:var(--dorado-claro);text-shadow:0 0 10px rgba(240,192,64,0.3),0 2px 4px rgba(0,0,0,0.8);line-height:1.2}
     .ganadores-vacio{font-size:0.7rem;color:var(--arena);opacity:0.5;text-align:center;padding:1rem 0}
 
     /* Ajustar pantallas cuando el panel está visible */
-    .con-panel #screenPremios,.con-panel #screenSorteo,.con-panel #screenGanador{padding-left:230px}
+    .con-panel #screenPremios,.con-panel #screenSorteo,.con-panel #screenGanador,.con-panel #screenFinal{padding-left:290px}
 
     /* PANTALLA FINAL */
     #screenFinal{flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center}
@@ -547,15 +547,29 @@ function volverAPremios(){
 }
 
 // ── PANEL DE GANADORES ──────────────────────────────
+function convertirDriveUrl(url) {
+  if (!url) return '';
+  var str = String(url).trim();
+  // https://drive.google.com/file/d/FILE_ID/view?usp=sharing
+  var match = str.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match) {
+    return 'https://lh3.googleusercontent.com/d/' + match[1];
+  }
+  // https://drive.google.com/uc?id=FILE_ID
+  var match2 = str.match(/id=([a-zA-Z0-9_-]+)/);
+  if (match2) {
+    return 'https://lh3.googleusercontent.com/d/' + match2[1];
+  }
+  return str;
+}
+
 function agregarGanadorPanel(premio, ganador) {
   ganadoresRegistrados.push({ premio: premio, ganador: ganador });
   
-  // Mostrar panel
   var panel = document.getElementById('ganadoresPanel');
   panel.style.display = 'block';
   document.body.classList.add('con-panel');
   
-  // Renderizar lista
   var lista = document.getElementById('ganadoresLista');
   lista.innerHTML = '';
   
@@ -564,8 +578,9 @@ function agregarGanadorPanel(premio, ganador) {
     item.className = 'ganador-item';
     
     var logoHtml = '';
-    if (g.premio.imagen_url) {
-      logoHtml = '<img class="ganador-item-logo" src="' + g.premio.imagen_url + '" alt="' + g.premio.nombre + '">';
+    var imgUrl = convertirDriveUrl(g.premio.imagen_url);
+    if (imgUrl) {
+      logoHtml = '<img class="ganador-item-logo" src="' + imgUrl + '" alt="' + g.premio.nombre + '" onerror="this.style.display=\'none\'">';
     } else {
       logoHtml = '<div class="ganador-item-logo-placeholder">🏆</div>';
     }
