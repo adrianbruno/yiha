@@ -110,12 +110,41 @@
     .toast.visible{opacity:1}
     .spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);border-top-color:white;animation:spin 0.7s linear infinite;display:none}
     @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* PANEL DE GANADORES */
+    .ganadores-panel{position:fixed;top:0;left:0;bottom:0;width:220px;z-index:20;background:linear-gradient(180deg,rgba(10,5,0,0.95),rgba(26,10,0,0.9));border-right:1px solid rgba(201,146,42,0.2);overflow-y:auto;padding:0.75rem;display:none;animation:slide-in 0.4s ease both}
+    @keyframes slide-in{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+    .ganadores-panel-titulo{font-family:'Rye',serif;font-size:0.75rem;color:var(--dorado-claro);text-align:center;margin-bottom:0.6rem;letter-spacing:0.1em;text-transform:uppercase;padding-bottom:0.5rem;border-bottom:1px solid rgba(201,146,42,0.2)}
+    .ganador-item{display:flex;align-items:center;gap:0.5rem;padding:0.5rem;background:rgba(245,236,215,0.04);border:1px solid rgba(201,146,42,0.15);border-radius:4px;margin-bottom:0.4rem;animation:entrar 0.3s ease both}
+    .ganador-item-logo{width:36px;height:36px;border-radius:4px;object-fit:contain;background:rgba(255,255,255,0.9);padding:2px;flex-shrink:0}
+    .ganador-item-logo-placeholder{width:36px;height:36px;border-radius:4px;background:rgba(201,146,42,0.15);display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+    .ganador-item-info{flex:1;min-width:0}
+    .ganador-item-premio{font-size:0.6rem;color:var(--dorado);letter-spacing:0.05em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ganador-item-nombre{font-size:0.78rem;color:var(--paja);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .ganadores-vacio{font-size:0.7rem;color:var(--arena);opacity:0.5;text-align:center;padding:1rem 0}
+
+    /* Ajustar pantallas cuando el panel está visible */
+    .con-panel #screenPremios,.con-panel #screenSorteo,.con-panel #screenGanador{padding-left:230px}
+
+    /* PANTALLA FINAL */
+    #screenFinal{flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center}
+    .final-vic{height:clamp(200px,25vw,320px);filter:drop-shadow(0 0 40px rgba(240,192,64,0.5));animation:vic-float 3s ease-in-out infinite;margin-bottom:2rem}
+    .final-titulo{font-family:'Rye',serif;font-size:clamp(2.5rem,7vw,5rem);color:var(--dorado-claro);text-shadow:0 0 50px rgba(240,192,64,0.6),3px 3px 0 rgba(0,0,0,0.5);margin-bottom:1rem;animation:entrar 0.8s ease both}
+    .final-sub{font-size:clamp(1rem,3vw,1.5rem);color:var(--paja);letter-spacing:0.15em;text-transform:uppercase;opacity:0.9;animation:entrar 0.8s ease 0.3s both}
   </style>
 </head>
 <body>
 <div class="sky"></div>
 <div class="stars" id="stars"></div>
 <div class="toast" id="toast"></div>
+
+<!-- PANEL DE GANADORES (lateral izquierdo) -->
+<div class="ganadores-panel" id="ganadoresPanel">
+  <div class="ganadores-panel-titulo">🏆 Ganadores</div>
+  <div id="ganadoresLista">
+    <div class="ganadores-vacio">Aún no hay ganadores</div>
+  </div>
+</div>
 
 <div class="screen active" id="screenLogin">
   <img src="img/vic_juntos_saludo.png" class="login-vic" alt="Vic">
@@ -176,11 +205,20 @@
   </div>
 </div>
 
+<!-- PANTALLA FINAL -->
+<div class="screen" id="screenFinal">
+  <div class="confetti-wrap" id="confettiFinal"></div>
+  <img src="img/vic_juntos_highfive.png" class="final-vic" alt="Vic">
+  <div class="final-titulo">¡GRACIAS a todos por participar!</div>
+  <div class="final-sub">Cumple 221countryLP · Yiha! 🤠🌵</div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 <script>
 const API='https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
 let password='',personas=[],pool=[],premios=[],premioActual=null,ganadorActual=null;
 let engine,render,runner,bolitas=[],sorteando=false,testMode=0;
+let ganadoresRegistrados=[];
 
 (function(){const c=document.getElementById('stars');for(let i=0;i<150;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+0.5;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*75}%;left:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*5}s`;c.appendChild(s)}})();
 
@@ -469,13 +507,19 @@ function mostrarGanador(p){
 }
 
 async function marcarEntregado(){
-  if(!ganadorActual.id.startsWith('T-')){try{const r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'entregado',password})});const d=await r.json();if(!d.ok){mostrarToast(d.error);return}}catch(e){mostrarToast('Error');return}}
-  pool=pool.filter(p=>p.id!==ganadorActual.id);premioActual._ganados=(premioActual._ganados||0)+1;
-  mostrarToast('¡Premio entregado!');setTimeout(volverAPremios,1500);
+  if(!ganadorActual.id.startsWith('T-')){try{var r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'entregado',password})});var d=await r.json();if(!d.ok){mostrarToast(d.error);return}}catch(e){mostrarToast('Error');return}}
+  pool=pool.filter(function(p){return p.id!==ganadorActual.id});
+  premioActual._ganados=(premioActual._ganados||0)+1;
+  
+  // Agregar al panel de ganadores
+  agregarGanadorPanel(premioActual, ganadorActual);
+  
+  mostrarToast('¡Premio entregado!');
+  setTimeout(function(){ volverAPremios(); }, 1500);
 }
 async function sortearDeNuevo(){
   if(!ganadorActual.id.startsWith('T-')){try{await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'no_presente',password})})}catch(e){}}
-  pool=pool.filter(p=>p.id!==ganadorActual.id);
+  pool=pool.filter(function(p){return p.id!==ganadorActual.id});
   if(!pool.length){mostrarToast('No quedan más participantes');setTimeout(volverAPremios,2000);return}
   document.getElementById('partNum').textContent=pool.length;
   limpiarBolitas();limpiarConfetti();mostrarPantalla('screenSorteo');
@@ -485,7 +529,86 @@ async function sortearDeNuevo(){
   document.getElementById('finalistasWrap').style.display='none';
   sizeSombrero();iniciarFisica();
 }
-function volverAPremios(){limpiarBolitas();limpiarConfetti();if(runner)Matter.Runner.stop(runner);if(render)Matter.Render.stop(render);if(engine)Matter.Engine.clear(engine);document.getElementById('sombreroContainer').className='sombrero-container';document.getElementById('finalistasWrap').style.display='none';renderPremios();mostrarPantalla('screenPremios')}
+function volverAPremios(){
+  limpiarBolitas();limpiarConfetti();
+  if(runner)Matter.Runner.stop(runner);
+  if(render)Matter.Render.stop(render);
+  if(engine)Matter.Engine.clear(engine);
+  document.getElementById('sombreroContainer').className='sombrero-container';
+  document.getElementById('finalistasWrap').style.display='none';
+  
+  // Verificar si todos los premios fueron sorteados
+  if(verificarTodosSorteados()){
+    mostrarFinal();
+    return;
+  }
+  
+  renderPremios();mostrarPantalla('screenPremios');
+}
+
+// ── PANEL DE GANADORES ──────────────────────────────
+function agregarGanadorPanel(premio, ganador) {
+  ganadoresRegistrados.push({ premio: premio, ganador: ganador });
+  
+  // Mostrar panel
+  var panel = document.getElementById('ganadoresPanel');
+  panel.style.display = 'block';
+  document.body.classList.add('con-panel');
+  
+  // Renderizar lista
+  var lista = document.getElementById('ganadoresLista');
+  lista.innerHTML = '';
+  
+  ganadoresRegistrados.forEach(function(g) {
+    var item = document.createElement('div');
+    item.className = 'ganador-item';
+    
+    var logoHtml = '';
+    if (g.premio.imagen_url) {
+      logoHtml = '<img class="ganador-item-logo" src="' + g.premio.imagen_url + '" alt="' + g.premio.nombre + '">';
+    } else {
+      logoHtml = '<div class="ganador-item-logo-placeholder">🏆</div>';
+    }
+    
+    item.innerHTML = logoHtml +
+      '<div class="ganador-item-info">' +
+        '<div class="ganador-item-premio">' + g.premio.nombre + '</div>' +
+        '<div class="ganador-item-nombre">' + g.ganador.nombre + ' ' + g.ganador.apellido + '</div>' +
+      '</div>';
+    
+    lista.appendChild(item);
+  });
+}
+
+function verificarTodosSorteados() {
+  if (premios.length === 0) return false;
+  for (var i = 0; i < premios.length; i++) {
+    var ganados = premios[i]._ganados || 0;
+    if (ganados < premios[i].cantidad_ganadores) return false;
+  }
+  return true;
+}
+
+function mostrarFinal() {
+  lanzarConfettiFinal();
+  mostrarPantalla('screenFinal');
+}
+
+function lanzarConfettiFinal() {
+  var w = document.getElementById('confettiFinal');
+  w.innerHTML = '';
+  var cs = ['#f0c040','#c0392b','#27ae60','#2980b9','#f39c12','#8e44ad','#e8d5a3'];
+  for (var i = 0; i < 200; i++) {
+    var c = document.createElement('div');
+    var cl = cs[Math.floor(Math.random()*cs.length)];
+    var sz = 8+Math.random()*12;
+    var l = Math.random()*100;
+    var d = Math.random()*3;
+    var dur = 4+Math.random()*3;
+    c.style.cssText = 'position:absolute;top:-20px;left:'+l+'%;width:'+(Math.random()>0.5?sz:sz/2)+'px;height:'+sz+'px;background:'+cl+';border-radius:'+(Math.random()>0.5?'2px':'50%')+';animation:confetti-caer '+dur+'s ease-in '+d+'s both;transform:rotate('+Math.random()*360+'deg)';
+    w.appendChild(c);
+  }
+}
 
 function lanzarConfetti(){const w=document.getElementById('confettiWrap');w.innerHTML='';const cs=['#f0c040','#c0392b','#27ae60','#2980b9','#f39c12','#8e44ad','#e8d5a3'];for(let i=0;i<150;i++){const c=document.createElement('div');const cl=cs[Math.floor(Math.random()*cs.length)];const sz=8+Math.random()*10;const l=Math.random()*100;const d=Math.random()*2;const dur=3+Math.random()*2;c.style.cssText=`position:absolute;top:-20px;left:${l}%;width:${Math.random()>0.5?sz:sz/2}px;height:${sz}px;background:${cl};border-radius:${Math.random()>0.5?'2px':'50%'};animation:confetti-caer ${dur}s ease-in ${d}s both;transform:rotate(${Math.random()*360}deg)`;w.appendChild(c)}}
 function limpiarConfetti(){document.getElementById('confettiWrap').innerHTML=''}
