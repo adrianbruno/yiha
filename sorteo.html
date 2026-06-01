@@ -123,8 +123,8 @@
     .ganador-item-nombre{font-family:'Rye',serif;font-size:1.1rem;color:var(--dorado-claro);text-shadow:0 0 10px rgba(240,192,64,0.3),0 2px 4px rgba(0,0,0,0.8);line-height:1.2}
     .ganadores-vacio{font-size:0.7rem;color:var(--arena);opacity:0.5;text-align:center;padding:1rem 0}
 
-    /* Ajustar pantallas cuando el panel está visible */
-    .con-panel #screenPremios,.con-panel #screenSorteo,.con-panel #screenGanador,.con-panel #screenFinal{padding-left:290px}
+    /* Ajustar pantallas cuando el panel está visible - NO el sorteo */
+    .con-panel #screenPremios,.con-panel #screenGanador,.con-panel #screenFinal{padding-left:290px}
 
     /* PANTALLA FINAL */
     #screenFinal{flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center}
@@ -137,6 +137,7 @@
 <div class="sky"></div>
 <div class="stars" id="stars"></div>
 <div class="toast" id="toast"></div>
+<audio id="musicaSorteo" src="audio/sonido.mp3" preload="auto" loop></audio>
 
 <!-- PANEL DE GANADORES (lateral izquierdo) -->
 <div class="ganadores-panel" id="ganadoresPanel">
@@ -260,6 +261,7 @@ function seleccionarPremio(p){
   document.getElementById('spinnerSorteo').style.display='none';
   document.getElementById('txtSortear').textContent='🤠 ¡Sortear!';
   document.getElementById('sombreroContainer').className='sombrero-container';
+  iniciarMusica();
 }
 
 function sizeSombrero(){
@@ -503,6 +505,7 @@ function mostrarNombreEliminado(b){
 function mostrarGanador(p){
   document.getElementById('ganadorNombre').textContent=p.nombre+' '+p.apellido;
   document.getElementById('ganadorPremio').textContent=premioActual.nombre;
+  fadeOutMusica();
   lanzarConfetti();mostrarPantalla('screenGanador');
 }
 
@@ -530,7 +533,7 @@ async function sortearDeNuevo(){
   sizeSombrero();iniciarFisica();
 }
 function volverAPremios(){
-  limpiarBolitas();limpiarConfetti();
+  limpiarBolitas();limpiarConfetti();pararMusica();
   if(runner)Matter.Runner.stop(runner);
   if(render)Matter.Render.stop(render);
   if(engine)Matter.Engine.clear(engine);
@@ -630,6 +633,38 @@ function limpiarConfetti(){document.getElementById('confettiWrap').innerHTML=''}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}
 function mostrarPantalla(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+// ── MÚSICA ──────────────────────────────────────────
+function iniciarMusica() {
+  var audio = document.getElementById('musicaSorteo');
+  audio.currentTime = 0;
+  audio.volume = 0.6;
+  audio.play().catch(function() {
+    // Si el navegador bloquea autoplay, ignora silenciosamente
+  });
+}
+
+function fadeOutMusica() {
+  var audio = document.getElementById('musicaSorteo');
+  var vol = audio.volume;
+  var fade = setInterval(function() {
+    vol -= 0.05;
+    if (vol <= 0) {
+      clearInterval(fade);
+      audio.pause();
+      audio.volume = 0.6;
+    } else {
+      audio.volume = vol;
+    }
+  }, 100);
+}
+
+function pararMusica() {
+  var audio = document.getElementById('musicaSorteo');
+  audio.pause();
+  audio.currentTime = 0;
+  audio.volume = 0.6;
+}
 function setLoading(s,t,l,txt){document.getElementById(s).style.display=l?'block':'none';document.getElementById(t).textContent=txt}
 function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('visible');setTimeout(()=>t.classList.remove('visible'),4000)}
 </script>
