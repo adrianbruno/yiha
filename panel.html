@@ -105,7 +105,7 @@
     .btn-accion-baja:hover { background:rgba(192,57,43,0.2); }
 
     /* SUBIR COMPROBANTE */
-    .upload-area { border:2px dashed rgba(200,160,106,0.3); border-radius:3px; padding:1.5rem; text-align:center; cursor:pointer; transition:all 0.15s; }
+    .upload-area { display:block; border:2px dashed rgba(200,160,106,0.3); border-radius:6px; padding:1.5rem; text-align:center; cursor:pointer; transition:all 0.15s; margin-bottom:0.75rem; }
     .upload-area:hover { border-color:var(--dorado); background:rgba(201,146,42,0.05); }
     .upload-input-hidden { display:none!important; }
     .upload-icon { font-size:2rem; margin-bottom:0.5rem; }
@@ -334,6 +334,13 @@
         <div class="spinner" id="spinnerSubir"></div>
         <span id="txtBtnSubir">Subir comprobante</span>
       </button>
+      <div id="uploadStatus" style="display:none;margin-top:0.75rem;padding:0.75rem 1rem;background:rgba(201,146,42,0.1);border:1px solid rgba(201,146,42,0.25);border-radius:4px;text-align:center">
+        <div style="font-size:0.8rem;color:var(--dorado-claro);font-weight:600" id="uploadStatusTxt">Preparando...</div>
+        <div style="margin-top:0.5rem;height:4px;background:rgba(200,160,106,0.15);border-radius:2px;overflow:hidden">
+          <div id="uploadProgressBar" style="height:100%;background:var(--dorado);border-radius:2px;width:0%;transition:width 0.5s ease"></div>
+        </div>
+        <div style="font-size:0.65rem;color:var(--arena);margin-top:0.4rem;opacity:0.7">No cierres ni recargues esta página</div>
+      </div>
     </div>
 
     <!-- PERSONAS DEL GRUPO -->
@@ -581,15 +588,32 @@ function previewArchivo(e) {
 async function subirComprobante() {
   if (!archivoSeleccionado) return;
   
-  const btn = document.getElementById('btnSubir');
+  var btn = document.getElementById('btnSubir');
+  var status = document.getElementById('uploadStatus');
+  var statusTxt = document.getElementById('uploadStatusTxt');
+  var progressBar = document.getElementById('uploadProgressBar');
+  
   btn.disabled = true;
-  setLoading('spinnerSubir', 'txtBtnSubir', true, 'Procesando... no cierres esta página');
+  btn.style.display = 'none';
+  status.style.display = 'block';
+  
+  // Paso 1: Preparando archivo
+  statusTxt.textContent = '📎 Preparando archivo...';
+  progressBar.style.width = '10%';
 
   try {
-    const base64 = await fileToBase64(archivoSeleccionado);
-    setLoading('spinnerSubir', 'txtBtnSubir', true, 'Subiendo comprobante...');
+    // Paso 2: Convirtiendo a base64
+    await sleep(300);
+    statusTxt.textContent = '🔄 Procesando imagen...';
+    progressBar.style.width = '25%';
     
-    const res = await fetch(API, {
+    var base64 = await fileToBase64(archivoSeleccionado);
+    
+    // Paso 3: Enviando
+    statusTxt.textContent = '📤 Subiendo al servidor... esto puede tardar';
+    progressBar.style.width = '50%';
+    
+    var res = await fetch(API, {
       method: 'POST',
       body: JSON.stringify({
         action: 'subir_comprobante',
@@ -600,22 +624,43 @@ async function subirComprobante() {
         mime_type: archivoSeleccionado.type
       })
     });
-    const data = await res.json();
-    if (!data.ok) { mostrarToast('error', data.error); return; }
+    
+    // Paso 4: Procesando respuesta
+    statusTxt.textContent = '⏳ Guardando en Drive...';
+    progressBar.style.width = '80%';
+    
+    var data = await res.json();
+    
+    if (!data.ok) {
+      status.style.display = 'none';
+      btn.style.display = 'flex';
+      btn.disabled = false;
+      mostrarToast('error', data.error);
+      return;
+    }
 
-    mostrarToast('ok', '¡Comprobante enviado! Lo revisamos a la brevedad.');
+    // Paso 5: Listo
+    statusTxt.textContent = '✅ ¡Comprobante recibido!';
+    progressBar.style.width = '100%';
     archivoSeleccionado = null;
     
-    // Recargar panel sin recargar la página
-    setTimeout(() => recargarPanel(), 1500);
+    mostrarToast('ok', '¡Comprobante enviado! Lo revisamos a la brevedad.');
+    
+    setTimeout(function() {
+      status.style.display = 'none';
+      btn.style.display = 'flex';
+      recargarPanel();
+    }, 2000);
 
   } catch(e) {
-    mostrarToast('error', 'Error al subir. Revisá tu conexión.');
-  } finally {
-    setLoading('spinnerSubir', 'txtBtnSubir', false, 'Subir comprobante');
+    status.style.display = 'none';
+    btn.style.display = 'flex';
     btn.disabled = false;
+    mostrarToast('error', 'Error al subir. Revisá tu conexión e intentá de nuevo.');
   }
 }
+
+function sleep(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
 
 function fileToBase64(file) {
   return new Promise((res, rej) => {
