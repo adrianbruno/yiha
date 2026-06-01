@@ -276,7 +276,7 @@
           <div class="spinner" id="spinnerLogin"></div>
           <span id="txtBtnLogin">🤠 Entrar a mi panel</span>
         </button>
-		<div style="text-align:center;margin-top:1rem">
+        <div style="text-align:center;margin-top:1rem">
           <button onclick="mostrarRecuperarId()" style="background:none;border:none;color:var(--arena);font-family:'Josefin Sans',sans-serif;font-size:0.75rem;cursor:pointer;text-decoration:underline;opacity:0.7">¿Perdiste tu ID? Recuperalo acá</button>
         </div>
       </div>
@@ -808,7 +808,7 @@ function mostrarToast(tipo, msg) {
   setTimeout(() => t.classList.remove('visible'), 4000);
 }
 
-cargarMenus();
+// ── RECUPERAR ID ──────────────────────────────────────
 function mostrarRecuperarId() {
   var cel = prompt('Ingresá el número de celular con el que te registraste:');
   if (!cel || cel.trim().length < 6) return;
@@ -861,11 +861,27 @@ async function recuperarIdFetch(celular) {
       if (confirm(msg2)) {
         window.location.href = 'registro.html';
       }
+    } else {
+      mostrarToast('error', 'No encontramos ningún grupo con ese celular');
     }
   } catch(e) {
     mostrarToast('error', 'Error de conexión');
   }
 }
+
+cargarMenus();
+
+// Auto-login desde URL
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id');
+  var cel = params.get('cel');
+  if (id && cel) {
+    document.getElementById('loginId').value = id.toUpperCase();
+    document.getElementById('loginCelular').value = cel;
+    setTimeout(entrarPanel, 1000);
+  }
+})();
 </script>
 </body>
 </html>
