@@ -815,6 +815,9 @@ function mostrarRecuperarId() {
   
   var celLimpio = cel.trim().replace(/\D/g, '');
   
+  // Mostrar barra de status
+  mostrarToast('ok', '🔍 Buscando tu registro...');
+  
   fetch(API, {
     method: 'POST',
     body: JSON.stringify({ action: 'recuperar_id', celular: celLimpio })
@@ -833,9 +836,10 @@ function mostrarRecuperarId() {
       var g = activos[0];
       document.getElementById('loginId').value = g.grupo_id;
       document.getElementById('loginCelular').value = g.celular_ultimos4;
-      mostrarToast('ok', '¡Encontramos tu grupo! ' + g.grupo_id + ' · Tocá Entrar');
+      mostrarToast('ok', '✅ ¡Encontramos tu grupo! ' + g.grupo_id + ' · Tocá Entrar');
     
     } else if (activos.length > 1) {
+      mostrarToast('ok', '✅ Encontramos ' + activos.length + ' grupos');
       var msg = 'Encontramos ' + activos.length + ' grupos:\n\n';
       activos.forEach(function(g) {
         msg += g.grupo_id + ' (' + g.cant_personas + ' personas, ' + g.estado_pago.replace('_', ' ') + ')\n';
@@ -858,7 +862,7 @@ function mostrarRecuperarId() {
     }
   })
   .catch(function(err) {
-    mostrarToast('error', 'Error de conexión');
+    mostrarToast('error', 'Error de conexión. Intentá de nuevo.');
   });
 }
 
