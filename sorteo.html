@@ -233,15 +233,43 @@ async function entrarSorteo(){
     const[dC,dP,dPe]=await Promise.all([rC.json(),rP.json(),rPe.json()]);
     if(!dC.ok){mostrarToast(dC.error||'Contraseña incorrecta');return}
     password=pass;premios=dP.premios||[];personas=dPe.personas||[];
-	// Cargar ganadores ya entregados desde la planilla
-	premios.forEach(function(p){ p._ganados = p.ganados || 0; });
+    // Cargar estado persistente
+    premios.forEach(function(p){ p._ganados = p.ganados || 0; });
+    var ganadoresServidor = dP.ganadores || [];
+    
     if(testMode>0){
       const noms=['Ana','Luis','María','Carlos','Laura','Pedro','Sofía','Diego','Lucía','Martín','Valentina','Tomás','Camila','Mateo','Julieta','Nicolás','Florencia','Santiago','Milagros','Agustín','Rocío','Bruno','Celeste','Franco','Abril','Gonzalo','Pilar','Facundo','Delfina','Lautaro','Carolina','Joaquín','Paula','Ramiro','Daniela','Hernán','Aldana','Ignacio','Brenda','Mauro','Andrea','Ezequiel','Romina','Gastón','Natalia','Sergio','Mora','Sebastián','Candela','Emmanuel','Valeria'];
       const apes=['García','López','Martínez','Rodríguez','Pérez','González','Sánchez','Romero','Gómez','Torres','Díaz','Fernández','Álvarez','Moreno','Ruiz','Acosta','Molina','Castro','Herrera','Medina','Ortiz','Silva','Ríos','Flores','Benítez'];
       personas=[];for(let i=0;i<testMode;i++)personas.push({id:'T-'+i,nombre:noms[i%noms.length],apellido:apes[i%apes.length]});
     }
-    pool=[...personas];if(!personas.length){mostrarToast('No hay participantes');return}
-    mostrarPantalla('screenPremios');renderPremios();
+    
+    // Excluir personas que ya ganaron del pool
+    var ganadoresIds = {};
+    ganadoresServidor.forEach(function(g){ ganadoresIds[g.persona_id] = true; });
+    pool = personas.filter(function(p){ return !ganadoresIds[p.id]; });
+    
+    if(!personas.length){mostrarToast('No hay participantes');return}
+    
+    // Reconstruir panel de ganadores si hay previos
+    if(ganadoresServidor.length > 0) {
+      ganadoresRegistrados = [];
+      ganadoresServidor.forEach(function(g) {
+        var premio = null;
+        for(var i=0;i<premios.length;i++){
+          if(String(premios[i].id) === String(g.premio_id)){ premio = premios[i]; break; }
+        }
+        if(premio) {
+          agregarGanadorPanel(premio, { nombre: g.nombre, apellido: g.apellido, id: g.persona_id });
+        }
+      });
+    }
+    
+    // Verificar si ya se entregaron todos
+    if(verificarTodosSorteados()){
+      mostrarFinal();
+    } else {
+      mostrarPantalla('screenPremios');renderPremios();
+    }
   }catch(e){mostrarToast('Error de conexión')}
   finally{setLoading('spinnerLogin','txtLogin',false,'🎉 Entrar al sorteo')}
 }
