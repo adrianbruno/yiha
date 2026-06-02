@@ -392,8 +392,17 @@ function limpiarBusqueda() {
 
 // ── CHECK-IN ──────────────────────────────────────────
 async function checkIn(persona) {
+  // Mostrar overlay de carga inmediato
+  var overlay = document.getElementById('overlayCheckin');
+  overlay.className = 'overlay-checkin ok';
+  document.getElementById('checkinIcono').textContent = '⏳';
+  document.getElementById('checkinNombre').textContent = persona.nombre + ' ' + persona.apellido;
+  document.getElementById('checkinSub').textContent = 'Registrando asistencia...';
+  document.getElementById('checkinMenu').textContent = '';
+  overlay.classList.add('visible');
+
   try {
-    const res = await fetch(API, {
+    var res = await fetch(API, {
       method: 'POST',
       body: JSON.stringify({
         action: 'checkin',
@@ -401,22 +410,39 @@ async function checkIn(persona) {
         password: passwordAdmin
       })
     });
-    const data = await res.json();
-    if (!data.ok) { mostrarToast(data.error); return; }
+    var data = await res.json();
+    if (!data.ok) {
+      cerrarCheckin();
+      mostrarToast(data.error);
+      return;
+    }
 
     // Actualizar local
-    const idx = todasLasPersonas.findIndex(p => p.id === persona.id);
+    var idx = -1;
+    for (var i = 0; i < todasLasPersonas.length; i++) {
+      if (todasLasPersonas[i].id === persona.id) { idx = i; break; }
+    }
     if (idx !== -1) todasLasPersonas[idx].asistio = 'SI';
     actualizarContadores();
 
-    // Mostrar overlay de éxito
-    const menuNombre = menus.find(m => String(m.id) === String(persona.menu_id))?.nombre || '';
-    mostrarCheckin(persona.nombre + ' ' + persona.apellido, menuNombre, false);
+    // Cambiar overlay a éxito
+    var menuNombre = '';
+    for (var j = 0; j < menus.length; j++) {
+      if (String(menus[j].id) === String(persona.menu_id)) { menuNombre = menus[j].nombre; break; }
+    }
+    document.getElementById('checkinIcono').textContent = '✅';
+    document.getElementById('checkinSub').textContent = '¡Bienvenido al cumple!';
+    document.getElementById('checkinMenu').textContent = menuNombre ? '🍽 ' + menuNombre : '';
 
     // Refrescar resultados
     buscar(document.getElementById('busquedaInput').value);
 
-  } catch(e) { mostrarToast('Error al registrar asistencia'); }
+    setTimeout(cerrarCheckin, 3000);
+
+  } catch(e) {
+    cerrarCheckin();
+    mostrarToast('Error al registrar asistencia');
+  }
 }
 
 function mostrarYaPresente(persona) {
