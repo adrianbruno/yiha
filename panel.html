@@ -251,7 +251,7 @@
     <a href="index.html" class="back-btn">←</a>
     <div>
       <div class="header-titulo">Mi Panel</div>
-      <div class="header-sub">Cumple 221countryLP · 3 Oct 2026</div>
+      <div class="header-sub" id="headerSubPanel">Yiha!</div>
     </div>
   </div>
 
@@ -388,6 +388,20 @@ async function cargarMenus() {
   // Mostrar UI de inmediato
   document.getElementById('loadingInicial').classList.add('oculto');
   
+  // Cargar config para parámetros dinámicos
+  try {
+    const resConf = await fetch(`${API}?action=config`);
+    const dConf = await resConf.json();
+    if (dConf.ok) {
+      const cfg = dConf.config;
+      if (cfg.subtitulo_evento) {
+        document.getElementById('headerSubPanel').textContent = cfg.subtitulo_evento;
+        window._subtituloEvento = cfg.subtitulo_evento;
+      }
+      if (cfg.nombre_corto) window._nombreCorto = cfg.nombre_corto;
+    }
+  } catch(e) {}
+
   try {
     const res = await fetch(`${API}?action=menus`);
     const data = await res.json();
@@ -854,7 +868,7 @@ function descargarQR() {
   // Texto evento
   ctx.font = '11px sans-serif';
   ctx.fillStyle = '#888';
-  ctx.fillText('Cumple 221countryLP · Yiha!', finalCanvas.width / 2, canvas.height + padding + 52);
+  ctx.fillText(window._subtituloEvento || 'Yiha!', finalCanvas.width / 2, canvas.height + padding + 52);
   
   // Descargar
   const link = document.createElement('a');

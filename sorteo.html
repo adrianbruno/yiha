@@ -110,6 +110,10 @@
     .toast.visible{opacity:1}
     .spinner{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,255,255,0.3);border-top-color:white;animation:spin 0.7s linear infinite;display:none}
     @keyframes spin{to{transform:rotate(360deg)}}
+    .sound-toggle{display:flex;align-items:center;justify-content:center;gap:0.75rem;padding:0.6rem 1.25rem;background:rgba(201,146,42,0.1);border:1px solid rgba(201,146,42,0.25);border-radius:20px;cursor:pointer;margin-top:0.75rem;transition:all 0.15s;user-select:none}
+    .sound-toggle:hover{background:rgba(201,146,42,0.18)}
+    .sound-toggle-icon{font-size:1.2rem}
+    .sound-toggle-txt{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena)}
 
     /* PANEL DE GANADORES */
     .ganadores-panel{position:fixed;top:0;left:0;bottom:0;width:280px;z-index:20;background:transparent;overflow-y:auto;padding:1rem;display:none;animation:slide-in 0.4s ease both}
@@ -151,7 +155,7 @@
   <img src="img/vic_juntos_saludo.png" class="login-vic" alt="Vic">
   <div class="login-card">
     <div class="login-titulo">¡Sorteo!</div>
-    <div class="login-sub">Cumple 221countryLP · 3 Oct 2026</div>
+    <div class="login-sub" id="loginSubSorteo">Yiha!</div>
     <div class="campo"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') entrarSorteo()"></div>
     <button class="btn btn-dorado" style="width:100%" onclick="entrarSorteo()"><div class="spinner" id="spinnerLogin"></div><span id="txtLogin">🎉 Entrar al sorteo</span></button>
     <details class="test-toggle"><summary>Modo test</summary><div class="campo"><label>Simular participantes</label><input type="number" id="testCantidad" value="0" min="0" max="300"></div></details>
@@ -162,6 +166,10 @@
   <div class="premios-titulo" style="animation:entrar 0.6s ease both">¿Qué sorteamos?</div>
   <div class="premios-sub" style="animation:entrar 0.6s ease 0.1s both">Elegí el premio</div>
   <div class="premios-grid" id="premiosGrid" style="animation:entrar 0.6s ease 0.2s both"></div>
+  <div class="sound-toggle" onclick="toggleSonido()" id="soundToggle" style="animation:entrar 0.6s ease 0.3s both">
+    <span class="sound-toggle-icon" id="soundIcon">🔊</span>
+    <span class="sound-toggle-txt" id="soundTxt">Sonido activado</span>
+  </div>
   <div class="vic-premios-wrap"><img src="img/vic_apoyado_valla.png" class="vic-premios" alt="Vic"></div>
 </div>
 
@@ -211,7 +219,7 @@
   <div class="confetti-wrap" id="confettiFinal"></div>
   <img src="img/vic_juntos_highfive.png" class="final-vic" alt="Vic">
   <div class="final-titulo">¡GRACIAS a todos por participar!</div>
-  <div class="final-sub">Cumple 221countryLP · Yiha! 🤠🌵</div>
+  <div class="final-sub" id="finalSub">Yiha! 🤠🌵</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
@@ -220,6 +228,8 @@ const API='https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X
 let password='',personas=[],pool=[],premios=[],premioActual=null,ganadorActual=null;
 let engine,render,runner,bolitas=[],sorteando=false,testMode=0;
 let ganadoresRegistrados=[];
+let sonidoActivo=true;
+let entregandoPremio=false;
 
 (function(){const c=document.getElementById('stars');for(let i=0;i<150;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+0.5;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*75}%;left:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*5}s`;c.appendChild(s)}})();
 
@@ -540,15 +550,15 @@ function mostrarGanador(p){
 }
 
 async function marcarEntregado(){
-  if(!ganadorActual.id.startsWith('T-')){try{var r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'entregado',password})});var d=await r.json();if(!d.ok){mostrarToast(d.error);return}}catch(e){mostrarToast('Error');return}}
+  if(entregandoPremio) return; // Evitar doble click
+  entregandoPremio = true;
+  
+  if(!ganadorActual.id.startsWith('T-')){try{var r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'entregado',password})});var d=await r.json();if(!d.ok){mostrarToast(d.error);entregandoPremio=false;return}}catch(e){mostrarToast('Error');entregandoPremio=false;return}}
   pool=pool.filter(function(p){return p.id!==ganadorActual.id});
   premioActual._ganados=(premioActual._ganados||0)+1;
-  
-  // Agregar al panel de ganadores
   agregarGanadorPanel(premioActual, ganadorActual);
-  
   mostrarToast('¡Premio entregado!');
-  setTimeout(function(){ volverAPremios(); }, 1500);
+  setTimeout(function(){ entregandoPremio=false; volverAPremios(); }, 1500);
 }
 async function sortearDeNuevo(){
   if(!ganadorActual.id.startsWith('T-')){try{await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'no_presente',password})})}catch(e){}}
@@ -664,14 +674,21 @@ function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random
 function mostrarPantalla(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active')}
 function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
 
-// ── MÚSICA ──────────────────────────────────────────
+// ── SONIDO ───────────────────────────────────────────
+function toggleSonido() {
+  sonidoActivo = !sonidoActivo;
+  var audio = document.getElementById('musicaSorteo');
+  document.getElementById('soundIcon').textContent = sonidoActivo ? '🔊' : '🔇';
+  document.getElementById('soundTxt').textContent = sonidoActivo ? 'Sonido activado' : 'Sonido desactivado';
+  if (!sonidoActivo) audio.pause();
+}
+
 function iniciarMusica() {
+  if (!sonidoActivo) return;
   var audio = document.getElementById('musicaSorteo');
   audio.currentTime = 0;
   audio.volume = 0.6;
-  audio.play().catch(function() {
-    // Si el navegador bloquea autoplay, ignora silenciosamente
-  });
+  audio.play().catch(function() {});
 }
 
 function fadeOutMusica() {
@@ -679,24 +696,35 @@ function fadeOutMusica() {
   var vol = audio.volume;
   var fade = setInterval(function() {
     vol -= 0.05;
-    if (vol <= 0) {
-      clearInterval(fade);
-      audio.pause();
-      audio.volume = 0.6;
-    } else {
-      audio.volume = vol;
-    }
+    if (vol <= 0) { clearInterval(fade); audio.pause(); audio.volume = 0.6; }
+    else { audio.volume = vol; }
   }, 100);
 }
 
 function pararMusica() {
   var audio = document.getElementById('musicaSorteo');
-  audio.pause();
-  audio.currentTime = 0;
-  audio.volume = 0.6;
+  audio.pause(); audio.currentTime = 0; audio.volume = 0.6;
+}
+
+// ── CARGAR CONFIG ─────────────────────────────────────
+async function cargarConfigSorteo() {
+  try {
+    var res = await fetch(API + '?action=config');
+    var data = await res.json();
+    if (data.ok) {
+      var cfg = data.config;
+      if (cfg.subtitulo_evento) document.getElementById('loginSubSorteo').textContent = cfg.subtitulo_evento;
+      if (cfg.nombre_corto) {
+        var sub = (cfg.nombre_corto + ' · Yiha! 🤠🌵');
+        document.getElementById('finalSub').textContent = sub;
+      }
+    }
+  } catch(e) {}
 }
 function setLoading(s,t,l,txt){document.getElementById(s).style.display=l?'block':'none';document.getElementById(t).textContent=txt}
 function mostrarToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('visible');setTimeout(()=>t.classList.remove('visible'),4000)}
+
+cargarConfigSorteo();
 </script>
 </body>
 </html>

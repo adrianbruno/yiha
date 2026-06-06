@@ -130,7 +130,7 @@
       <span>🤠</span><span>¡Quiero mi lugar!</span>
     </a>
     <a href="panel.html" class="btn btn-secundario">
-      <span>🎫</span><span>Ya me registré · Ver mi grupo</span>
+      <span>🎫</span><span>Ver mis datos · Ver datos del grupo</span>
     </a>
   </div>
 
@@ -150,7 +150,7 @@
 
 </div>
 
-<div class="footer"><div class="footer-text">221 Country La Plata · Yiha! 🌵</div></div>
+<div class="footer"><div class="footer-text" id="footerTxt">Yiha! 🌵</div></div>
 
 <script>
 const API = 'https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
@@ -184,6 +184,17 @@ async function cargarConfig() {
       } else {
         document.getElementById('msgBienvenida').textContent = cfg.mensaje_bienvenida || '¡Gracias por venir!';
       }
+    }
+
+    // Título del evento
+    if (cfg.titulo_evento) {
+      const tituloEl = document.querySelector('.titulo-evento');
+      if (tituloEl) tituloEl.innerHTML = cfg.titulo_evento.replace('\n','<br>');
+    }
+
+    // Footer con nombre_corto
+    if (cfg.nombre_corto) {
+      document.getElementById('footerTxt').textContent = cfg.nombre_corto + ' · Yiha! 🌵';
     }
 
     if (cfg.fecha_evento) {

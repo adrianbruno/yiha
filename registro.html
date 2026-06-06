@@ -197,7 +197,7 @@
     <a href="index.html" class="back-btn">←</a>
     <div>
       <div class="header-titulo">Registro</div>
-      <div class="header-sub">Cumple 221countryLP · 3 Oct 2026</div>
+      <div class="header-sub" id="headerSub">Registro</div>
     </div>
   </div>
 
@@ -259,7 +259,7 @@
         <label>Email <span class="opc">(opcional)</span></label>
         <input type="email" id="respEmail" placeholder="lucia@mail.com" autocomplete="email">
       </div>
-      <div class="campo">
+      <div class="campo" id="campoMenuResp" style="display:none">
         <label>Menú <span class="req">*</span></label>
         <select id="respMenu"><option value="">Elegí tu menú...</option></select>
       </div>
@@ -353,15 +353,25 @@ async function cargarDatos() {
     if (dConfig.ok) {
       precioEntrada = Number(dConfig.config.precio_entrada) || 0;
       aliasTransferencia = dConfig.config.alias_transferencia || '(a definir)';
-      whatsappEvento = dConfig.config.whatsapp_evento || '';
+      whatsappEvento = String(dConfig.config.whatsapp_evento || '');
       document.getElementById('resAlias').textContent = aliasTransferencia;
       document.getElementById('resPrecio').textContent = '$' + precioEntrada.toLocaleString('es-AR');
       actualizarResumen();
 
+      // Subtítulo dinámico
+      if (dConfig.config.subtitulo_evento) {
+        document.getElementById('headerSub').textContent = dConfig.config.subtitulo_evento;
+      }
+
+      // Mostrar/ocultar menú según config (mostrar_menu = SI activa el campo)
+      const mostrarMenu = String(dConfig.config.mostrar_menu || 'NO').toUpperCase().trim() === 'SI';
+      document.getElementById('campoMenuResp').style.display = mostrarMenu ? 'flex' : 'none';
+
       // Link de ayuda WhatsApp
       if (whatsappEvento) {
         const waNum = whatsappEvento.replace(/\D/g,'');
-        document.getElementById('ayudaWa').href = `https://wa.me/${waNum}?text=Hola!%20Necesito%20ayuda%20con%20el%20registro%20del%20cumple%20221`;
+        const textoConsulta = dConfig.config.texto_wa_consulta || 'Hola! Necesito ayuda con el registro';
+        document.getElementById('ayudaWa').href = `https://wa.me/${waNum}?text=${encodeURIComponent(textoConsulta)}`;
         document.getElementById('ayudaWaNum').textContent = whatsappEvento;
       }
     }
@@ -420,7 +430,7 @@ function agregarMiembro() {
           <input type="text" id="${id}-apellido" placeholder="Apellido" oninput="actualizarPreviewMiembro('${id}')">
         </div>
       </div>
-      <div class="fila fila-1">
+      <div class="fila fila-1" style="display:none" id="campoMenuMiembro-${id}">
         <div class="campo">
           <label>Menú <span class="req">*</span></label>
           <select id="${id}-menu" onchange="actualizarPreviewMiembro('${id}')"></select>
@@ -491,7 +501,7 @@ function actualizarResumen() {
 // Validar
 function validar() {
   let ok = true;
-  ['respNombre','respApellido','respDni','respCelular','respMenu'].forEach(id => {
+  ['respNombre','respApellido','respDni','respCelular'].forEach(id => {
     const el = document.getElementById(id);
     if (!el.value.trim()) { el.classList.add('error'); ok = false; }
     else el.classList.remove('error');
@@ -501,8 +511,8 @@ function validar() {
     const miembros = getMiembros();
     if (miembros.length === 0) { mostrarToast('Agregá al menos una persona más al grupo'); return false; }
     for (let i = 0; i < miembros.length; i++) {
-      if (!miembros[i].nombre || !miembros[i].apellido || !miembros[i].menu_id) {
-        mostrarToast(`Persona ${i+1}: completá nombre, apellido y menú`);
+      if (!miembros[i].nombre || !miembros[i].apellido) {
+        mostrarToast(`Persona ${i+1}: completá nombre y apellido`);
         return false;
       }
     }
