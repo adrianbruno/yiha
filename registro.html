@@ -484,7 +484,7 @@ function getMiembros() {
       nombre: document.getElementById(`${id}-nombre`)?.value.trim() || '',
       apellido: document.getElementById(`${id}-apellido`)?.value.trim() || '',
       escuela_id: '0',
-      menu_id: document.getElementById(`${id}-menu`)?.value || '',
+      menu_id: '0',
       obs_alimenticias: document.getElementById(`${id}-obs`)?.value.trim() || ''
     };
   });
@@ -535,7 +535,7 @@ async function confirmarRegistro() {
     celular: document.getElementById('respCelular').value.trim(),
     email: document.getElementById('respEmail').value.trim(),
     escuela_id: '0',
-    menu_id: document.getElementById('respMenu').value,
+    menu_id: document.getElementById('campoMenuResp').style.display !== 'none' ? document.getElementById('respMenu').value : '0',
     obs_alimenticias: document.getElementById('respObs').value.trim()
   };
 
