@@ -4,32 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Panel · Yiha! 221countryLP</title>
-  <meta name="theme-color" content="#1a0a00">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Yiha!">
+  <link rel="apple-touch-icon" href="img/logo_yiha_apple.png">
+  <meta name="theme-color" content="#2d5a3d">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <style>
     :root {
-      --tierra:       #1a0a00;
-      --cuero:        #3d1f00;
-      --arena:        #c8a06a;
-      --paja:         #e8d5a3;
-      --hueso:        #f5ecd7;
-      --rojo:         #8b1a1a;
-      --rojo-vivo:    #c0392b;
+      --tierra:#0f2318;
+      --cuero:#1a3d28;
+      --arena:#b8986a;
+      --paja:#e8d5b0;
+      --hueso:#f5ecd7;
+      --rojo:#8b2a2a;
+      --rojo-vivo:#b83232;
       --dorado:       #c9922a;
       --dorado-claro: #f0c040;
       --verde:        #1a5c1a;
       --verde-claro:  #27ae60;
-      --surface:      rgba(61,31,0,0.6);
-      --border:       rgba(200,160,106,0.25);
+      --surface:rgba(26,61,40,0.75);
+      --border:rgba(74,124,95,0.3);
       --border-focus: rgba(240,192,64,0.6);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     html,body { min-height:100%; font-family:'Josefin Sans',sans-serif; background:var(--tierra); color:var(--hueso); }
 
-    .bg { position:fixed; inset:0; z-index:0; background:radial-gradient(ellipse at 50% 0%,#2a3f5f 0%,#0d1a2e 40%,#060c14 100%); }
+    .bg { position:fixed; inset:0; z-index:0; background:radial-gradient(ellipse at 50% 0%,#1a3d28 0%,#0f2318 40%,#080f0a 100%); }
     .stars { position:fixed; inset:0; z-index:1; pointer-events:none; }
     .star { position:absolute; background:white; border-radius:50%; animation:twinkle var(--dur) ease-in-out infinite alternate; animation-delay:var(--delay); }
     @keyframes twinkle { from{opacity:0.15} to{opacity:0.9} }
@@ -39,7 +44,7 @@
     /* HEADER */
     .header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.5rem; animation:entrar 0.5s ease both; }
     .back-btn { width:36px; height:36px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--arena); font-size:1.1rem; display:flex; align-items:center; justify-content:center; text-decoration:none; transition:all 0.15s; flex-shrink:0; }
-    .back-btn:hover { background:rgba(200,160,106,0.15); color:var(--hueso); }
+    .back-btn:hover { background:rgba(74,124,95,0.15); color:var(--hueso); }
     .header-titulo { font-family:'Rye',serif; font-size:1.4rem; color:var(--dorado-claro); text-shadow:0 0 20px rgba(240,192,64,0.3); }
     .header-sub { font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--arena); opacity:0.7; }
 
@@ -70,7 +75,7 @@
 
     /* BADGE DE ESTADO */
     .estado-badge { display:inline-flex; align-items:center; gap:0.4rem; border-radius:20px; padding:0.3rem 0.8rem; font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; font-weight:600; }
-    .estado-pendiente { background:rgba(201,146,42,0.15); border:1px solid rgba(201,146,42,0.3); color:var(--dorado-claro); }
+    .estado-pendiente { background:rgba(74,124,95,0.2); border:1px solid rgba(74,124,95,0.35); color:var(--dorado-claro); }
     .estado-comprobante { background:rgba(41,128,185,0.15); border:1px solid rgba(41,128,185,0.3); color:#7ec8f0; }
     .estado-confirmado { background:rgba(39,174,96,0.15); border:1px solid rgba(39,174,96,0.3); color:#7efca8; }
     .estado-cancelado { background:rgba(192,57,43,0.15); border:1px solid rgba(192,57,43,0.3); color:#f08080; }
@@ -80,7 +85,7 @@
     @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
 
     /* INFO PAGO */
-    .info-pago { background:rgba(201,146,42,0.08); border:1px solid rgba(201,146,42,0.2); border-radius:3px; padding:0.85rem 1rem; margin:0.75rem 0; }
+    .info-pago { background:rgba(201,146,42,0.08); border:1px solid rgba(74,124,95,0.25); border-radius:3px; padding:0.85rem 1rem; margin:0.75rem 0; }
     .info-pago-fila { display:flex; justify-content:space-between; align-items:center; padding:0.25rem 0; font-size:0.82rem; }
     .info-pago-fila .lbl { color:var(--arena); opacity:0.8; font-size:0.72rem; letter-spacing:0.05em; text-transform:uppercase; }
     .info-pago-fila .val { color:var(--paja); font-weight:600; }
@@ -90,24 +95,24 @@
     .persona-card { background:rgba(26,10,0,0.4); border:1px solid var(--border); border-radius:3px; padding:0.75rem 1rem; margin-bottom:0.5rem; }
     .persona-header { display:flex; align-items:center; gap:0.75rem; }
     .persona-num { width:24px; height:24px; border-radius:50%; background:var(--dorado); color:var(--tierra); font-size:0.7rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-    .persona-resp { font-size:0.6rem; background:rgba(201,146,42,0.2); color:var(--dorado); border-radius:10px; padding:0.15rem 0.5rem; letter-spacing:0.05em; text-transform:uppercase; }
+    .persona-resp { font-size:0.6rem; background:rgba(74,124,95,0.25); color:var(--dorado); border-radius:10px; padding:0.15rem 0.5rem; letter-spacing:0.05em; text-transform:uppercase; }
     .persona-nombre { flex:1; font-size:0.9rem; color:var(--paja); }
     .persona-info { display:flex; gap:0.75rem; margin-top:0.4rem; padding-left:2.25rem; }
-    .persona-tag { font-size:0.68rem; color:var(--arena); opacity:0.7; background:rgba(200,160,106,0.1); border-radius:10px; padding:0.15rem 0.5rem; }
+    .persona-tag { font-size:0.68rem; color:var(--arena); opacity:0.7; background:rgba(74,124,95,0.1); border-radius:10px; padding:0.15rem 0.5rem; }
     .persona-baja { opacity:0.4; text-decoration:line-through; }
 
     .persona-acciones { display:flex; gap:0.4rem; margin-top:0.6rem; padding-left:2.25rem; flex-wrap:wrap; }
     .btn-accion { padding:0.35rem 0.75rem; border-radius:3px; font-family:'Josefin Sans',sans-serif; font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.15s; border:1px solid; }
-    .btn-accion-menu { background:rgba(201,146,42,0.1); border-color:rgba(201,146,42,0.3); color:var(--dorado); }
-    .btn-accion-menu:hover { background:rgba(201,146,42,0.2); }
+    .btn-accion-menu { background:rgba(74,124,95,0.12); border-color:rgba(74,124,95,0.35); color:var(--dorado); }
+    .btn-accion-menu:hover { background:rgba(74,124,95,0.25); }
     .btn-accion-edit { background:rgba(41,128,185,0.1); border-color:rgba(41,128,185,0.3); color:#7ec8f0; }
     .btn-accion-edit:hover { background:rgba(41,128,185,0.2); }
     .btn-accion-baja { background:rgba(192,57,43,0.1); border-color:rgba(192,57,43,0.3); color:#f08080; }
     .btn-accion-baja:hover { background:rgba(192,57,43,0.2); }
 
     /* SUBIR COMPROBANTE */
-    .upload-area { display:block; border:2px dashed rgba(200,160,106,0.3); border-radius:6px; padding:1.5rem; text-align:center; cursor:pointer; transition:all 0.15s; margin-bottom:0.75rem; }
-    .upload-area:hover { border-color:var(--dorado); background:rgba(201,146,42,0.05); }
+    .upload-area { display:block; border:2px dashed rgba(74,124,95,0.3); border-radius:6px; padding:1.5rem; text-align:center; cursor:pointer; transition:all 0.15s; margin-bottom:0.75rem; }
+    .upload-area:hover { border-color:var(--dorado); background:rgba(74,124,95,0.08); }
     .upload-input-hidden { display:none!important; }
     .upload-icon { font-size:2rem; margin-bottom:0.5rem; }
     .upload-txt { font-size:0.8rem; color:var(--arena); opacity:0.8; }
@@ -121,10 +126,10 @@
     .btn-primario { background:linear-gradient(160deg,var(--rojo-vivo),var(--rojo)); color:var(--hueso); box-shadow:0 4px 16px rgba(192,57,43,0.3); }
     .btn-primario:hover:not(:disabled) { transform:translateY(-2px); }
     .btn-primario:disabled { opacity:0.4; cursor:not-allowed; }
-    .btn-dorado { background:linear-gradient(160deg,#c9922a,#8b5e1a); color:var(--hueso); box-shadow:0 4px 16px rgba(201,146,42,0.3); }
+    .btn-dorado { background:linear-gradient(160deg,#c9922a,#8b5e1a); color:var(--hueso); box-shadow:0 4px 16px rgba(74,124,95,0.35); }
     .btn-dorado:hover:not(:disabled) { transform:translateY(-2px); }
     .btn-dorado:disabled { opacity:0.4; cursor:not-allowed; }
-    .btn-outline { background:transparent; color:var(--arena); border:1px solid rgba(200,160,106,0.3); }
+    .btn-outline { background:transparent; color:var(--arena); border:1px solid rgba(74,124,95,0.3); }
     .btn-outline:hover { background:rgba(200,160,106,0.08); color:var(--hueso); border-color:var(--arena); }
 
     /* MODAL */
@@ -153,8 +158,22 @@
     .loading-txt { font-family:'Rye',serif; font-size:1.5rem; color:var(--dorado-claro); animation:brillo 1.5s ease-in-out infinite alternate; }
     @keyframes brillo { from{text-shadow:0 0 10px rgba(240,192,64,0.3)} to{text-shadow:0 0 30px rgba(240,192,64,0.8)} }
 
-    .sep { height:1px; background:linear-gradient(90deg,transparent,rgba(200,160,106,0.2),transparent); margin:0.75rem 0; }
+    .sep { height:1px; background:linear-gradient(90deg,transparent,rgba(74,124,95,0.2),transparent); margin:0.75rem 0; }
   </style>
+<script>
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/yiha/sw.js').catch(function(){});
+}
+
+// Aplicar colores desde config (si están disponibles)
+function aplicarColores(cfg) {
+  var r = document.documentElement.style;
+  if (cfg.color_primario)   r.setProperty('--verde-medio', cfg.color_primario);
+  if (cfg.color_secundario) r.setProperty('--verde-base', cfg.color_secundario);
+  if (cfg.color_acento)     r.setProperty('--dorado-claro', cfg.color_acento);
+}
+</script>
 </head>
 <body>
 
@@ -328,16 +347,16 @@
         <div class="upload-sub">JPG, PNG o PDF · Máximo 5MB</div>
       </label>
       <div id="uploadPreview" style="display:none;text-align:center;margin-top:0.75rem">
-        <img id="previewImg" src="" alt="preview" style="max-height:120px;border-radius:4px;border:1px solid rgba(200,160,106,0.3)">
+        <img id="previewImg" src="" alt="preview" style="max-height:120px;border-radius:4px;border:1px solid rgba(74,124,95,0.3)">
         <div id="uploadNombre" style="font-size:0.78rem;color:var(--dorado);margin-top:0.4rem"></div>
       </div>
       <button class="btn-full btn-dorado" id="btnSubir" onclick="subirComprobante()" disabled>
         <div class="spinner" id="spinnerSubir"></div>
         <span id="txtBtnSubir">Subir comprobante</span>
       </button>
-      <div id="uploadStatus" style="display:none;margin-top:0.75rem;padding:0.75rem 1rem;background:rgba(201,146,42,0.1);border:1px solid rgba(201,146,42,0.25);border-radius:4px;text-align:center">
+      <div id="uploadStatus" style="display:none;margin-top:0.75rem;padding:0.75rem 1rem;background:rgba(74,124,95,0.12);border:1px solid rgba(201,146,42,0.25);border-radius:4px;text-align:center">
         <div style="font-size:0.8rem;color:var(--dorado-claro);font-weight:600" id="uploadStatusTxt">Preparando...</div>
-        <div style="margin-top:0.5rem;height:4px;background:rgba(200,160,106,0.15);border-radius:2px;overflow:hidden">
+        <div style="margin-top:0.5rem;height:4px;background:rgba(74,124,95,0.15);border-radius:2px;overflow:hidden">
           <div id="uploadProgressBar" style="height:100%;background:var(--dorado);border-radius:2px;width:0%;transition:width 0.5s ease"></div>
         </div>
         <div style="font-size:0.65rem;color:var(--arena);margin-top:0.4rem;opacity:0.7">No cierres ni recargues esta página</div>

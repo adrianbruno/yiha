@@ -4,28 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro · Yiha! 221countryLP</title>
-  <meta name="theme-color" content="#1a0a00">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Yiha!">
+  <link rel="apple-touch-icon" href="img/logo_yiha_apple.png">
+  <meta name="theme-color" content="#2d5a3d">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <style>
     :root {
-      --tierra:       #1a0a00;
-      --cuero:        #3d1f00;
-      --madera:       #6b3a1f;
-      --arena:        #c8a06a;
-      --paja:         #e8d5a3;
-      --hueso:        #f5ecd7;
-      --rojo:         #8b1a1a;
-      --rojo-vivo:    #c0392b;
+      --tierra:#0f2318;
+      --cuero:#1a3d28;
+      --madera:#2d5a3d;
+      --arena:#b8986a;
+      --paja:#e8d5b0;
+      --hueso:#f5ecd7;
+      --rojo:#8b2a2a;
+      --rojo-vivo:#b83232;
       --dorado:       #c9922a;
       --dorado-claro: #f0c040;
-      --verde:        #2d5a27;
-      --input-bg:     rgba(245,236,215,0.12);
-      --input-border: rgba(200,160,106,0.4);
-      --input-focus:  rgba(240,192,64,0.7);
-      --surface:      rgba(61,31,0,0.65);
-      --border:       rgba(200,160,106,0.25);
+      --verde:#2d5a3d;
+      --input-bg:rgba(26,61,40,0.5);
+      --input-border:rgba(74,124,95,0.4);
+      --input-focus:rgba(74,124,95,0.8);
+      --surface:rgba(26,61,40,0.75);
+      --border:rgba(74,124,95,0.3);
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -41,12 +46,12 @@
     /* HEADER */
     .header { display:flex; align-items:center; gap:0.75rem; margin-bottom:1.25rem; animation:entrar 0.5s ease both; }
     .back-btn { width:36px; height:36px; border-radius:50%; background:var(--surface); border:1px solid var(--border); color:var(--arena); font-size:1.1rem; display:flex; align-items:center; justify-content:center; text-decoration:none; transition:all 0.15s; flex-shrink:0; }
-    .back-btn:hover { background:rgba(200,160,106,0.15); color:var(--hueso); }
+    .back-btn:hover { background:rgba(74,124,95,0.15); color:var(--hueso); }
     .header-titulo { font-family:'Rye',serif; font-size:1.4rem; color:var(--dorado-claro); text-shadow:0 0 20px rgba(240,192,64,0.3); }
     .header-sub { font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--arena); opacity:0.7; }
 
     /* PASOS RESUMEN */
-    .pasos-card { background:linear-gradient(160deg,rgba(61,31,0,0.7),rgba(26,10,0,0.8)); border:1px solid rgba(201,146,42,0.3); border-radius:6px; padding:1rem 1.25rem; margin-bottom:1rem; animation:entrar 0.5s ease 0.05s both; }
+    .pasos-card { background:linear-gradient(160deg,rgba(45,90,61,0.7),rgba(26,61,40,0.8)); border:1px solid rgba(74,124,95,0.35); border-radius:6px; padding:1rem 1.25rem; margin-bottom:1rem; animation:entrar 0.5s ease 0.05s both; }
     .pasos-titulo { font-family:'Rye',serif; font-size:0.9rem; color:var(--dorado-claro); margin-bottom:0.75rem; }
     .paso-item { display:flex; align-items:flex-start; gap:0.6rem; margin-bottom:0.5rem; }
     .paso-num { width:22px; height:22px; border-radius:50%; background:var(--dorado); color:var(--tierra); font-size:0.65rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
@@ -96,27 +101,27 @@
     /* MODO TABS */
     .modo-tabs { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:1rem; }
     .modo-tab { padding:0.75rem; border-radius:4px; cursor:pointer; border:1.5px solid var(--input-border); background:transparent; color:var(--paja); font-family:'Josefin Sans',sans-serif; font-size:0.8rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:0.4rem; }
-    .modo-tab.activo { background:rgba(201,146,42,0.2); border-color:var(--dorado); color:var(--dorado-claro); }
+    .modo-tab.activo { background:rgba(74,124,95,0.25); border-color:var(--dorado); color:var(--dorado-claro); }
 
     /* MIEMBROS */
     .miembros-lista { display:flex; flex-direction:column; gap:0.5rem; margin-bottom:0.75rem; }
-    .miembro-card { background:rgba(245,236,215,0.06); border:1.5px solid var(--input-border); border-radius:4px; overflow:hidden; transition:border-color 0.15s; }
+    .miembro-card { background:rgba(74,124,95,0.08); border:1.5px solid var(--input-border); border-radius:4px; overflow:hidden; transition:border-color 0.15s; }
     .miembro-card:focus-within { border-color:rgba(201,146,42,0.5); }
-    .miembro-header { display:flex; align-items:center; gap:0.6rem; padding:0.65rem 0.85rem; cursor:pointer; background:rgba(61,31,0,0.4); }
+    .miembro-header { display:flex; align-items:center; gap:0.6rem; padding:0.65rem 0.85rem; cursor:pointer; background:rgba(26,61,40,0.5); }
     .miembro-num { width:24px; height:24px; border-radius:50%; background:var(--dorado); color:var(--tierra); font-size:0.72rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
     .miembro-nombre-preview { flex:1; font-size:0.88rem; color:var(--paja); }
     .miembro-menu-preview { font-size:0.72rem; color:var(--arena); opacity:0.7; }
     .miembro-delete { width:26px; height:26px; border-radius:50%; background:rgba(220,70,60,0.15); border:1px solid rgba(220,70,60,0.3); color:#f08080; font-size:0.9rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; flex-shrink:0; }
     .miembro-delete:hover { background:rgba(220,70,60,0.3); color:white; }
-    .miembro-body { padding:0.85rem; display:none; border-top:1px solid rgba(200,160,106,0.15); }
+    .miembro-body { padding:0.85rem; display:none; border-top:1px solid rgba(74,124,95,0.15); }
     .miembro-body.abierto { display:block; }
 
     .btn-agregar { width:100%; padding:0.7rem; background:transparent; border:1.5px dashed rgba(200,160,106,0.35); border-radius:4px; color:var(--paja); font-family:'Josefin Sans',sans-serif; font-size:0.78rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.15s; display:flex; align-items:center; justify-content:center; gap:0.4rem; }
-    .btn-agregar:hover { border-color:var(--dorado); color:var(--dorado-claro); background:rgba(201,146,42,0.05); }
+    .btn-agregar:hover { border-color:var(--dorado); color:var(--dorado-claro); background:rgba(74,124,95,0.08); }
 
     /* RESUMEN */
-    .resumen { background:rgba(245,236,215,0.08); border:1.5px solid rgba(201,146,42,0.35); border-radius:6px; padding:1rem 1.25rem; margin-bottom:1rem; animation:entrar 0.3s ease both; }
-    .resumen-fila { display:flex; justify-content:space-between; align-items:center; padding:0.3rem 0; font-size:0.85rem; color:var(--paja); border-bottom:1px solid rgba(200,160,106,0.1); }
+    .resumen { background:rgba(74,124,95,0.1); border:1.5px solid rgba(201,146,42,0.35); border-radius:6px; padding:1rem 1.25rem; margin-bottom:1rem; animation:entrar 0.3s ease both; }
+    .resumen-fila { display:flex; justify-content:space-between; align-items:center; padding:0.3rem 0; font-size:0.85rem; color:var(--paja); border-bottom:1px solid rgba(74,124,95,0.1); }
     .resumen-fila:last-child { border-bottom:none; }
     .resumen-fila .label { color:var(--arena); }
     .resumen-total { font-family:'Rye',serif; font-size:1.15rem; color:var(--dorado-claro); }
@@ -139,18 +144,18 @@
     .vic-deco { position:fixed; bottom:0; right:-10px; z-index:5; height:clamp(110px,22vw,160px); filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5)); opacity:0.8; pointer-events:none; animation:entrar 0.8s ease 0.3s both; }
 
     /* OVERLAY ÉXITO */
-    .overlay-exito { position:fixed; inset:0; z-index:100; background:rgba(6,12,20,0.97); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; text-align:center; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
+    .overlay-exito { position:fixed; inset:0; z-index:100; background:rgba(8,15,10,0.97); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; text-align:center; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
     .overlay-exito.visible { opacity:1; pointer-events:all; }
     .exito-vic { height:180px; filter:drop-shadow(0 0 30px rgba(240,192,64,0.4)); animation:vic-float 3s ease-in-out infinite; margin-bottom:1.25rem; }
     @keyframes vic-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
     .exito-titulo { font-family:'Rye',serif; font-size:2rem; color:var(--dorado-claro); text-shadow:0 0 30px rgba(240,192,64,0.5); margin-bottom:0.25rem; }
     .exito-sub { font-size:0.85rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--paja); margin-bottom:1.5rem; }
     .exito-id-label { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--arena); opacity:0.7; margin-bottom:0.25rem; }
-    .exito-id { font-family:'Rye',serif; font-size:2rem; color:var(--dorado-claro); background:rgba(201,146,42,0.1); border:2px solid var(--dorado); border-radius:4px; padding:0.5rem 1.5rem; margin-bottom:1rem; letter-spacing:0.1em; }
+    .exito-id { font-family:'Rye',serif; font-size:2rem; color:var(--dorado-claro); background:rgba(74,124,95,0.12); border:2px solid var(--dorado); border-radius:4px; padding:0.5rem 1.5rem; margin-bottom:1rem; letter-spacing:0.1em; }
     .exito-msg { font-size:0.82rem; color:var(--paja); line-height:1.7; max-width:340px; margin-bottom:1.5rem; }
     .exito-wa { display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:1rem 1.5rem; border-radius:4px; background:#25d366; color:white; font-family:'Josefin Sans',sans-serif; font-size:0.82rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; margin-bottom:0.75rem; transition:all 0.15s; width:100%; max-width:320px; }
     .exito-wa:hover { background:#20ba5a; }
-    .exito-panel { font-size:0.78rem; color:var(--arena); text-decoration:none; border-bottom:1px solid rgba(200,160,106,0.3); }
+    .exito-panel { font-size:0.78rem; color:var(--arena); text-decoration:none; border-bottom:1px solid rgba(74,124,95,0.3); }
 
     /* TOAST */
     .toast { position:fixed; top:1rem; left:50%; transform:translateX(-50%); z-index:200; background:rgba(139,26,26,0.95); border:1px solid rgba(192,57,43,0.5); border-radius:4px; padding:0.75rem 1.25rem; font-size:0.82rem; color:#f5d5d5; max-width:360px; width:90%; text-align:center; opacity:0; pointer-events:none; transition:opacity 0.3s ease; }
@@ -165,6 +170,20 @@
     .loading-txt { font-family:'Rye',serif; font-size:1.5rem; color:var(--dorado-claro); animation:brillo 1.5s ease-in-out infinite alternate; }
     @keyframes brillo { from{text-shadow:0 0 10px rgba(240,192,64,0.3)} to{text-shadow:0 0 30px rgba(240,192,64,0.8)} }
   </style>
+<script>
+// PWA Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/yiha/sw.js').catch(function(){});
+}
+
+// Aplicar colores desde config (si están disponibles)
+function aplicarColores(cfg) {
+  var r = document.documentElement.style;
+  if (cfg.color_primario)   r.setProperty('--verde-medio', cfg.color_primario);
+  if (cfg.color_secundario) r.setProperty('--verde-base', cfg.color_secundario);
+  if (cfg.color_acento)     r.setProperty('--dorado-claro', cfg.color_acento);
+}
+</script>
 </head>
 <body>
 
@@ -184,9 +203,9 @@
   <p class="exito-msg" id="exitoMsg">Guardá este ID, lo vas a necesitar para todo.</p>
   <a href="#" class="exito-wa" id="exitoWa" target="_blank">📱 Enviar datos por WhatsApp</a>
   <div style="display:flex;flex-direction:column;gap:0.6rem;width:100%;max-width:320px;margin-top:0.75rem">
-    <a href="panel.html" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.8rem 1.25rem;border-radius:4px;background:linear-gradient(160deg,#c9922a,#8b5e1a);color:var(--hueso);font-family:'Josefin Sans',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 16px rgba(201,146,42,0.3)">🎫 Ir a mi panel</a>
-    <a href="registro.html" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.8rem 1.25rem;border-radius:4px;background:transparent;border:1px solid rgba(200,160,106,0.4);color:var(--arena);font-family:'Josefin Sans',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none">👥 Registrar otra persona</a>
-    <a href="index.html" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.8rem 1.25rem;border-radius:4px;background:transparent;border:1px solid rgba(200,160,106,0.2);color:var(--arena);font-family:'Josefin Sans',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;opacity:0.7">← Volver al inicio</a>
+    <a href="panel.html" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.8rem 1.25rem;border-radius:4px;background:linear-gradient(160deg,#c9922a,#8b5e1a);color:var(--hueso);font-family:'Josefin Sans',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 16px rgba(74,124,95,0.35)">🎫 Ir a mi panel</a>
+    <a href="registro.html" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.8rem 1.25rem;border-radius:4px;background:transparent;border:1px solid rgba(74,124,95,0.4);color:var(--arena);font-family:'Josefin Sans',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none">👥 Registrar otra persona</a>
+    <a href="index.html" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.8rem 1.25rem;border-radius:4px;background:transparent;border:1px solid rgba(74,124,95,0.2);color:var(--arena);font-family:'Josefin Sans',sans-serif;font-size:0.75rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;opacity:0.7">← Volver al inicio</a>
   </div>
 </div>
 
@@ -484,7 +503,7 @@ function getMiembros() {
       nombre: document.getElementById(`${id}-nombre`)?.value.trim() || '',
       apellido: document.getElementById(`${id}-apellido`)?.value.trim() || '',
       escuela_id: '0',
-      menu_id: '0',
+      menu_id: document.getElementById(`${id}-menu`)?.value || '',
       obs_alimenticias: document.getElementById(`${id}-obs`)?.value.trim() || ''
     };
   });
@@ -535,7 +554,7 @@ async function confirmarRegistro() {
     celular: document.getElementById('respCelular').value.trim(),
     email: document.getElementById('respEmail').value.trim(),
     escuela_id: '0',
-    menu_id: document.getElementById('campoMenuResp').style.display !== 'none' ? document.getElementById('respMenu').value : '0',
+    menu_id: document.getElementById('respMenu').value,
     obs_alimenticias: document.getElementById('respObs').value.trim()
   };
 
