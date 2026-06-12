@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Yiha!">
-  <link rel="apple-touch-icon" href="img/logo_yiha_apple.png">
+  <link rel="apple-touch-icon" href="img/logo_negro.png">
   <meta name="theme-color" content="#2d5a3d">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -92,7 +92,7 @@
 <script>
 // PWA Service Worker
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/yiha/sw.js').catch(function(){});
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
 }
 
 // Aplicar colores desde config (si están disponibles)
