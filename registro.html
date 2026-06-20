@@ -202,6 +202,7 @@ function aplicarColores(cfg) {
   <div class="exito-id" id="exitoId">---</div>
   <p class="exito-msg" id="exitoMsg">Guardá este ID, lo vas a necesitar para todo.</p>
   <a href="#" class="exito-wa" id="exitoWa" target="_blank">📱 Enviar datos por WhatsApp</a>
+  <a href="#" id="exitoBtnPago" target="_blank" style="display:none;align-items:center;justify-content:center;gap:0.5rem;padding:1rem 1.5rem;border-radius:4px;background:linear-gradient(160deg,#009ee3,#0077b6);color:white;font-family:'Josefin Sans',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;margin-bottom:0.75rem;width:100%;max-width:320px;box-shadow:0 4px 16px rgba(0,158,227,0.4)">💳 Pagar con MercadoPago</a>
   <div style="display:flex;flex-direction:column;gap:0.6rem;width:100%;max-width:320px;margin-top:0.75rem">
     <a href="panel.html" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.8rem 1.25rem;border-radius:4px;background:linear-gradient(160deg,#c9922a,#8b5e1a);color:var(--hueso);font-family:'Josefin Sans',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;box-shadow:0 4px 16px rgba(74,124,95,0.35)">🎫 Ir a mi panel</a>
     <a href="registro.html" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.8rem 1.25rem;border-radius:4px;background:transparent;border:1px solid rgba(74,124,95,0.4);color:var(--arena);font-family:'Josefin Sans',sans-serif;font-size:0.78rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none">👥 Registrar otra persona</a>
@@ -344,6 +345,7 @@ let menus = [];
 let precioEntrada = 0;
 let aliasTransferencia = '';
 let whatsappEvento = '';
+let linkPago = '';
 let miembroCount = 0;
 
 // Estrellas
@@ -373,6 +375,7 @@ async function cargarDatos() {
       precioEntrada = Number(dConfig.config.precio_entrada) || 0;
       aliasTransferencia = dConfig.config.alias_transferencia || '(a definir)';
       whatsappEvento = String(dConfig.config.whatsapp_evento || '');
+      linkPago = String(dConfig.config.link_pago || '');
       document.getElementById('resAlias').textContent = aliasTransferencia;
       document.getElementById('resPrecio').textContent = '$' + precioEntrada.toLocaleString('es-AR');
       actualizarResumen();
@@ -578,10 +581,23 @@ async function confirmarRegistro() {
 // Éxito
 function mostrarExito(data) {
   document.getElementById('exitoId').textContent = data.grupo_id;
-  document.getElementById('exitoMsg').innerHTML =
-    `Guardá este ID, lo vas a necesitar para todo.<br>
-     Total: <strong>$${Number(data.total).toLocaleString('es-AR')}</strong> · Alias: <strong>${aliasTransferencia}</strong><br>
-     Tenés <strong>48 hs</strong> para transferir y enviar el comprobante.`;
+
+  // Mensaje según si hay link de pago o no
+  if (linkPago) {
+    document.getElementById('exitoMsg').innerHTML =
+      `Guardá este ID, lo vas a necesitar para todo.<br>
+       Total: <strong>$${Number(data.total).toLocaleString('es-AR')}</strong><br>
+       Podés pagar ahora con MercadoPago o enviar el comprobante por WhatsApp.`;
+    const btnPago = document.getElementById('exitoBtnPago');
+    btnPago.href = linkPago;
+    btnPago.style.display = 'flex';
+  } else {
+    document.getElementById('exitoMsg').innerHTML =
+      `Guardá este ID, lo vas a necesitar para todo.<br>
+       Total: <strong>$${Number(data.total).toLocaleString('es-AR')}</strong> · Alias: <strong>${aliasTransferencia}</strong><br>
+       Tenés <strong>48 hs</strong> para transferir y enviar el comprobante.`;
+    document.getElementById('exitoBtnPago').style.display = 'none';
+  }
 
   // WhatsApp al número del evento
   const msg = encodeURIComponent(data.mensaje_whatsapp);
