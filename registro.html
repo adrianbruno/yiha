@@ -506,7 +506,7 @@ function getMiembros() {
       nombre: document.getElementById(`${id}-nombre`)?.value.trim() || '',
       apellido: document.getElementById(`${id}-apellido`)?.value.trim() || '',
       escuela_id: '0',
-      menu_id: document.getElementById(`${id}-menu`)?.value || '',
+      menu_id: '0',,
       obs_alimenticias: document.getElementById(`${id}-obs`)?.value.trim() || ''
     };
   });
@@ -533,7 +533,7 @@ function validar() {
     const miembros = getMiembros();
     if (miembros.length === 0) { mostrarToast('Agregá al menos una persona más al grupo'); return false; }
     for (let i = 0; i < miembros.length; i++) {
-      if (!miembros[i].nombre || !miembros[i].apellido) {
+      if (!miembros[i].nombre) {
         mostrarToast(`Persona ${i+1}: completá nombre y apellido`);
         return false;
       }
@@ -583,7 +583,8 @@ function mostrarExito(data) {
   document.getElementById('exitoId').textContent = data.grupo_id;
 
   // Mensaje según si hay link de pago o no
-  if (linkPago) {
+  const esIndividual = !data.miembros || data.miembros.length === 0;
+  if (linkPago && esIndividual) {
     document.getElementById('exitoMsg').innerHTML =
       `Guardá este ID, lo vas a necesitar para todo.<br>
        Total: <strong>$${Number(data.total).toLocaleString('es-AR')}</strong><br>
