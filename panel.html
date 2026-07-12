@@ -149,6 +149,16 @@
 
     /* SPINNER */
     .spinner { width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,0.3); border-top-color:white; animation:spin 0.7s linear infinite; display:none; }
+
+    /* OVERLAY PROCESANDO COMPROBANTE */
+    .overlay-proc { position:fixed; inset:0; z-index:150; background:rgba(8,15,10,0.92); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; text-align:center; opacity:0; pointer-events:none; transition:opacity 0.25s ease; backdrop-filter:blur(4px); }
+    .overlay-proc.visible { opacity:1; pointer-events:all; }
+    .proc-spinner { width:60px; height:60px; border-radius:50%; border:4px solid rgba(240,192,64,0.2); border-top-color:var(--dorado-claro); animation:spin 0.8s linear infinite; margin-bottom:1.5rem; }
+    .proc-titulo { font-family:'Rye',serif; font-size:1.4rem; color:var(--dorado-claro); margin-bottom:0.5rem; text-shadow:0 0 20px rgba(240,192,64,0.3); }
+    .proc-texto { font-size:0.85rem; color:var(--paja); line-height:1.6; max-width:300px; margin-bottom:1rem; }
+    .proc-barra-wrap { width:220px; height:6px; background:rgba(74,124,95,0.2); border-radius:3px; overflow:hidden; margin-bottom:0.75rem; }
+    .proc-barra { height:100%; background:var(--dorado-claro); border-radius:3px; width:0%; transition:width 0.4s ease; }
+    .proc-aviso { font-size:0.7rem; color:var(--arena); opacity:0.7; }
     @keyframes spin { to{transform:rotate(360deg)} }
 
     @keyframes entrar { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
@@ -178,6 +188,14 @@ function aplicarColores(cfg) {
 <body>
 
 <div class="loading-inicial" id="loadingInicial"><div class="loading-txt">Yiha!</div></div>
+
+<div class="overlay-proc" id="overlayProc">
+  <div class="proc-spinner"></div>
+  <div class="proc-titulo" id="procTitulo">Subiendo comprobante...</div>
+  <div class="proc-texto" id="procTexto">Estamos procesando tu comprobante, aguardá un momento.</div>
+  <div class="proc-barra-wrap"><div class="proc-barra" id="procBarra"></div></div>
+  <div class="proc-aviso">No cierres ni recargues esta página</div>
+</div>
 <div class="bg"></div>
 <div class="stars" id="stars"></div>
 <div class="toast error" id="toastError"></div>
@@ -402,15 +420,17 @@ let archivoSeleccionado = null;
   }
 })();
 
-// Cargar menús para los modales
+// Cargar config + menús en paralelo (más rápido)
 async function cargarMenus() {
-  // Mostrar UI de inmediato
   document.getElementById('loadingInicial').classList.add('oculto');
   
-  // Cargar config para parámetros dinámicos
   try {
-    const resConf = await fetch(`${API}?action=config`);
-    const dConf = await resConf.json();
+    const [resConf, resMenus] = await Promise.all([
+      fetch(`${API}?action=config`),
+      fetch(`${API}?action=menus`)
+    ]);
+    const [dConf, dMenus] = await Promise.all([resConf.json(), resMenus.json()]);
+
     if (dConf.ok) {
       const cfg = dConf.config;
       if (cfg.subtitulo_evento) {
@@ -419,13 +439,9 @@ async function cargarMenus() {
       }
       if (cfg.nombre_corto) window._nombreCorto = cfg.nombre_corto;
     }
-  } catch(e) {}
 
-  try {
-    const res = await fetch(`${API}?action=menus`);
-    const data = await res.json();
-    if (data.ok) {
-      menus = data.menus || [];
+    if (dMenus.ok) {
+      menus = dMenus.menus || [];
       const sel = document.getElementById('modalMenuSelect');
       sel.innerHTML = '';
       menus.forEach(m => {
@@ -435,7 +451,7 @@ async function cargarMenus() {
         sel.appendChild(opt);
       });
     }
-  } catch(e) { console.warn('Error cargando menús:', e); }
+  } catch(e) { console.warn('Error cargando datos:', e); }
 }
 
 // ── LOGIN ────────────────────────────────────────────
@@ -622,30 +638,27 @@ function previewArchivo(e) {
 async function subirComprobante() {
   if (!archivoSeleccionado) return;
   
-  var btn = document.getElementById('btnSubir');
-  var status = document.getElementById('uploadStatus');
-  var statusTxt = document.getElementById('uploadStatusTxt');
-  var progressBar = document.getElementById('uploadProgressBar');
+  var proc = document.getElementById('overlayProc');
+  var titulo = document.getElementById('procTitulo');
+  var texto = document.getElementById('procTexto');
+  var barra = document.getElementById('procBarra');
   
-  btn.disabled = true;
-  btn.style.display = 'none';
-  status.style.display = 'block';
-  
-  // Paso 1: Preparando archivo
-  statusTxt.textContent = '📎 Preparando archivo...';
-  progressBar.style.width = '10%';
+  // Mostrar overlay full-screen
+  proc.classList.add('visible');
+  titulo.textContent = 'Preparando archivo...';
+  texto.textContent = 'Estamos preparando tu comprobante.';
+  barra.style.width = '10%';
 
   try {
-    // Paso 2: Convirtiendo a base64
     await sleep(300);
-    statusTxt.textContent = '🔄 Procesando imagen...';
-    progressBar.style.width = '25%';
+    titulo.textContent = 'Procesando imagen...';
+    barra.style.width = '25%';
     
     var base64 = await fileToBase64(archivoSeleccionado);
     
-    // Paso 3: Enviando
-    statusTxt.textContent = '📤 Subiendo al servidor... esto puede tardar';
-    progressBar.style.width = '50%';
+    titulo.textContent = 'Subiendo al servidor...';
+    texto.textContent = 'Esto puede tardar unos segundos, aguardá.';
+    barra.style.width = '50%';
     
     var res = await fetch(API, {
       method: 'POST',
@@ -659,37 +672,32 @@ async function subirComprobante() {
       })
     });
     
-    // Paso 4: Procesando respuesta
-    statusTxt.textContent = '⏳ Guardando en Drive...';
-    progressBar.style.width = '80%';
+    titulo.textContent = 'Guardando...';
+    barra.style.width = '80%';
     
     var data = await res.json();
     
     if (!data.ok) {
-      status.style.display = 'none';
-      btn.style.display = 'flex';
-      btn.disabled = false;
+      proc.classList.remove('visible');
+      barra.style.width = '0%';
       mostrarToast('error', data.error);
       return;
     }
 
-    // Paso 5: Listo
-    statusTxt.textContent = '✅ ¡Comprobante recibido!';
-    progressBar.style.width = '100%';
+    titulo.textContent = '¡Comprobante recibido!';
+    texto.textContent = 'Lo vamos a revisar a la brevedad.';
+    barra.style.width = '100%';
     archivoSeleccionado = null;
     
-    mostrarToast('ok', '¡Comprobante enviado! Lo revisamos a la brevedad.');
-    
     setTimeout(function() {
-      status.style.display = 'none';
-      btn.style.display = 'flex';
+      proc.classList.remove('visible');
+      barra.style.width = '0%';
       recargarPanel();
-    }, 2000);
+    }, 1800);
 
   } catch(e) {
-    status.style.display = 'none';
-    btn.style.display = 'flex';
-    btn.disabled = false;
+    proc.classList.remove('visible');
+    barra.style.width = '0%';
     mostrarToast('error', 'Error al subir. Revisá tu conexión e intentá de nuevo.');
   }
 }
