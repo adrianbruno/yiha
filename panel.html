@@ -557,7 +557,6 @@ function renderPanel(data) {
   const lista = document.getElementById('personasLista');
   lista.innerHTML = '';
   personas.forEach((p, i) => {
-    const menuNombre = menus.find(m => String(m.id) === String(p.menu_id))?.nombre || 'Menú ' + p.menu_id;
     const esBaja = p.estado === 'baja';
     const card = document.createElement('div');
     card.className = 'persona-card' + (esBaja ? ' persona-baja' : '');
@@ -568,13 +567,9 @@ function renderPanel(data) {
         ${p.es_responsable ? '<span class="persona-resp">Responsable</span>' : ''}
         ${esBaja ? '<span style="font-size:0.68rem;color:#f08080;opacity:0.8">Baja</span>' : ''}
       </div>
-      <div class="persona-info">
-        <span class="persona-tag">🍽 ${menuNombre}</span>
-        ${p.obs_alimenticias ? `<span class="persona-tag">⚠️ ${p.obs_alimenticias}</span>` : ''}
-      </div>
+      ${p.obs_alimenticias ? `<div class="persona-info"><span class="persona-tag">⚠️ ${p.obs_alimenticias}</span></div>` : ''}
       ${!esBaja && !p.es_responsable ? `
       <div class="persona-acciones">
-        ${permisos.puede_cambiar_menu ? `<button class="btn-accion btn-accion-menu" onclick="abrirCambioMenu('${p.id}','${p.nombre} ${p.apellido}','${p.menu_id}')">Cambiar menú</button>` : ''}
         ${permisos.puede_modificar_cantidad || grupo.estado_pago !== 'pendiente_pago' ? `<button class="btn-accion btn-accion-edit" onclick="abrirEdicion('${p.id}','${p.nombre}','${p.apellido}')">Editar nombre</button>` : ''}
         <button class="btn-accion btn-accion-baja" onclick="abrirBajaPersona('${p.id}','${p.nombre} ${p.apellido}')">Dar de baja</button>
       </div>` : ''}
