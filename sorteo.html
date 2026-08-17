@@ -494,15 +494,15 @@ async function iniciarSorteo(){
 
   await sleep(2000);
 
-  // Countdown dramático: 5...4...3...2...1
+  // Countdown dramático: 3...2...1
   var countContainer = document.getElementById('countdownContainer');
-  var sizes = ['3rem', '4rem', '5.5rem', '7.5rem', '10rem'];
+  var sizes = ['5.5rem', '7.5rem', '10rem'];
   
-  for (var c = 5; c >= 1; c--) {
+  for (var c = 3; c >= 1; c--) {
     countContainer.innerHTML = '';
     var numEl = document.createElement('div');
     numEl.className = 'countdown-num';
-    numEl.style.fontSize = sizes[5 - c];
+    numEl.style.fontSize = sizes[3 - c];
     numEl.textContent = c;
     countContainer.appendChild(numEl);
     
