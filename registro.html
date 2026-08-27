@@ -153,6 +153,7 @@
     .exito-id-label { font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--arena); opacity:0.7; margin-bottom:0.25rem; }
     .exito-id { font-family:'Rye',serif; font-size:2rem; color:var(--dorado-claro); background:rgba(74,124,95,0.12); border:2px solid var(--dorado); border-radius:4px; padding:0.5rem 1.5rem; margin-bottom:1rem; letter-spacing:0.1em; }
     .exito-msg { font-size:0.82rem; color:var(--paja); line-height:1.7; max-width:340px; margin-bottom:1.5rem; }
+    .exito-alias { font-size:1.2rem; color:var(--dorado-claro); }
     .exito-wa { display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:1rem 1.5rem; border-radius:4px; background:#25d366; color:white; font-family:'Josefin Sans',sans-serif; font-size:0.82rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; margin-bottom:0.75rem; transition:all 0.15s; width:100%; max-width:320px; }
     .exito-wa:hover { background:#20ba5a; }
     .exito-panel { font-size:0.78rem; color:var(--arena); text-decoration:none; border-bottom:1px solid rgba(74,124,95,0.3); }
@@ -329,7 +330,7 @@ function aplicarColores(cfg) {
     </div>
     <div class="resumen-fila">
       <span class="label">Alias</span>
-      <span id="resAlias" style="font-size:0.8rem;color:var(--dorado-claro)">cargando...</span>
+      <span id="resAlias" style="font-size:1.1rem;color:var(--dorado-claro)">cargando...</span>
     </div>
   </div>
 
@@ -618,7 +619,7 @@ function mostrarExito(data) {
 
   document.getElementById('exitoMsg').innerHTML =
     `Guardá este ID, lo vas a necesitar para todo.<br>
-     Total: <strong>$${Number(data.total).toLocaleString('es-AR')}</strong> · Alias: <strong>${aliasTransferencia}</strong><br>
+    Total: <strong>$${Number(data.total).toLocaleString('es-AR')}</strong> · Alias: <strong class="exito-alias">${aliasTransferencia}</strong><br>
      Tenés <strong>48 hs</strong> para transferir y enviar el comprobante.`;
 
   // WhatsApp al número del evento
