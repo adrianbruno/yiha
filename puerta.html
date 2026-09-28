@@ -392,6 +392,7 @@ function buscar(query) {
       <div class="res-nombre">${p.nombre} ${p.apellido}</div>
       <div class="res-info">
         ${menuNombre ? `<span class="res-tag">🍽 ${menuNombre}</span>` : ''}
+        ${p.obs_alimenticias ? `<span class="res-tag res-tag-alimentacion">⚠️ ${p.obs_alimenticias}</span>` : ''}
         ${p.escuela_nombre ? `<span class="res-tag">🏫 ${p.escuela_nombre}</span>` : ''}
         ${presente ? `<span class="res-tag res-tag-verde">✅ Presente</span>` : ''}
         ${!confirmado ? `<span class="res-tag" style="color:#f08080">⚠️ ${p.estado.replace('_',' ')}</span>` : ''}
@@ -646,6 +647,7 @@ function mostrarGrupoCheckin(grupoId, personasGrupo) {
     var html = '<div class="check-box">' + (yaPresente ? '✅' : '') + '</div>';
     html += '<div style="flex:1"><div class="check-nombre">' + p.nombre + ' ' + p.apellido + '</div>';
     if (menuNombre) html += '<div class="check-menu">🍽 ' + menuNombre + '</div>';
+    if (p.obs_alimenticias) html += '<div class="check-menu">⚠️ ' + p.obs_alimenticias + '</div>';
     html += '</div>';
     if (yaPresente) html += '<span style="font-size:0.65rem;color:#7efca8">Ya presente</span>';
     if (!confirmado) html += '<span style="font-size:0.65rem;color:#f08080">' + (p.estado || '').replace('_',' ') + '</span>';

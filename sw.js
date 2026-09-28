@@ -1,4 +1,4 @@
-const CACHE = 'yiha-v2';
+const CACHE = 'yiha-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -50,7 +50,7 @@ self.addEventListener('fetch', function(e) {
   e.respondWith(
     caches.match(e.request).then(function(cached) {
       var network = fetch(e.request).then(function(response) {
-        if (response && response.status === 200) {
+        if (response && (response.status === 200 || response.type === 'opaque')) {
           var clone = response.clone();
           caches.open(CACHE).then(function(cache) { cache.put(e.request, clone); });
         }

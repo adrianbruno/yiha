@@ -15,62 +15,66 @@
   <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js" as="script">
   <style>
-    :root{--tierra:#0f2318;--arena:#b8986a;--paja:#e8d5b0;--hueso:#f5ecd7;--rojo:#8b2a2a;--rojo-vivo:#b83232;--dorado:#c9922a;--dorado-claro:#f0c040;--verde:#27ae60;--surface:rgba(26,61,40,0.75);--border:rgba(74,124,95,0.3)}
+    :root{--tierra:#0f2318;--tierra-2:#153b2c;--arena:#b8986a;--paja:#e8d5b0;--hueso:#f5ecd7;--rojo:#8b2a2a;--rojo-vivo:#b83232;--dorado:#c9922a;--dorado-claro:#f0c040;--verde:#27ae60;--verde-brillante:#5ee19c;--surface:rgba(19,52,35,0.78);--surface-strong:rgba(12,31,22,0.92);--surface-soft:rgba(38,80,57,0.7);--border:rgba(170,217,180,0.2);--shadow-soft:rgba(8,15,10,0.45);--glow:rgba(240,192,64,0.38)}
     *{margin:0;padding:0;box-sizing:border-box}
-    html,body{width:100%;height:100%;overflow:hidden;font-family:'Josefin Sans',sans-serif;background:#080f0a;color:var(--hueso)}
-    .sky{position:fixed;inset:0;z-index:0;background:radial-gradient(ellipse at 50% 0%,#1a3d28 0%,#0f2318 40%,#080f0a 100%);inset:0;z-index:1;pointer-events:none}
+    html,body{width:100%;height:100%;overflow:hidden;font-family:'Josefin Sans',sans-serif;background:radial-gradient(circle at top,#1d4a39 0%,#0f2d20 24%,#0b140f 58%,#050805 100%);color:var(--hueso)}
+    body::before, body::after{content:"";position:fixed;pointer-events:none;z-index:0;border-radius:50%;filter:blur(26px);opacity:0.85}
+    body::before{top:-10%;right:-5%;width:42vw;height:42vw;background:radial-gradient(circle, rgba(240,192,64,0.26) 0%, rgba(240,192,64,0.08) 32%, transparent 68%)}
+    body::after{bottom:-10%;left:-4%;width:38vw;height:38vw;background:radial-gradient(circle, rgba(46,204,113,0.18) 0%, rgba(46,204,113,0.08) 30%, transparent 70%)}
+    .sky{position:fixed;inset:0;z-index:1;background:radial-gradient(ellipse at 50% 0%, rgba(35,90,62,0.8) 0%, rgba(15,35,24,0.38) 38%, rgba(8,15,10,0.1) 100%);pointer-events:none}
     .star{position:absolute;background:white;border-radius:50%;animation:twinkle var(--dur) ease-in-out infinite alternate;animation-delay:var(--delay)}
-    @keyframes twinkle{from{opacity:0.1}to{opacity:1}}
+    @keyframes twinkle{from{opacity:0.15}to{opacity:1}}
     .screen{position:fixed;inset:0;z-index:10;display:none}
     .screen.active{display:flex}
 
     #screenLogin{flex-direction:column;align-items:center;justify-content:center;padding:2rem}
-    .login-vic{height:220px;filter:drop-shadow(0 12px 30px rgba(0,0,0,0.7));animation:vic-float 3s ease-in-out infinite;margin-bottom:1.5rem}
-    .login-card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:2rem;width:100%;max-width:380px;backdrop-filter:blur(12px)}
-    .login-titulo{font-family:'Rye',serif;font-size:1.5rem;color:var(--dorado-claro);text-align:center;margin-bottom:0.25rem;text-shadow:0 0 20px rgba(240,192,64,0.4)}
-    .login-sub{font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);text-align:center;margin-bottom:1.5rem;opacity:0.7}
-    .campo label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.8;display:block;margin-bottom:0.3rem}
-    input{background:rgba(15,35,24,0.8);border:1px solid var(--border);border-radius:3px;color:var(--hueso);font-family:'Josefin Sans',sans-serif;font-size:1rem;padding:0.8rem;width:100%;outline:none;transition:border-color 0.15s;margin-bottom:1rem;-webkit-appearance:none}
-    input:focus{border-color:rgba(240,192,64,0.6);box-shadow:0 0 0 2px rgba(240,192,64,0.1)}
-    .test-toggle{margin-top:0.5rem;padding:0.5rem 0.75rem;background:rgba(74,124,95,0.1);border:1px solid rgba(74,124,95,0.2);border-radius:4px}
+    .login-vic{height:220px;filter:drop-shadow(0 16px 36px rgba(0,0,0,0.7));animation:vic-float 3s ease-in-out infinite;margin-bottom:1.5rem}
+    .login-card{position:relative;background:linear-gradient(180deg, rgba(35,79,58,0.82), rgba(17,41,29,0.9));border:1px solid rgba(170,217,180,0.22);border-radius:22px;padding:2.1rem;width:100%;max-width:420px;backdrop-filter:blur(14px);box-shadow:0 24px 80px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.1)}
+    .login-card::before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg, rgba(240,192,64,0.12), transparent 45%, rgba(94,225,156,0.08));pointer-events:none}
+    .login-titulo{font-family:'Rye',serif;font-size:1.8rem;color:var(--dorado-claro);text-align:center;margin-bottom:0.25rem;text-shadow:0 0 24px rgba(240,192,64,0.45)}
+    .login-sub{font-size:0.72rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--arena);text-align:center;margin-bottom:1.5rem;opacity:0.8}
+    .campo label{font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.85;display:block;margin-bottom:0.4rem}
+    input{background:rgba(9,23,17,0.82);border:1px solid rgba(170,217,180,0.18);border-radius:12px;color:var(--hueso);font-family:'Josefin Sans',sans-serif;font-size:1rem;padding:0.9rem 1rem;width:100%;outline:none;transition:border-color 0.15s, box-shadow 0.15s, transform 0.15s;margin-bottom:1rem;-webkit-appearance:none}
+    input:focus{border-color:rgba(240,192,64,0.7);box-shadow:0 0 0 3px rgba(240,192,64,0.12)}
+    .test-toggle{margin-top:0.5rem;padding:0.6rem 0.85rem;background:rgba(74,124,95,0.12);border:1px solid rgba(74,124,95,0.22);border-radius:10px}
     .test-toggle summary{font-size:0.7rem;color:var(--arena);cursor:pointer;letter-spacing:0.1em;text-transform:uppercase}
     .test-toggle .campo{margin-top:0.5rem}
 
-    #screenPremios{flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem;gap:2rem}
-    .premios-titulo{font-family:'Rye',serif;font-size:clamp(2rem,5vw,3.5rem);color:var(--dorado-claro);text-align:center;text-shadow:0 0 40px rgba(240,192,64,0.5)}
-    .premios-sub{font-size:0.8rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);opacity:0.7}
-    .premios-grid{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;max-width:900px;width:100%}
-    .premio-card{background:linear-gradient(160deg,rgba(45,90,61,0.8),rgba(26,61,40,0.9));border:1px solid rgba(74,124,95,0.35);border-radius:6px;padding:1.5rem 2rem;cursor:pointer;transition:all 0.2s;text-align:center;min-width:200px;flex:1;max-width:280px}
-    .premio-card:hover{border-color:var(--dorado);transform:translateY(-4px);box-shadow:0 12px 40px rgba(74,124,95,0.25)}
-    .premio-card.ganado{opacity:0.4;cursor:not-allowed}.premio-card.ganado:hover{transform:none;box-shadow:none}
-    .premio-orden{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--arena);opacity:0.6;margin-bottom:0.5rem}
-    .premio-nombre{font-family:'Rye',serif;font-size:1.3rem;color:var(--dorado-claro);margin-bottom:0.25rem}
-    .premio-desc{font-size:0.78rem;color:var(--paja);opacity:0.8;margin-bottom:0.75rem}
-    .premio-ganadores{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.6}
-    .premio-badge-ganado{display:inline-block;background:rgba(39,174,96,0.2);border:1px solid rgba(39,174,96,0.4);border-radius:20px;padding:0.2rem 0.75rem;font-size:0.68rem;color:#7efca8;margin-top:0.5rem}
+    #screenPremios{flex-direction:column;align-items:center;justify-content:center;padding:3rem 2rem;gap:1.6rem}
+    .premios-titulo{font-family:'Rye',serif;font-size:clamp(2.2rem,5vw,3.8rem);color:var(--dorado-claro);text-align:center;text-shadow:0 0 42px rgba(240,192,64,0.5);letter-spacing:0.03em}
+    .premios-sub{font-size:0.8rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--arena);opacity:0.8}
+    .premios-grid{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;max-width:1000px;width:100%}
+    .premio-card{background:linear-gradient(160deg, rgba(48,94,64,0.82), rgba(23,54,38,0.96));border:1px solid rgba(155,200,170,0.24);border-radius:18px;padding:1.3rem 1.5rem;cursor:pointer;transition:all 0.2s ease;text-align:center;min-width:210px;flex:1;max-width:280px;box-shadow:0 18px 45px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.04)}
+    .premio-card:hover{border-color:rgba(240,192,64,0.8);transform:translateY(-5px) scale(1.01);box-shadow:0 24px 50px rgba(20,45,32,0.4)}
+    .premio-card.ganado{opacity:0.52;cursor:not-allowed;border-style:dashed}.premio-card.ganado:hover{transform:none;box-shadow:0 12px 25px rgba(0,0,0,0.16)}
+    .premio-orden{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--arena);opacity:0.7;margin-bottom:0.55rem}
+    .premio-nombre{font-family:'Rye',serif;font-size:1.3rem;color:var(--dorado-claro);margin-bottom:0.3rem;line-height:1.2}
+    .premio-desc{font-size:0.8rem;color:var(--paja);opacity:0.82;margin-bottom:0.8rem}
+    .premio-ganadores{font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--arena);opacity:0.72}
+    .premio-badge-ganado{display:inline-block;background:rgba(39,174,96,0.18);border:1px solid rgba(39,174,96,0.45);border-radius:999px;padding:0.26rem 0.8rem;font-size:0.68rem;color:#7efca8;margin-top:0.6rem;letter-spacing:0.06em}
     .vic-premios-wrap{position:fixed;bottom:0;right:2rem;z-index:5}
-    .vic-premios{height:clamp(180px,20vw,280px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
+    .vic-premios{height:clamp(180px,20vw,280px);filter:drop-shadow(0 10px 28px rgba(0,0,0,0.58));animation:vic-float 3s ease-in-out infinite}
 
-    #screenSorteo{flex-direction:column;align-items:center;justify-content:center}
+    #screenSorteo{flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at center, rgba(30,74,52,0.35) 0%, rgba(15,35,24,0.12) 42%, rgba(8,15,10,0.2) 100%)}
     #canvas{position:absolute;inset:0;z-index:3}
-    .nombre-flotante{position:absolute;z-index:7;pointer-events:none;font-family:'Josefin Sans',sans-serif;font-weight:700;color:white;text-align:center;line-height:1;text-shadow:0 1px 4px rgba(0,0,0,0.95);transform:translate(-50%,-50%);white-space:nowrap;overflow:hidden}
-    .premio-actual{position:absolute;top:2%;left:50%;transform:translateX(-50%);z-index:6;text-align:center;background:linear-gradient(160deg,rgba(45,90,61,0.9),rgba(26,61,40,0.95));border:1px solid rgba(201,146,42,0.4);border-radius:6px;padding:0.6rem 2rem;backdrop-filter:blur(12px);white-space:nowrap}
-    .premio-actual-label{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);opacity:0.7}
+    .nombre-flotante{position:absolute;z-index:7;pointer-events:none;font-family:'Josefin Sans',sans-serif;font-weight:700;color:white;text-align:center;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,0.95),0 0 14px rgba(240,192,64,0.3);transform:translate(-50%,-50%);white-space:nowrap;overflow:hidden;letter-spacing:0.04em}
+    .premio-actual{position:absolute;top:2%;left:50%;transform:translateX(-50%);z-index:6;text-align:center;background:linear-gradient(160deg, rgba(49,96,65,0.96), rgba(26,61,40,0.98));border:1px solid rgba(201,146,42,0.5);border-radius:16px;padding:0.7rem 1.8rem;backdrop-filter:blur(12px);white-space:nowrap;box-shadow:0 14px 36px rgba(0,0,0,0.26)}
+    .premio-actual-label{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);opacity:0.72}
     .premio-actual-nombre{font-family:'Rye',serif;font-size:clamp(1.2rem,3vw,2rem);color:var(--dorado-claro)}
-    .vic-sorteo-izq{position:absolute;bottom:0;left:0;z-index:5;height:clamp(130px,14vw,200px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
-    .vic-sorteo-der{position:absolute;bottom:0;right:0;z-index:5;height:clamp(130px,14vw,200px);filter:drop-shadow(0 8px 24px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out 1s infinite;transform:scaleX(-1)}
+    .vic-sorteo-izq{position:absolute;bottom:0;left:0;z-index:5;height:clamp(130px,14vw,200px);filter:drop-shadow(0 10px 30px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
+    .vic-sorteo-der{position:absolute;bottom:0;right:0;z-index:5;height:clamp(130px,14vw,200px);filter:drop-shadow(0 10px 30px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out 1s infinite;transform:scaleX(-1)}
     .btn-sortear-wrap{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);z-index:8}
-    .participantes-badge{position:absolute;top:2%;right:1.5%;z-index:6;background:rgba(15,35,24,0.9);border:1px solid rgba(74,124,95,0.35);border-radius:4px;padding:0.5rem 0.8rem;text-align:center}
+    .participantes-badge{position:absolute;top:2%;right:1.5%;z-index:6;background:rgba(15,35,24,0.82);border:1px solid rgba(170,217,180,0.18);border-radius:14px;padding:0.6rem 0.85rem;text-align:center;box-shadow:0 14px 32px rgba(0,0,0,0.24)}
     .part-num{font-family:'Rye',serif;font-size:1.6rem;color:var(--dorado-claro);line-height:1}
-    .part-label{font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.7}
-    .eliminacion-counter{position:absolute;top:2%;left:1.5%;z-index:6;background:rgba(15,35,24,0.9);border:1px solid rgba(192,57,43,0.3);border-radius:4px;padding:0.5rem 0.8rem;text-align:center;display:none}
+    .part-label{font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.75}
+    .eliminacion-counter{position:absolute;top:2%;left:1.5%;z-index:6;background:rgba(15,35,24,0.82);border:1px solid rgba(192,57,43,0.28);border-radius:14px;padding:0.6rem 0.85rem;text-align:center;display:none;box-shadow:0 14px 32px rgba(0,0,0,0.24)}
     .elim-num{font-family:'Rye',serif;font-size:1.6rem;color:#f08080;line-height:1}
-    .elim-label{font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.7}
-    .nombre-eliminado{position:absolute;z-index:9;pointer-events:none;font-family:'Rye',serif;color:var(--dorado-claro);text-shadow:0 0 10px rgba(240,192,64,0.6);opacity:1;transition:all 0.8s ease-out;white-space:nowrap}
+    .elim-label{font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena);opacity:0.75}
+    .nombre-eliminado{position:absolute;z-index:9;pointer-events:none;font-family:'Rye',serif;color:var(--dorado-claro);text-shadow:0 0 12px rgba(240,192,64,0.6);opacity:1;transition:all 0.8s ease-out;white-space:nowrap}
     .nombre-eliminado.volando{opacity:0;transform:translateY(-120px) scale(0.5)}
 
     /* SOMBRERO GRANDE */
-    .sombrero-container{position:absolute;bottom:8%;left:50%;transform:translateX(-50%);z-index:4;pointer-events:none}
+    .sombrero-container{position:absolute;bottom:8%;left:50%;transform:translateX(-50%);z-index:4;pointer-events:none;width:min(78vw,900px)}
     .sombrero-container.shaking{animation:shake 0.3s linear infinite}
     .sombrero-container.shaking-hard{animation:shake-hard 0.25s linear infinite}
 
@@ -82,26 +86,28 @@
 
     #screenGanador{flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:1.5rem}
     .ganador-vic{height:clamp(180px,20vw,260px);filter:drop-shadow(0 0 40px rgba(240,192,64,0.4));animation:vic-float 2.5s ease-in-out infinite}
-    .ganador-cartel{background:linear-gradient(160deg,#2d5a3d 0%,#1a3d28 40%,#0f2318 100%);border:3px solid var(--dorado);border-radius:6px;padding:2rem 3rem;position:relative;box-shadow:0 0 0 1px #080f0a,0 0 0 5px #3d6b50,0 20px 60px rgba(0,0,0,0.8);animation:cartel-entrada 0.8s cubic-bezier(0.34,1.56,0.64,1) both;max-width:600px;width:90%}
+    .ganador-cartel{background:linear-gradient(160deg, rgba(44,91,62,0.96), rgba(23,55,39,0.98) 42%, rgba(14,31,22,0.97));border:3px solid rgba(240,192,64,0.8);border-radius:22px;padding:2rem 3rem;position:relative;box-shadow:0 0 0 1px rgba(255,255,255,0.05),0 0 0 6px rgba(84,132,102,0.55),0 26px 70px rgba(0,0,0,0.8);animation:cartel-entrada 0.8s cubic-bezier(0.34,1.56,0.64,1) both;max-width:800px;width:90%}
     @keyframes cartel-entrada{from{opacity:0;transform:scale(0.5) rotate(-5deg)}to{opacity:1;transform:scale(1) rotate(0deg)}}
     .ganador-cartel::before{content:'✦';position:absolute;top:12px;left:16px;color:var(--dorado);font-size:14px;opacity:0.7}
     .ganador-cartel::after{content:'✦';position:absolute;top:12px;right:16px;color:var(--dorado);font-size:14px;opacity:0.7}
-    .ganador-label{font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--arena);opacity:0.8;margin-bottom:0.5rem}
-    .ganador-premio{font-family:'Rye',serif;font-size:clamp(1rem,3vw,1.8rem);color:var(--dorado);margin-bottom:1rem;opacity:0.9}
+    .ganador-label{font-size:0.7rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--arena);opacity:0.8;margin-bottom:0.6rem}
+    .ganador-premio{font-family:'Rye',serif;font-size:clamp(1rem,3vw,1.8rem);color:var(--dorado);margin-bottom:1rem;opacity:0.92}
     .ganador-nombre{font-family:'Rye',serif;font-size:clamp(2rem,6vw,4.5rem);color:var(--dorado-claro);line-height:1.1;text-shadow:0 0 40px rgba(240,192,64,0.6),3px 3px 0 rgba(0,0,0,0.6)}
+    .ganadores-resultados{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:0.65rem 1rem;margin-top:0.8rem;max-height:38vh;overflow-y:auto}
+    .ganador-resultado{font-family:'Rye',serif;font-size:clamp(1rem,2.2vw,1.45rem);color:var(--dorado-claro);line-height:1.2;text-shadow:0 0 18px rgba(240,192,64,0.45),2px 2px 0 rgba(0,0,0,0.55)}
     .confetti-wrap{position:fixed;inset:0;z-index:15;pointer-events:none}
     .ganador-botones{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
 
-    .btn{padding:0.9rem 2rem;border-radius:4px;font-family:'Josefin Sans',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;border:none}
-    .btn-dorado{background:linear-gradient(160deg,#c9922a,#8b5e1a);color:var(--hueso);box-shadow:0 6px 24px rgba(201,146,42,0.4);font-size:1rem;padding:1rem 2.5rem}
-    .btn-dorado:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 10px 32px rgba(201,146,42,0.5)}
-    .btn-dorado:disabled{opacity:0.4;cursor:not-allowed}
-    .btn-rojo{background:linear-gradient(160deg,var(--rojo-vivo),var(--rojo));color:var(--hueso);box-shadow:0 4px 16px rgba(192,57,43,0.4)}
+    .btn{padding:0.9rem 2rem;border-radius:14px;font-family:'Josefin Sans',sans-serif;font-size:0.82rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:all 0.18s ease;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;border:none;box-shadow:0 14px 26px rgba(0,0,0,0.22)}
+    .btn-dorado{background:linear-gradient(160deg,#d2a13b,#9a651f);color:var(--hueso);box-shadow:0 12px 30px rgba(201,146,42,0.38);font-size:1rem;padding:1rem 2.5rem}
+    .btn-dorado:hover:not(:disabled){transform:translateY(-3px);box-shadow:0 16px 34px rgba(201,146,42,0.5)}
+    .btn-dorado:disabled{opacity:0.45;cursor:not-allowed;transform:none}
+    .btn-rojo{background:linear-gradient(160deg,var(--rojo-vivo),var(--rojo));color:var(--hueso);box-shadow:0 10px 24px rgba(192,57,43,0.35)}
     .btn-rojo:hover{transform:translateY(-2px)}
-    .btn-verde{background:linear-gradient(160deg,#2ecc71,#27ae60);color:white;box-shadow:0 4px 16px rgba(39,174,96,0.4)}
+    .btn-verde{background:linear-gradient(160deg,#39d67f,#27ae60);color:white;box-shadow:0 12px 24px rgba(39,174,96,0.38)}
     .btn-verde:hover{transform:translateY(-2px)}
-    .btn-outline{background:transparent;color:var(--arena);border:1px solid rgba(74,124,95,0.4)}
-    .btn-outline:hover{background:rgba(200,160,106,0.08);color:var(--hueso)}
+    .btn-outline{background:rgba(255,255,255,0.02);color:var(--arena);border:1px solid rgba(155,200,170,0.28)}
+    .btn-outline:hover{background:rgba(240,192,64,0.08);color:var(--hueso)}
     .btn-grande{font-size:1.1rem;padding:1.1rem 3rem}
 
     @keyframes vic-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
@@ -120,15 +126,15 @@
     .sound-toggle-txt{font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--arena)}
 
     /* PANEL DE GANADORES */
-    .ganadores-panel{position:fixed;top:0;left:0;bottom:0;width:280px;z-index:20;background:transparent;overflow-y:auto;padding:1rem;display:none;animation:slide-in 0.4s ease both}
+    .ganadores-panel{position:fixed;top:0;left:0;bottom:0;width:280px;z-index:20;background:linear-gradient(180deg, rgba(11,27,20,0.6), rgba(11,27,20,0.15));backdrop-filter:blur(12px);overflow-y:auto;padding:1rem;display:none;animation:slide-in 0.4s ease both;border-right:1px solid rgba(170,217,180,0.15)}
     @keyframes slide-in{from{transform:translateX(-100%)}to{transform:translateX(0)}}
-    .ganadores-panel-titulo{font-family:'Rye',serif;font-size:1rem;color:var(--dorado-claro);text-align:center;margin-bottom:0.75rem;letter-spacing:0.1em;text-transform:uppercase;text-shadow:0 0 20px rgba(240,192,64,0.4)}
-    .ganador-item{display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0;border-bottom:1px solid rgba(74,124,95,0.2);animation:entrar 0.4s ease both}
-    .ganador-item-logo{width:60px;height:60px;border-radius:6px;object-fit:contain;background:rgba(255,255,255,0.95);padding:4px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
-    .ganador-item-logo-placeholder{width:60px;height:60px;border-radius:6px;background:rgba(74,124,95,0.25);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+    .ganadores-panel-titulo{font-family:'Rye',serif;font-size:1rem;color:var(--dorado-claro);text-align:center;margin-bottom:0.85rem;letter-spacing:0.1em;text-transform:uppercase;text-shadow:0 0 20px rgba(240,192,64,0.4)}
+    .ganador-item{display:flex;align-items:center;gap:0.75rem;padding:0.7rem 0.7rem;border-radius:12px;background:rgba(18,44,31,0.45);border:1px solid rgba(155,200,170,0.12);margin-bottom:0.5rem;animation:entrar 0.4s ease both}
+    .ganador-item-logo{width:60px;height:60px;border-radius:10px;object-fit:contain;background:rgba(255,255,255,0.95);padding:4px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+    .ganador-item-logo-placeholder{width:60px;height:60px;border-radius:10px;background:rgba(74,124,95,0.25);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
     .ganador-item-info{flex:1;min-width:0}
     .ganador-item-premio{font-size:0.7rem;color:var(--dorado);letter-spacing:0.08em;text-transform:uppercase;text-shadow:0 1px 3px rgba(0,0,0,0.8);margin-bottom:0.15rem}
-    .ganador-item-nombre{font-family:'Rye',serif;font-size:1.1rem;color:var(--dorado-claro);text-shadow:0 0 10px rgba(240,192,64,0.3),0 2px 4px rgba(0,0,0,0.8);line-height:1.2}
+    .ganador-item-nombre{font-family:'Rye',serif;font-size:1.08rem;color:var(--dorado-claro);text-shadow:0 0 10px rgba(240,192,64,0.3),0 2px 4px rgba(0,0,0,0.8);line-height:1.2}
     .ganadores-vacio{font-size:0.7rem;color:var(--arena);opacity:0.5;text-align:center;padding:1rem 0}
 
     /* Ajustar pantallas cuando el panel está visible - NO el sorteo */
@@ -138,7 +144,7 @@
     #screenFinal{flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center}
     .final-vic{height:clamp(200px,25vw,320px);filter:drop-shadow(0 0 40px rgba(240,192,64,0.5));animation:vic-float 3s ease-in-out infinite;margin-bottom:2rem}
     .final-titulo{font-family:'Rye',serif;font-size:clamp(2.5rem,7vw,5rem);color:var(--dorado-claro);text-shadow:0 0 50px rgba(240,192,64,0.6),3px 3px 0 rgba(0,0,0,0.6);margin-bottom:1rem;animation:entrar 0.8s ease both}
-    .final-sub{font-size:clamp(1rem,3vw,1.5rem);color:var(--paja);letter-spacing:0.15em;text-transform:uppercase;opacity:0.9;animation:entrar 0.8s ease 0.3s both}
+    .final-sub{font-size:clamp(1rem,3vw,1.5rem);color:var(--paja);letter-spacing:0.15em;text-transform:uppercase;opacity:0.92;animation:entrar 0.8s ease 0.3s both}
   </style>
 <script>
 // PWA Service Worker
@@ -211,7 +217,7 @@ function aplicarColores(cfg) {
       <path d="M80 130 Q95 118 300 115 Q505 118 520 130 Q505 142 300 145 Q95 142 80 130 Z" fill="#c9922a" opacity="0.6"/>
       <rect x="282" y="122" width="36" height="14" rx="3" fill="#f0c040" opacity="0.8"/>
       <rect x="288" y="126" width="24" height="8" rx="2" fill="#c9922a"/>
-      <ellipse cx="300" cy="34" rx="210" ry="22" fill="rgba(10,5,0,0.6)" stroke="#6b3a1f" stroke-width="1.5"/>
+      <ellipse cx="300" cy="34" rx="205" ry="22" fill="rgba(10,5,0,0.6)" stroke="#6b3a1f" stroke-width="1.5"/>
       <path d="M108 300 Q95 200 108 130" stroke="rgba(240,192,64,0.08)" stroke-width="4" fill="none"/>
     </svg>
   </div>
@@ -224,7 +230,7 @@ function aplicarColores(cfg) {
 <div class="screen" id="screenGanador">
   <div class="confetti-wrap" id="confettiWrap"></div>
   <img src="img/vic_juntos_highfive.png" class="ganador-vic" alt="Vic">
-  <div class="ganador-cartel"><div class="ganador-label">¡FELICITACIONES ganaste...!</div><div class="ganador-premio" id="ganadorPremio">Premio</div><div class="ganador-nombre" id="ganadorNombre">Nombre</div></div>
+  <div class="ganador-cartel"><div class="ganador-label">¡FELICITACIONES ganaron...!</div><div class="ganador-premio" id="ganadorPremio">Premio</div><div class="ganadores-resultados" id="ganadoresResultados"></div></div>
   <div class="ganador-botones">
     <button class="btn btn-verde btn-grande" onclick="marcarEntregado()">✅ Premio entregado</button>
     <button class="btn btn-rojo" onclick="sortearDeNuevo()">🔄 Sortear de nuevo</button>
@@ -243,11 +249,12 @@ function aplicarColores(cfg) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
 <script>
 const API='https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
-let password='',personas=[],pool=[],premios=[],premioActual=null,ganadorActual=null;
+let password='',personas=[],pool=[],premios=[],premioActual=null,ganadorActual=null,ganadoresActuales=[];
 let engine,render,runner,bolitas=[],sorteando=false,testMode=0;
 let ganadoresRegistrados=[];
 let sonidoActivo=true;
 let entregandoPremio=false;
+let modoOffline=false;
 
 (function(){const c=document.getElementById('stars');for(let i=0;i<150;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+0.5;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*75}%;left:${Math.random()*100}%;--dur:${2+Math.random()*4}s;--delay:${Math.random()*5}s`;c.appendChild(s)}})();
 
@@ -260,46 +267,83 @@ async function entrarSorteo(){
     const[rC,rP,rPe]=await Promise.all([fetch(`${API}?action=config_admin&password=${encodeURIComponent(pass)}`),fetch(`${API}?action=premios_sorteo&password=${encodeURIComponent(pass)}`),fetch(`${API}?action=personas_sorteo&password=${encodeURIComponent(pass)}`)]);
     const[dC,dP,dPe]=await Promise.all([rC.json(),rP.json(),rPe.json()]);
     if(!dC.ok){mostrarToast(dC.error||'Contraseña incorrecta');return}
-    password=pass;premios=dP.premios||[];personas=dPe.personas||[];
-    // Cargar estado persistente
-    premios.forEach(function(p){ p._ganados = p.ganados || 0; });
-    var ganadoresServidor = dP.ganadores || [];
-    
-    if(testMode>0){
-      const noms=['Ana','Luis','María','Carlos','Laura','Pedro','Sofía','Diego','Lucía','Martín','Valentina','Tomás','Camila','Mateo','Julieta','Nicolás','Florencia','Santiago','Milagros','Agustín','Rocío','Bruno','Celeste','Franco','Abril','Gonzalo','Pilar','Facundo','Delfina','Lautaro','Carolina','Joaquín','Paula','Ramiro','Daniela','Hernán','Aldana','Ignacio','Brenda','Mauro','Andrea','Ezequiel','Romina','Gastón','Natalia','Sergio','Mora','Sebastián','Candela','Emmanuel','Valeria'];
-      const apes=['García','López','Martínez','Rodríguez','Pérez','González','Sánchez','Romero','Gómez','Torres','Díaz','Fernández','Álvarez','Moreno','Ruiz','Acosta','Molina','Castro','Herrera','Medina','Ortiz','Silva','Ríos','Flores','Benítez'];
-      personas=[];for(let i=0;i<testMode;i++)personas.push({id:'T-'+i,nombre:noms[i%noms.length],apellido:apes[i%apes.length]});
-    }
-    
-    // Excluir personas que ya ganaron del pool
-    var ganadoresIds = {};
-    ganadoresServidor.forEach(function(g){ ganadoresIds[g.persona_id] = true; });
-    pool = personas.filter(function(p){ return !ganadoresIds[p.id]; });
-    
-    if(!personas.length){mostrarToast('No hay participantes');return}
-    
-    // Reconstruir panel de ganadores si hay previos
-    if(ganadoresServidor.length > 0) {
-      ganadoresRegistrados = [];
-      ganadoresServidor.forEach(function(g) {
-        var premio = null;
-        for(var i=0;i<premios.length;i++){
-          if(String(premios[i].id) === String(g.premio_id)){ premio = premios[i]; break; }
-        }
-        if(premio) {
-          agregarGanadorPanel(premio, { nombre: g.nombre, apellido: g.apellido, id: g.persona_id });
-        }
-      });
-    }
-    
-    // Verificar si ya se entregaron todos
-    if(verificarTodosSorteados()){
-      mostrarFinal();
-    } else {
-      mostrarPantalla('screenPremios');renderPremios();
-    }
-  }catch(e){mostrarToast('Error de conexión')}
+    modoOffline=false;
+    guardarCopiaLocal(dP,dPe);
+    prepararDatosSorteo(dP,dPe);
+  }catch(e){
+    var copia=leerCopiaLocal();
+    if(!copia){mostrarToast('Sin conexión y no hay una copia local disponible');return}
+    modoOffline=true;
+    prepararDatosSorteo({premios:copia.premios,ganadores:copia.ganadores},{personas:copia.personas});
+    mostrarToast('Modo offline: usando la última copia guardada');
+  }
   finally{setLoading('spinnerLogin','txtLogin',false,'🎉 Entrar al sorteo')}
+}
+
+function guardarCopiaLocal(dP,dPe){
+  try{
+    localStorage.setItem('yiha_sorteo_copia',JSON.stringify({
+      fecha:new Date().toISOString(),
+      premios:dP.premios||[],
+      personas:dPe.personas||[],
+      ganadores:dP.ganadores||[]
+    }));
+  }catch(e){}
+}
+
+function leerCopiaLocal(){
+  try{
+    var copia=JSON.parse(localStorage.getItem('yiha_sorteo_copia')||'null');
+    if(copia&&Array.isArray(copia.premios)&&Array.isArray(copia.personas))return copia;
+  }catch(e){}
+  return null;
+}
+
+function agregarGanadoresACopiaLocal(estado){
+  var copia=leerCopiaLocal();
+  if(!copia)return;
+  copia.ganadores=copia.ganadores||[];
+  ganadoresActuales.forEach(function(ganador){
+    copia.ganadores.push({
+      persona_id:ganador.id,
+      nombre:ganador.nombre,
+      apellido:ganador.apellido,
+      premio_id:premioActual.id,
+      estado:estado
+    });
+  });
+  copia.premios=copia.premios.map(function(p){
+    if(String(p.id)===String(premioActual.id)&&estado==='entregado')p.ganados=(p.ganados||0)+ganadoresActuales.length;
+    return p;
+  });
+  localStorage.setItem('yiha_sorteo_copia',JSON.stringify(copia));
+}
+
+function prepararDatosSorteo(dP,dPe,ganadoresOffline){
+  password=document.getElementById('loginPass').value.trim();
+  premios=dP.premios||[];personas=dPe.personas||[];
+  premios.forEach(function(p){ p._ganados = p.ganados || 0; });
+  var ganadoresServidor=ganadoresOffline||dP.ganadores||[];
+
+  if(testMode>0){
+    const noms=['Ana','Luis','María','Carlos','Laura','Pedro','Sofía','Diego','Lucía','Martín','Valentina','Tomás','Camila','Mateo','Julieta','Nicolás','Florencia','Santiago','Milagros','Agustín','Rocío','Bruno','Celeste','Franco','Abril','Gonzalo','Pilar','Facundo','Delfina','Lautaro','Carolina','Joaquín','Paula','Ramiro','Daniela','Hernán','Aldana','Ignacio','Brenda','Mauro','Andrea','Ezequiel','Romina','Gastón','Natalia','Sergio','Mora','Sebastián','Candela','Emmanuel','Valeria'];
+    const apes=['García','López','Martínez','Rodríguez','Pérez','González','Sánchez','Romero','Gómez','Torres','Díaz','Fernández','Álvarez','Moreno','Ruiz','Acosta','Molina','Castro','Herrera','Medina','Ortiz','Silva','Ríos','Flores','Benítez'];
+    personas=[];for(let i=0;i<testMode;i++)personas.push({id:'T-'+i,nombre:noms[i%noms.length],apellido:apes[i%apes.length]});
+  }
+
+  var ganadoresIds={};
+  ganadoresServidor.forEach(function(g){ganadoresIds[g.persona_id]=true;});
+  pool=personas.filter(function(p){return !ganadoresIds[p.id];});
+  if(!personas.length){mostrarToast('No hay participantes');return}
+  if(ganadoresServidor.length>0){
+    ganadoresRegistrados=[];
+    ganadoresServidor.forEach(function(g){
+      var premio=premios.find(function(p){return String(p.id)===String(g.premio_id);});
+      if(premio)agregarGanadorPanel(premio,{nombre:g.nombre,apellido:g.apellido,id:g.persona_id});
+    });
+  }
+  if(verificarTodosSorteados())mostrarFinal();
+  else{mostrarPantalla('screenPremios');renderPremios();}
 }
 
 function renderPremios(){
@@ -324,7 +368,7 @@ function seleccionarPremio(p){
 
 function sizeSombrero(){
   const W=window.innerWidth;
-  const sw=Math.min(W*0.58,700);
+  const sw=Math.min(W*0.78,900);
   document.getElementById('sombreroContainer').style.width=sw+'px';
 }
 
@@ -370,7 +414,7 @@ function iniciarFisica(){
 
   // Bolitas caen con delay
   const delay=Math.max(10,Math.min(60,2000/pool.length));
-  const dropW=sw*0.5;
+  const dropW=sw*0.64;
   pool.forEach((p,i)=>setTimeout(()=>crearBolita(p,W,H,cx,dropW),i*delay+400));
 
   Matter.Events.on(render,'afterRender',()=>{bolitas.forEach(b=>{if(b.elem&&b.body){b.elem.style.left=b.body.position.x+'px';b.elem.style.top=b.body.position.y+'px'}})});
@@ -382,7 +426,7 @@ function crearBolita(p,W,H,cx,spread){
   if(n<=20)r=Math.min(28,W*0.022);
   else if(n<=50)r=Math.min(20,W*0.016);
   else if(n<=100)r=Math.min(15,W*0.013);
-  else if(n<=150)r=Math.min(12,W*0.01);
+  else if(n<=150)r=Math.min(15,W*0.012);
   else r=Math.min(9,W*0.008);
 
   const x=cx-spread/2+Math.random()*spread;
@@ -411,10 +455,13 @@ async function iniciarSorteo(){
   document.getElementById('spinnerSorteo').style.display='block';
   document.getElementById('txtSortear').textContent='Sorteando...';
 
-  // Elegir ganador ANTES
-  const idxGanador=Math.floor(Math.random()*pool.length);
-  ganadorActual=pool[idxGanador];
-  const ganadorId=ganadorActual.id;
+  // Elegir todos los ganadores del premio en una sola extracción.
+  const cantidadPendiente=Math.max(1,(premioActual.cantidad_ganadores||1)-(premioActual._ganados||0));
+  const candidatos=pool.slice();
+  shuffle(candidatos);
+  ganadoresActuales=candidatos.slice(0,Math.min(cantidadPendiente,pool.length));
+  ganadorActual=ganadoresActuales[0];
+  const ganadoresIds=new Set(ganadoresActuales.map(p=>p.id));
 
   // FASE 1: Sacudir suave
   const somb=document.getElementById('sombreroContainer');
@@ -427,17 +474,17 @@ async function iniciarSorteo(){
   const elimC=document.getElementById('elimCounter');
   elimC.style.display='block';
 
-  // Preparar eliminación: todos menos el ganador + 4 finalistas aleatorios
-  const noGanador=bolitas.filter(b=>b.id!==ganadorId);
+  // Preparar eliminación: todos menos los ganadores + 4 finalistas aleatorios
+  const noGanador=bolitas.filter(b=>!ganadoresIds.has(b.id));
   shuffle(noGanador);
 
-  // Reservar 4 finalistas (además del ganador = 5 total)
+  // Reservar algunos finalistas para conservar el cierre dramático.
   const finalistas4=noGanador.splice(0,Math.min(4,noGanador.length));
   const aEliminar=noGanador; // el resto se elimina
 
   let quedan=bolitas.length;
 
-  // Eliminar rápido hasta quedar 5
+  // Eliminar rápido hasta dejar ganadores y algunos finalistas.
   for(let i=0;i<aEliminar.length;i++){
     const b=aEliminar[i];
     quedan--;
@@ -466,15 +513,15 @@ async function iniciarSorteo(){
     await sleep(delay);
   }
 
-  // ═══ FASE 3: ¡5 FINALISTAS! ═══
+  // ═══ FASE 3: FINALISTAS ═══
   somb.className='sombrero-container shaking';
   var finWrap = document.getElementById('finalistasWrap');
   finWrap.style.display='block';
   document.getElementById('countdownContainer').innerHTML = '';
   elimC.style.display='none';
 
-  // Hacer que las 5 bolitas restantes se vean grandes y con nombre
-  const finalistasIds=new Set([ganadorId,...finalistas4.map(b=>b.id)]);
+  // Hacer que las bolitas finalistas se vean grandes y con nombre
+  const finalistasIds=new Set([...ganadoresActuales.map(p=>p.id),...finalistas4.map(b=>b.id)]);
   bolitas.filter(b=>finalistasIds.has(b.id)).forEach(b=>{
     if(b.body){
       b.body.render.strokeStyle='#f0c040';
@@ -506,7 +553,7 @@ async function iniciarSorteo(){
     numEl.textContent = c;
     countContainer.appendChild(numEl);
     
-    agitarBolitas(0.03 + (5 - c) * 0.008, 0.02 + (5 - c) * 0.005);
+    agitarBolitas(0.03 + (ganadoresActuales.length - c) * 0.008, 0.02 + (ganadoresActuales.length - c) * 0.005);
     await sleep(2500);
   }
 
@@ -525,9 +572,10 @@ async function iniciarSorteo(){
   finWrap.style.display='none';
   await sleep(1000);
 
-  // Resaltar la bolita ganadora
-  const bGanador=bolitas.find(b=>b.id===ganadorId);
-  if(bGanador){
+  // Resaltar todas las bolitas ganadoras.
+  ganadoresActuales.forEach(ganador=>{
+    const bGanador=bolitas.find(b=>b.id===ganador.id);
+    if(!bGanador)return;
     if(bGanador.body){
       bGanador.body.render.fillStyle='#f0c040';
       bGanador.body.render.strokeStyle='#fff';
@@ -539,7 +587,7 @@ async function iniciarSorteo(){
       bGanador.elem.textContent=bGanador.name;
       bGanador.elem.style.width='160px';
     }
-  }
+  });
 
   await sleep(2000);
   sorteando=false;
@@ -561,8 +609,15 @@ function mostrarNombreEliminado(b){
 }
 
 function mostrarGanador(p){
-  document.getElementById('ganadorNombre').textContent=p.nombre+' '+p.apellido;
   document.getElementById('ganadorPremio').textContent=premioActual.nombre;
+  const resultados=document.getElementById('ganadoresResultados');
+  resultados.innerHTML='';
+  ganadoresActuales.forEach(function(ganador){
+    const nombre=document.createElement('div');
+    nombre.className='ganador-resultado';
+    nombre.textContent=ganador.nombre+' '+ganador.apellido;
+    resultados.appendChild(nombre);
+  });
   fadeOutMusica();
   lanzarConfetti();mostrarPantalla('screenGanador');
 }
@@ -570,17 +625,26 @@ function mostrarGanador(p){
 async function marcarEntregado(){
   if(entregandoPremio) return; // Evitar doble click
   entregandoPremio = true;
-  
-  if(!ganadorActual.id.startsWith('T-')){try{var r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'entregado',password})});var d=await r.json();if(!d.ok){mostrarToast(d.error);entregandoPremio=false;return}}catch(e){mostrarToast('Error');entregandoPremio=false;return}}
-  pool=pool.filter(function(p){return p.id!==ganadorActual.id});
-  premioActual._ganados=(premioActual._ganados||0)+1;
-  agregarGanadorPanel(premioActual, ganadorActual);
+  for(var i=0;i<ganadoresActuales.length;i++){
+    var ganador=ganadoresActuales[i];
+    if(!modoOffline&&!ganador.id.startsWith('T-')){try{var r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganador.id,premio_id:premioActual.id,estado:'entregado',password})});var d=await r.json();if(!d.ok){mostrarToast(d.error);entregandoPremio=false;return}}catch(e){mostrarToast('Error de conexión: el resultado quedó sin registrar');entregandoPremio=false;return}}
+    agregarGanadorPanel(premioActual, ganador);
+  }
+  if(modoOffline)agregarGanadoresACopiaLocal('entregado');
+  var idsGanadores=new Set(ganadoresActuales.map(function(p){return p.id}));
+  pool=pool.filter(function(p){return !idsGanadores.has(p.id)});
+  premioActual._ganados=(premioActual._ganados||0)+ganadoresActuales.length;
   mostrarToast('¡Premio entregado!');
   setTimeout(function(){ entregandoPremio=false; volverAPremios(); }, 1500);
 }
 async function sortearDeNuevo(){
-  if(!ganadorActual.id.startsWith('T-')){try{await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganadorActual.id,premio_id:premioActual.id,estado:'no_presente',password})})}catch(e){}}
-  pool=pool.filter(function(p){return p.id!==ganadorActual.id});
+  for(var i=0;i<ganadoresActuales.length;i++){
+    var ganador=ganadoresActuales[i];
+    if(!modoOffline&&!ganador.id.startsWith('T-')){try{await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganador.id,premio_id:premioActual.id,estado:'no_presente',password})})}catch(e){}}
+  }
+  if(modoOffline)agregarGanadoresACopiaLocal('no_presente');
+  var idsGanadores=new Set(ganadoresActuales.map(function(p){return p.id}));
+  pool=pool.filter(function(p){return !idsGanadores.has(p.id)});
   if(!pool.length){mostrarToast('No quedan más participantes');setTimeout(volverAPremios,2000);return}
   document.getElementById('partNum').textContent=pool.length;
   limpiarBolitas();limpiarConfetti();mostrarPantalla('screenSorteo');
