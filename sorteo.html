@@ -61,8 +61,8 @@
     .premio-actual{position:absolute;top:2%;left:50%;transform:translateX(-50%);z-index:6;text-align:center;background:linear-gradient(160deg, rgba(49,96,65,0.96), rgba(26,61,40,0.98));border:1px solid rgba(201,146,42,0.5);border-radius:16px;padding:0.7rem 1.8rem;backdrop-filter:blur(12px);white-space:nowrap;box-shadow:0 14px 36px rgba(0,0,0,0.26)}
     .premio-actual-label{font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--arena);opacity:0.72}
     .premio-actual-nombre{font-family:'Rye',serif;font-size:clamp(1.2rem,3vw,2rem);color:var(--dorado-claro)}
-    .vic-sorteo-izq{position:absolute;bottom:0;left:0;z-index:5;height:clamp(130px,14vw,200px);filter:drop-shadow(0 10px 30px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
-    .vic-sorteo-der{position:absolute;bottom:0;right:0;z-index:5;height:clamp(130px,14vw,200px);filter:drop-shadow(0 10px 30px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out 1s infinite;transform:scaleX(-1)}
+    .vic-sorteo-izq{position:absolute;bottom:0;left:0;z-index:5;height:clamp(260px,28.6vw,416px);filter:drop-shadow(0 10px 30px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out infinite}
+    .vic-sorteo-der{position:absolute;bottom:0;right:0;z-index:5;height:clamp(260px,28.6vw,416px);filter:drop-shadow(0 10px 30px rgba(0,0,0,0.6));animation:vic-float 3s ease-in-out 1s infinite;transform:scaleX(-1)}
     .btn-sortear-wrap{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);z-index:8}
     .participantes-badge{position:absolute;top:2%;right:1.5%;z-index:6;background:rgba(15,35,24,0.82);border:1px solid rgba(170,217,180,0.18);border-radius:14px;padding:0.6rem 0.85rem;text-align:center;box-shadow:0 14px 32px rgba(0,0,0,0.24)}
     .part-num{font-family:'Rye',serif;font-size:1.6rem;color:var(--dorado-claro);line-height:1}
@@ -182,6 +182,8 @@ function aplicarColores(cfg) {
     <div class="login-sub" id="loginSubSorteo">Yiha!</div>
     <div class="campo"><label>Contraseña</label><input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') entrarSorteo()"></div>
     <button class="btn btn-dorado" style="width:100%" onclick="entrarSorteo()"><div class="spinner" id="spinnerLogin"></div><span id="txtLogin">🎉 Entrar al sorteo</span></button>
+    <button class="btn btn-outline" style="width:100%;margin-top:0.75rem" onclick="document.getElementById('archivoCopia').click()">📂 Sortear desde archivo</button>
+    <input type="file" id="archivoCopia" accept=".json,application/json" style="display:none" onchange="cargarDesdeArchivo(this)">
     <details class="test-toggle"><summary>Modo test</summary><div class="campo"><label>Simular participantes</label><input type="number" id="testCantidad" value="0" min="0" max="300"></div></details>
   </div>
 </div>
@@ -194,6 +196,7 @@ function aplicarColores(cfg) {
     <span class="sound-toggle-icon" id="soundIcon">🔊</span>
     <span class="sound-toggle-txt" id="soundTxt">Sonido activado</span>
   </div>
+  <button class="btn btn-outline" onclick="descargarCopia()" style="animation:entrar 0.6s ease 0.4s both">💾 Descargar copia</button>
   <div class="vic-premios-wrap"><img src="img/vic_apoyado_valla.png" class="vic-premios" alt="Vic"></div>
 </div>
 
@@ -299,7 +302,41 @@ function leerCopiaLocal(){
   return null;
 }
 
+function descargarCopia(){
+  var copia=leerCopiaLocal();
+  if(!copia){mostrarToast('No hay copia para descargar');return}
+  var d=new Date(),p=function(n){return String(n).padStart(2,'0')};
+  var nombre='yiha_sorteo_'+d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'_'+p(d.getHours())+p(d.getMinutes())+'.json';
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(copia,null,2)],{type:'application/json'}));
+  a.download=nombre;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+  mostrarToast('Copia descargada: '+nombre);
+}
+
+function cargarDesdeArchivo(input){
+  var archivo=input.files&&input.files[0];
+  input.value='';
+  if(!archivo)return;
+  var lector=new FileReader();
+  lector.onload=function(){
+    var copia;
+    try{copia=JSON.parse(lector.result)}catch(e){mostrarToast('El archivo no es una copia válida');return}
+    if(!copia||!Array.isArray(copia.premios)||!Array.isArray(copia.personas)){mostrarToast('El archivo no es una copia válida');return}
+    copia.ganadores=copia.ganadores||[];
+    try{localStorage.setItem('yiha_sorteo_copia',JSON.stringify(copia))}catch(e){}
+    testMode=parseInt(document.getElementById('testCantidad').value)||0;
+    modoOffline=true;
+    prepararDatosSorteo({premios:copia.premios,ganadores:copia.ganadores},{personas:copia.personas});
+    mostrarToast('Sorteo desde archivo: '+copia.personas.length+' participantes');
+  };
+  lector.onerror=function(){mostrarToast('No se pudo leer el archivo')};
+  lector.readAsText(archivo);
+}
+
 function agregarGanadoresACopiaLocal(estado){
+  if(testMode>0)return;
   var copia=leerCopiaLocal();
   if(!copia)return;
   copia.ganadores=copia.ganadores||[];
@@ -630,7 +667,7 @@ async function marcarEntregado(){
     if(!modoOffline&&!ganador.id.startsWith('T-')){try{var r=await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganador.id,premio_id:premioActual.id,estado:'entregado',password})});var d=await r.json();if(!d.ok){mostrarToast(d.error);entregandoPremio=false;return}}catch(e){mostrarToast('Error de conexión: el resultado quedó sin registrar');entregandoPremio=false;return}}
     agregarGanadorPanel(premioActual, ganador);
   }
-  if(modoOffline)agregarGanadoresACopiaLocal('entregado');
+  agregarGanadoresACopiaLocal('entregado');
   var idsGanadores=new Set(ganadoresActuales.map(function(p){return p.id}));
   pool=pool.filter(function(p){return !idsGanadores.has(p.id)});
   premioActual._ganados=(premioActual._ganados||0)+ganadoresActuales.length;
@@ -642,7 +679,7 @@ async function sortearDeNuevo(){
     var ganador=ganadoresActuales[i];
     if(!modoOffline&&!ganador.id.startsWith('T-')){try{await fetch(API,{method:'POST',body:JSON.stringify({action:'registrar_ganador',persona_id:ganador.id,premio_id:premioActual.id,estado:'no_presente',password})})}catch(e){}}
   }
-  if(modoOffline)agregarGanadoresACopiaLocal('no_presente');
+  agregarGanadoresACopiaLocal('no_presente');
   var idsGanadores=new Set(ganadoresActuales.map(function(p){return p.id}));
   pool=pool.filter(function(p){return !idsGanadores.has(p.id)});
   if(!pool.length){mostrarToast('No quedan más participantes');setTimeout(volverAPremios,2000);return}
