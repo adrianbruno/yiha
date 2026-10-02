@@ -320,7 +320,10 @@ function desmarcar(grupoId) {
 }
 
 // ── UTILS ─────────────────────────────────────────────
-function primerNombre(n) { return String(n).trim().split(/\s+/)[0] || ''; }
+function primerNombre(n) {
+  const p = String(n).trim().split(/s+/)[0] || '';
+  return p.charAt(0).toLocaleUpperCase('es') + p.slice(1).toLocaleLowerCase('es');
+}
 
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
