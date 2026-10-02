@@ -307,7 +307,7 @@ function enviar(grupoId) {
   if (!g || !g.tel) return;
   if (/\[[^\]]+\]/.test(document.getElementById('plantilla').value)
       && !confirm('El mensaje tiene campos entre [ ] sin completar. ¿Enviar igual?')) return;
-  window.open(`https://wa.me/${g.tel}?text=${encodeURIComponent(armarMensaje(g))}`, '_blank');
+  window.open(`https://api.whatsapp.com/send?phone=${g.tel}&text=${encodeURIComponent(armarMensaje(g))}`, '_blank');
   enviados[grupoId] = new Date().toISOString();
   lsSet(LS_ENVIADOS, JSON.stringify(enviados));
   render();
