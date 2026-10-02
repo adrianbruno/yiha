@@ -9,8 +9,8 @@
   <meta name="theme-color" content="#2d5a3d">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" async onload="window.dibujarQR && dibujarQR()"></script>
   <style>
     :root {
       --tierra:#0f2318;
@@ -30,7 +30,7 @@
     .card { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:1.5rem; width:100%; max-width:360px; text-align:center; backdrop-filter:blur(8px); }
     .titulo { font-family:'Rye',serif; font-size:1.3rem; color:var(--dorado-claro); margin-bottom:0.25rem; }
     .sub { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--arena); opacity:0.8; margin-bottom:1.25rem; }
-    .qr { background:white; border-radius:8px; padding:1rem; display:inline-block; }
+    .qr { background:white; border-radius:8px; padding:1rem; display:inline-block; min-width:252px; min-height:252px; }
     .qr img, .qr canvas { display:block; }
     .grupo-id { font-weight:600; letter-spacing:0.1em; color:var(--paja); margin-top:0.6rem; }
     .mesa-label { font-size:0.7rem; color:var(--arena); letter-spacing:0.15em; text-transform:uppercase; margin-top:1rem; }
@@ -43,7 +43,7 @@
 <body>
 <div class="bg"></div>
 <div class="wrap">
-  <img src="img/vic_sombrero.png" class="vic" alt="Vic">
+  <img src="img/vic_sombrero.png" class="vic" alt="Vic" width="95" height="120">
   <div class="card" id="card"></div>
 </div>
 
@@ -71,7 +71,13 @@ if (!grupoId) {
     <div class="mesa" style="font-size:${varias ? '1.4rem' : '2.6rem'}">${esc(mesa)}</div>` : ''}
     <div class="hint">Mostrá este QR en la puerta del evento</div>
     <button class="btn" onclick="descargarQR()">📥 Descargar QR</button>`;
-  new QRCode(document.getElementById('qrContainer'), {
+}
+
+// La librería del QR carga en paralelo: se dibuja cuando están listas ella y la página
+function dibujarQR() {
+  const container = document.getElementById('qrContainer');
+  if (!container || !window.QRCode || container.hasChildNodes()) return;
+  new QRCode(container, {
     text: grupoId,
     width: 220,
     height: 220,
@@ -80,6 +86,7 @@ if (!grupoId) {
     correctLevel: QRCode.CorrectLevel.H
   });
 }
+dibujarQR();
 
 function descargarQR() {
   const canvas = document.querySelector('#qrContainer canvas');
