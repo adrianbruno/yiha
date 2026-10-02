@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Envíos · Yiha! 221countryLP</title>
+  <link rel="apple-touch-icon" href="img/logo_negro.png">
+  <meta name="theme-color" content="#2d5a3d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --tierra:#0f2318;
+      --arena:#b8986a;
+      --paja:#e8d5b0;
+      --hueso:#f5ecd7;
+      --rojo:#8b2a2a;
+      --rojo-vivo:#b83232;
+      --dorado:#c9922a;
+      --dorado-claro:#f0c040;
+      --verde:#27ae60;
+      --surface:rgba(26,61,40,0.75);
+      --border:rgba(74,124,95,0.3);
+      --border-focus:rgba(240,192,64,0.6);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html,body { min-height:100%; font-family:'Josefin Sans',sans-serif; background:var(--tierra); color:var(--hueso); overflow-x:hidden; }
+    .bg { position:fixed; inset:0; z-index:0; background:radial-gradient(ellipse at 50% 0%,#1a2a1a 0%,#0a1a08 40%,#030a03 100%); }
+
+    .login-screen { position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem; }
+    .login-vic { height:160px; filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6)); margin-bottom:1.5rem; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:1.25rem; backdrop-filter:blur(8px); }
+    .login-card { width:100%; max-width:340px; }
+    .titulo { font-family:'Rye',serif; font-size:1.2rem; color:var(--dorado-claro); text-align:center; margin-bottom:0.25rem; }
+    .sub { font-size:0.68rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--arena); opacity:0.7; text-align:center; margin-bottom:1.25rem; }
+
+    .campo { display:flex; flex-direction:column; gap:0.3rem; margin-bottom:0.75rem; }
+    .campo label { font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--arena); opacity:0.8; }
+    input, textarea { background:rgba(26,10,0,0.6); border:1px solid var(--border); border-radius:3px; color:var(--hueso); font-family:'Josefin Sans',sans-serif; font-size:0.95rem; padding:0.7rem; width:100%; outline:none; -webkit-appearance:none; }
+    textarea { min-height:300px; resize:vertical; line-height:1.4; }
+    input:focus, textarea:focus { border-color:var(--border-focus); }
+    .ayuda { font-size:0.72rem; color:var(--arena); opacity:0.85; line-height:1.5; }
+    .ayuda code { color:var(--dorado-claro); }
+
+    .btn { padding:0.8rem 1rem; border-radius:3px; font-family:'Josefin Sans',sans-serif; font-size:0.78rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; border:none; display:inline-flex; align-items:center; justify-content:center; gap:0.4rem; text-decoration:none; }
+    .btn-full { width:100%; }
+    .btn-rojo { background:linear-gradient(160deg,var(--rojo-vivo),var(--rojo)); color:var(--hueso); }
+    .btn-wa { background:linear-gradient(160deg,#2ecc71,#27ae60); color:white; white-space:nowrap; }
+    .btn-outline { background:transparent; color:var(--arena); border:1px solid var(--border); }
+    .btn:disabled { opacity:0.4; cursor:not-allowed; }
+    .spinner { width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,0.3); border-top-color:white; animation:spin 0.7s linear infinite; display:none; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    .app { position:relative; z-index:10; display:none; max-width:1100px; margin:0 auto; padding:1rem; }
+    .app-titulo { font-family:'Rye',serif; font-size:1.4rem; color:var(--dorado-claro); margin-bottom:1rem; }
+    .layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); gap:1rem; align-items:start; }
+    @media (max-width:800px) { .layout { grid-template-columns:minmax(0,1fr); } }
+    .seccion { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--arena); margin-bottom:0.75rem; }
+
+    .preview { white-space:pre-wrap; background:#0b141a; border-radius:6px; padding:0.8rem; font-size:0.85rem; line-height:1.4; color:#e9edef; margin-top:0.75rem; border-left:3px solid #25d366; word-break:break-word; }
+    .aviso { background:rgba(184,50,50,0.2); border:1px solid rgba(184,50,50,0.5); border-radius:3px; padding:0.6rem; font-size:0.75rem; margin-top:0.75rem; display:none; }
+
+    .filtros { display:flex; flex-wrap:wrap; gap:0.5rem; align-items:center; margin-bottom:0.75rem; }
+    .filtros input[type=text] { flex:1; min-width:160px; }
+    .chk { display:flex; align-items:center; gap:0.35rem; font-size:0.75rem; color:var(--paja); cursor:pointer; }
+    .chk input { width:auto; }
+    .contador { font-size:0.75rem; color:var(--arena); margin-bottom:0.5rem; }
+
+    .grupo { display:flex; align-items:center; gap:0.75rem; padding:0.7rem; border:1px solid var(--border); border-radius:3px; margin-bottom:0.5rem; background:rgba(10,26,8,0.5); }
+    .grupo.enviado { opacity:0.55; }
+    .grupo-info { flex:1; min-width:0; }
+    .grupo-nombre { font-weight:600; color:var(--hueso); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .grupo-meta { font-size:0.72rem; color:var(--arena); margin-top:0.2rem; display:flex; flex-wrap:wrap; gap:0.5rem; }
+    .tag { background:rgba(240,192,64,0.12); color:var(--dorado-claro); padding:0.1rem 0.4rem; border-radius:2px; }
+    .tag-error { background:rgba(184,50,50,0.25); color:#ff9b9b; }
+    .tag-ok { background:rgba(39,174,96,0.2); color:#7be3a4; }
+    .deshacer { background:none; border:none; color:var(--arena); font-size:0.7rem; text-decoration:underline; cursor:pointer; font-family:inherit; }
+
+    .toast { position:fixed; bottom:1.5rem; left:50%; transform:translateX(-50%) translateY(100px); background:var(--rojo); color:var(--hueso); padding:0.75rem 1.25rem; border-radius:3px; font-size:0.85rem; z-index:100; transition:transform 0.25s; max-width:90vw; }
+    .toast.visible { transform:translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <img src="img/vic_senalando.png" class="login-vic" alt="Vic">
+  <div class="card login-card">
+    <div class="titulo">Envíos · WhatsApp</div>
+    <div class="sub">Solo staff autorizado</div>
+    <div class="campo">
+      <label>Contraseña</label>
+      <input type="password" id="loginPass" placeholder="••••••••" onkeydown="if(event.key==='Enter') entrar()">
+    </div>
+    <button class="btn btn-rojo btn-full" onclick="entrar()">
+      <div class="spinner" id="spinnerLogin"></div>
+      <span id="txtLogin">📱 Entrar</span>
+    </button>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app">
+  <div class="app-titulo">📱 Envío de QR y mesa</div>
+  <div class="layout">
+
+    <div class="card">
+      <div class="seccion">Mensaje</div>
+      <div class="campo">
+        <textarea id="plantilla" oninput="guardarPlantilla()"></textarea>
+      </div>
+      <div class="ayuda">
+        Se reemplazan solos por cada grupo: <code>{nombre}</code> <code>{mesa}</code> <code>{link}</code> <code>{id}</code><br>
+        Para negrita en WhatsApp usá <code>*texto*</code>. El texto se guarda en este navegador.
+      </div>
+      <button class="btn btn-outline" style="margin-top:0.6rem" onclick="restaurarPlantilla()">↺ Volver al texto original</button>
+      <div class="aviso" id="avisoCorchetes">⚠️ El mensaje todavía tiene campos entre corchetes [ ] sin completar (dirección o link de Google Maps).</div>
+      <div class="seccion" style="margin-top:1rem">Vista previa</div>
+      <div class="preview" id="preview"></div>
+    </div>
+
+    <div class="card">
+      <div class="seccion">Grupos</div>
+      <div class="filtros">
+        <input type="text" id="buscador" placeholder="Buscar por nombre, ID o mesa" oninput="render()">
+        <label class="chk"><input type="checkbox" id="soloPendientes" onchange="render()" checked> Solo pendientes</label>
+        <label class="chk"><input type="checkbox" id="soloConMesa" onchange="render()" checked> Solo con mesa</label>
+        <button class="btn btn-outline" onclick="cargarGrupos()">⟳</button>
+      </div>
+      <div class="contador" id="contador"></div>
+      <div id="lista"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbzgZNqX4YHQ8yONqi5a_lS1JGUA-X58KcBotLqc3dYSBEnkhcM2l0HTKsOXum9iWr2E/exec';
+
+const PLANTILLA_DEFAULT =
+`¡Hola {nombre}! 🤠
+Ya está todo listo para *Yiha! 221countryLP*.
+
+🪑 Tu mesa: *{mesa}*
+🎟️ Tu QR de ingreso (mostralo en la puerta): {link}
+
+🕣 Apertura: *20:30 hs*
+🍔 En el salón va a haber *buffet* para pedir comida y bebida.
+📍 Dirección: [DIRECCIÓN DEL SALÓN]
+🗺️ Cómo llegar: [LINK DE GOOGLE MAPS]
+
+¡Nos vemos en la pista! 💃🕺`;
+
+const LS_PLANTILLA = 'yiha_envios_plantilla';
+const LS_ENVIADOS = 'yiha_envios_enviados';
+
+let passwordAdmin = '';
+let grupos = [];
+let enviados = {};
+
+function lsGet(k) { try { return localStorage.getItem(k); } catch(e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch(e) {} }
+
+// ── LOGIN ─────────────────────────────────────────────
+async function entrar() {
+  const pass = document.getElementById('loginPass').value.trim();
+  if (!pass) { mostrarToast('Ingresá la contraseña'); return; }
+  document.getElementById('spinnerLogin').style.display = 'block';
+  document.getElementById('txtLogin').textContent = 'Verificando...';
+  try {
+    const res = await fetch(`${API}?action=config_admin&password=${encodeURIComponent(pass)}`);
+    const data = await res.json();
+    if (!data.ok) { mostrarToast(data.error || 'Contraseña incorrecta'); return; }
+    passwordAdmin = pass;
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    iniciar();
+  } catch(e) {
+    mostrarToast('Error de conexión');
+  } finally {
+    document.getElementById('spinnerLogin').style.display = 'none';
+    document.getElementById('txtLogin').textContent = '📱 Entrar';
+  }
+}
+
+function iniciar() {
+  document.getElementById('plantilla').value = lsGet(LS_PLANTILLA) || PLANTILLA_DEFAULT;
+  try { enviados = JSON.parse(lsGet(LS_ENVIADOS) || '{}') || {}; } catch(e) { enviados = {}; }
+  actualizarPreview();
+  cargarGrupos();
+}
+
+async function cargarGrupos() {
+  document.getElementById('lista').innerHTML = '<div class="ayuda">Cargando grupos...</div>';
+  try {
+    const res = await fetch(`${API}?action=grupos_envio&password=${encodeURIComponent(passwordAdmin)}`);
+    const data = await res.json();
+    if (!data.ok) {
+      document.getElementById('lista').innerHTML = `<div class="ayuda">No se pudieron cargar los grupos: ${esc(data.error || 'error desconocido')}</div>`;
+      return;
+    }
+    grupos = (data.grupos || []).map(g => ({
+      ...g,
+      mesas: (g.mesas || []).map(m => String(m).trim()).filter(Boolean),
+      tel: normalizarCelular(g.celular)
+    }));
+    render();
+  } catch(e) {
+    document.getElementById('lista').innerHTML = '<div class="ayuda">Error de conexión al cargar los grupos.</div>';
+  }
+}
+
+// ── PLANTILLA ─────────────────────────────────────────
+function guardarPlantilla() {
+  lsSet(LS_PLANTILLA, document.getElementById('plantilla').value);
+  actualizarPreview();
+}
+
+function restaurarPlantilla() {
+  if (!confirm('¿Reemplazar el mensaje por el texto original?')) return;
+  document.getElementById('plantilla').value = PLANTILLA_DEFAULT;
+  guardarPlantilla();
+}
+
+function actualizarPreview() {
+  const plantilla = document.getElementById('plantilla').value;
+  const ejemplo = grupos.find(g => g.mesas.length) || { grupo_id: 'ABC123', nombre: 'Lucía', mesas: ['12'] };
+  document.getElementById('preview').textContent = armarMensaje(ejemplo);
+  document.getElementById('avisoCorchetes').style.display = /\[[^\]]+\]/.test(plantilla) ? 'block' : 'none';
+}
+
+function linkQR(g) {
+  const url = new URL('qr.html', location.href);
+  url.searchParams.set('id', g.grupo_id);
+  if (g.nombre) url.searchParams.set('n', primerNombre(g.nombre));
+  if (g.mesas.length) url.searchParams.set('m', g.mesas.join(' · '));
+  return url.toString();
+}
+
+function armarMensaje(g) {
+  const mesa = g.mesas.length ? g.mesas.join(' y ') : 'a confirmar';
+  return document.getElementById('plantilla').value
+    .replaceAll('{nombre}', primerNombre(g.nombre || ''))
+    .replaceAll('{mesa}', mesa)
+    .replaceAll('{id}', g.grupo_id)
+    .replaceAll('{link}', linkQR(g));
+}
+
+// ── CELULAR ───────────────────────────────────────────
+// WhatsApp necesita el formato internacional argentino: 549 + código de área + número (sin 0 ni 15)
+function normalizarCelular(cel) {
+  let d = String(cel || '').replace(/\D/g, '');
+  if (d.startsWith('00')) d = d.slice(2);
+  if (d.startsWith('549') && d.length === 13) return d;
+  if (d.startsWith('54') && d.length === 12) return '549' + d.slice(2);
+  if (d.startsWith('0')) d = d.slice(1);
+  if (d.length === 10) return '549' + d;
+  return null;
+}
+
+// ── LISTA ─────────────────────────────────────────────
+function render() {
+  const q = document.getElementById('buscador').value.trim().toLowerCase();
+  const soloPend = document.getElementById('soloPendientes').checked;
+  const soloMesa = document.getElementById('soloConMesa').checked;
+
+  const filtrados = grupos.filter(g => {
+    if (soloPend && enviados[g.grupo_id]) return false;
+    if (soloMesa && !g.mesas.length) return false;
+    if (!q) return true;
+    return [g.nombre, g.apellido, g.grupo_id, g.mesas.join(' ')].join(' ').toLowerCase().includes(q);
+  });
+
+  const totalEnviados = grupos.filter(g => enviados[g.grupo_id]).length;
+  document.getElementById('contador').textContent =
+    `Mostrando ${filtrados.length} · Enviados ${totalEnviados} de ${grupos.length}`;
+
+  document.getElementById('lista').innerHTML = filtrados.map(g => {
+    const enviado = enviados[g.grupo_id];
+    const mesaTag = g.mesas.length
+      ? `<span class="tag">🪑 Mesa ${esc(g.mesas.join(' · '))}</span>`
+      : `<span class="tag tag-error">Sin mesa</span>`;
+    const telTag = g.tel
+      ? `<span>📞 ${esc(String(g.celular))}</span>`
+      : `<span class="tag tag-error">Celular inválido: ${esc(String(g.celular || '—'))}</span>`;
+    const accion = enviado
+      ? `<span class="tag tag-ok">✓ Enviado</span> <button class="deshacer" onclick="desmarcar('${esc(g.grupo_id)}')">deshacer</button>`
+      : `<button class="btn btn-wa" ${g.tel ? '' : 'disabled'} onclick="enviar('${esc(g.grupo_id)}')">📱 Enviar</button>`;
+    return `
+      <div class="grupo ${enviado ? 'enviado' : ''}">
+        <div class="grupo-info">
+          <div class="grupo-nombre">${esc([g.nombre, g.apellido].filter(Boolean).join(' ') || 'Sin nombre')}</div>
+          <div class="grupo-meta"><span>${esc(g.grupo_id)}</span>${mesaTag}${telTag}${g.cant_personas ? `<span>👥 ${esc(String(g.cant_personas))}</span>` : ''}</div>
+        </div>
+        <div>${accion}</div>
+      </div>`;
+  }).join('') || '<div class="ayuda">No hay grupos para mostrar con estos filtros.</div>';
+
+  actualizarPreview();
+}
+
+function enviar(grupoId) {
+  const g = grupos.find(x => x.grupo_id === grupoId);
+  if (!g || !g.tel) return;
+  if (/\[[^\]]+\]/.test(document.getElementById('plantilla').value)
+      && !confirm('El mensaje tiene campos entre [ ] sin completar. ¿Enviar igual?')) return;
+  window.open(`https://wa.me/${g.tel}?text=${encodeURIComponent(armarMensaje(g))}`, '_blank');
+  enviados[grupoId] = new Date().toISOString();
+  lsSet(LS_ENVIADOS, JSON.stringify(enviados));
+  render();
+}
+
+function desmarcar(grupoId) {
+  delete enviados[grupoId];
+  lsSet(LS_ENVIADOS, JSON.stringify(enviados));
+  render();
+}
+
+// ── UTILS ─────────────────────────────────────────────
+function primerNombre(n) { return String(n).trim().split(/\s+/)[0] || ''; }
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('visible');
+  setTimeout(() => t.classList.remove('visible'), 3500);
+}
+</script>
+</body>
+</html>

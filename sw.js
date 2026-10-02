@@ -1,4 +1,4 @@
-const CACHE = 'yiha-v3';
+const CACHE = 'yiha-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const ASSETS = [
   './panel.html',
   './puerta.html',
   './sorteo.html',
+  './qr.html',
   './img/vic_senalando.png',
   './img/vic_sombrero.png',
   './img/vic_juntos_saludo.png',

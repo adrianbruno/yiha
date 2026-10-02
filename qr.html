@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu QR · Yiha! 221countryLP</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="img/logo_negro.png">
+  <meta name="theme-color" content="#2d5a3d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rye&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --tierra:#0f2318;
+      --arena:#b8986a;
+      --paja:#e8d5b0;
+      --hueso:#f5ecd7;
+      --dorado:#c9922a;
+      --dorado-claro:#f0c040;
+      --surface:rgba(26,61,40,0.75);
+      --border:rgba(74,124,95,0.3);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html,body { min-height:100%; font-family:'Josefin Sans',sans-serif; background:var(--tierra); color:var(--hueso); }
+    .bg { position:fixed; inset:0; z-index:0; background:radial-gradient(ellipse at 50% 0%,#1a2a1a 0%,#0a1a08 40%,#030a03 100%); }
+    .wrap { position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:2rem 1rem; }
+    .vic { height:120px; filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6)); margin-bottom:1rem; }
+    .card { background:var(--surface); border:1px solid var(--border); border-radius:4px; padding:1.5rem; width:100%; max-width:360px; text-align:center; backdrop-filter:blur(8px); }
+    .titulo { font-family:'Rye',serif; font-size:1.3rem; color:var(--dorado-claro); margin-bottom:0.25rem; }
+    .sub { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--arena); opacity:0.8; margin-bottom:1.25rem; }
+    .qr { background:white; border-radius:8px; padding:1rem; display:inline-block; }
+    .qr img, .qr canvas { display:block; }
+    .grupo-id { font-weight:600; letter-spacing:0.1em; color:var(--paja); margin-top:0.6rem; }
+    .mesa-label { font-size:0.7rem; color:var(--arena); letter-spacing:0.15em; text-transform:uppercase; margin-top:1rem; }
+    .mesa { font-family:'Rye',serif; font-size:2.6rem; color:var(--dorado-claro); line-height:1.2; }
+    .hint { font-size:0.75rem; color:var(--arena); opacity:0.8; margin:1rem 0; }
+    .btn { width:100%; padding:0.9rem; border-radius:3px; font-family:'Josefin Sans',sans-serif; font-size:0.82rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; cursor:pointer; border:none; background:linear-gradient(160deg,var(--dorado-claro),var(--dorado)); color:#1a0a00; }
+    .error { color:var(--paja); }
+  </style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="wrap">
+  <img src="img/vic_sombrero.png" class="vic" alt="Vic">
+  <div class="card" id="card"></div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const grupoId = (params.get('id') || '').trim();
+const nombre = (params.get('n') || '').trim();
+const mesa = (params.get('m') || '').trim();
+
+function esc(s) {
+  return s.replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+
+const card = document.getElementById('card');
+if (!grupoId) {
+  card.innerHTML = '<div class="titulo">Ups</div><p class="error">Este link no tiene un QR válido. Escribinos por WhatsApp.</p>';
+} else {
+  const varias = mesa.includes('·');
+  card.innerHTML = `
+    <div class="titulo">${nombre ? '¡Hola ' + esc(nombre) + '!' : 'Tu QR de ingreso'}</div>
+    <div class="sub">Yiha! 221countryLP</div>
+    <div class="qr" id="qrContainer"></div>
+    <div class="grupo-id">${esc(grupoId)}</div>
+    ${mesa ? `<div class="mesa-label">${varias ? 'Mesas' : 'Mesa'}</div>
+    <div class="mesa" style="font-size:${varias ? '1.4rem' : '2.6rem'}">${esc(mesa)}</div>` : ''}
+    <div class="hint">Mostrá este QR en la puerta del evento</div>
+    <button class="btn" onclick="descargarQR()">📥 Descargar QR</button>`;
+  new QRCode(document.getElementById('qrContainer'), {
+    text: grupoId,
+    width: 220,
+    height: 220,
+    colorDark: '#1a0a00',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+}
+
+function descargarQR() {
+  const canvas = document.querySelector('#qrContainer canvas');
+  if (!canvas) return;
+  const padding = 40;
+  const out = document.createElement('canvas');
+  out.width = canvas.width + padding * 2;
+  out.height = canvas.height + padding * 2 + 50 + (mesa ? 30 : 0);
+  const ctx = out.getContext('2d');
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, out.width, out.height);
+  ctx.drawImage(canvas, padding, padding);
+  ctx.fillStyle = '#1a0a00';
+  ctx.font = 'bold 18px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(grupoId, out.width / 2, canvas.height + padding + 35);
+  ctx.font = '11px sans-serif';
+  ctx.fillStyle = '#888';
+  ctx.fillText('Yiha! 221countryLP', out.width / 2, canvas.height + padding + 52);
+  if (mesa) {
+    ctx.font = 'bold 20px sans-serif';
+    ctx.fillStyle = '#1a0a00';
+    ctx.fillText((mesa.includes('·') ? 'Mesas ' : 'Mesa ') + mesa, out.width / 2, canvas.height + padding + 82);
+  }
+  const link = document.createElement('a');
+  link.download = `QR_${grupoId}.png`;
+  link.href = out.toDataURL('image/png');
+  link.click();
+}
+</script>
+</body>
+</html>
